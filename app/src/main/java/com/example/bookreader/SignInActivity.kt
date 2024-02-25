@@ -6,6 +6,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.bookreader.databinding.ActivitySignInBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class SignInActivity : AppCompatActivity() {
 
@@ -32,26 +36,46 @@ class SignInActivity : AppCompatActivity() {
 
                 firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
                     if (it.isSuccessful) {
-                        val intent = Intent(this, MainActivity::class.java)
-                        startActivity(intent)
+                        checkUser()
                     } else {
                         Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
 
                     }
                 }
             } else {
-                Toast.makeText(this, "Empty Fields Are not Allowed !!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Proszę uzupełnić pola!", Toast.LENGTH_SHORT).show()
 
             }
         }
     }
 
-    override fun onStart() {
-        super.onStart()
+    private fun checkUser(){
 
-        if(firebaseAuth.currentUser != null){
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }
+        val firebaseUser = firebaseAuth.currentUser!!
+
+        val ref = FirebaseDatabase.getInstance().getReference("Users")
+        ref.child(firebaseUser.uid)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+
+                    val userType = snapshot.child("userType").value
+
+                    if (userType == "user") {
+                        startActivity(Intent(this@SignInActivity, UserScreen::class.java))
+                        finish()
+                    } else if (userType == "admin") {
+                        startActivity(Intent(this@SignInActivity, AdminScreen::class.java))
+                        finish()
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError){
+
+                }
+
+                })
     }
+
 }
