@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LoginAndSignUp" >
         <activity
+            android:name=".AddCategory"
+            android:exported="false" />
+        <activity
+            android:name=".ModifyBookActivity"
+            android:exported="false" />
+        <activity
             android:name=".AdminScreen"
             android:exported="false" />
         <activity

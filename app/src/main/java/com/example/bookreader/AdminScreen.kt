@@ -17,7 +17,7 @@ class AdminScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAdminScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        
         val logout_Btn = findViewById<Button>(R.id.logout_btn)
         val book_Btn = findViewById<Button>(R.id.book_btn)
         val challenge_btn = findViewById<Button>(R.id.challenge_btn)
