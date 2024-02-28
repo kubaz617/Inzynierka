@@ -30,6 +30,7 @@ class BooksActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val category_btn = findViewById<Button>(R.id.addCategory)
+        val book_btn = findViewById<Button>(R.id.add_Book)
         firebaseAuth = FirebaseAuth.getInstance()
         checkUser()
         loadCategories()
@@ -53,6 +54,10 @@ class BooksActivity : AppCompatActivity() {
 
         category_btn.setOnClickListener {
             navigateToActivity(AddCategory::class.java)
+        }
+
+        book_btn.setOnClickListener {
+            navigateToActivity(AddBook::class.java)
         }
 
 
