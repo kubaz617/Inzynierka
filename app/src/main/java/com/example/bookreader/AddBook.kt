@@ -214,7 +214,7 @@ class AddBook : AppCompatActivity() {
         }
             else{
             Log.d(TAG, "PDF Pick cancelled: ")
-            Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Przerwano", Toast.LENGTH_SHORT).show()
             }
         }
     )
