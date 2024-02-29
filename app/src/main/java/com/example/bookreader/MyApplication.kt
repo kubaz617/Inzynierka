@@ -1,11 +1,14 @@
 package com.example.bookreader
 
 import android.app.Application
+import android.app.ProgressDialog
+import android.content.Context
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import com.github.barteksc.pdfviewer.PDFView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -119,6 +122,45 @@ class MyApplication:Application() {
                 })
         }
 
+        fun deleteBook(context: Context, bookId: String, bookUrl: String, bookTitle: String){
+
+            val TAG = "DELETE_BOOK_TAG"
+
+            Log.d(TAG, "deleteBook: Usuwanie książki")
+
+            val progressDialog = ProgressDialog(context)
+            progressDialog.setTitle("Proszę czekać")
+            progressDialog.setMessage("Usuwanie $bookTitle")
+            progressDialog.setCanceledOnTouchOutside(false)
+            progressDialog.show()
+
+            Log.d(TAG, "deleteBook: Usuwanie z bazy danych")
+            val storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(bookUrl)
+            storageReference.delete()
+                .addOnSuccessListener {
+                    Log.d(TAG, "deleteBook: Usuwanie z bazy danych")
+                    Log.d(TAG, "deleteBook: Książka usunięta")
+
+                    val ref = FirebaseDatabase.getInstance().getReference("Books")
+                    ref.child(bookId)
+                        .removeValue()
+                        .addOnSuccessListener {
+                        progressDialog.dismiss()
+                            Toast.makeText(context, " Książka usunięta", Toast.LENGTH_SHORT).show()
+                            Log.d(TAG, "deleteBook: Usuwanie z bazy danych")
+                        }
+                        .addOnFailureListener {e->
+                            progressDialog.dismiss()
+                            Log.d(TAG, "deleteBook: Nie udało się usunąć książki z bazy danych z powodu ${e.message}")
+                            Toast.makeText(context, " Nie udało się usunąć książki z powodu ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                }
+                .addOnFailureListener{ e->
+                    progressDialog.dismiss()
+                    Log.d(TAG, "deleteBook: Nie udało się usunąć książki z schowka z powodu ${e.message}")
+                    Toast.makeText(context, " Nie udało się usunąć książki z powodu ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+        }
     }
 
 

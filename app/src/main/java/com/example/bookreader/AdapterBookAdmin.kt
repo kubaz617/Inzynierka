@@ -1,6 +1,8 @@
 package com.example.bookreader
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,6 +57,31 @@ class AdapterBookAdmin :RecyclerView.Adapter<AdapterBookAdmin.HolderBookAdmin>, 
         MyApplication.loadBookFromUrlSinglePage(bookUrl, title, holder.bookView, holder.progressBar, null)
 
         MyApplication.loadBookSize(bookUrl, title, holder.sizeTv)
+
+        holder.moreBtn.setOnClickListener{
+            moreOptionsDialog(model, holder)
+        }
+    }
+
+    private fun moreOptionsDialog(model: ModelBook, holder: AdapterBookAdmin.HolderBookAdmin) {
+        val bookId = model.id
+        val bookUrl = model.url
+        val bookTitle = model.title
+
+        val options = arrayOf("Edytuj", "Usuń")
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Wybierz opcje")
+            .setItems(options){dialog, position ->
+                if (position== 0){
+                    val intent = Intent(context, BookEditActivity::class.java)
+                    intent.putExtra("bookId", bookId)
+                    context.startActivity(intent)
+                }
+                else if (position == 1){
+                    MyApplication.deleteBook(context, bookId, bookUrl, bookTitle)
+                }
+            }
+            .show()
     }
 
     override fun getFilter(): Filter {
