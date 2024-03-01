@@ -1,5 +1,6 @@
 package com.example.bookreader
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.bookreader.databinding.ActivityBookDetailBinding
@@ -24,6 +25,12 @@ class BookDetailActivity : AppCompatActivity() {
         MyApplication.incrementBookViewCount(bookId)
 
         loadBookDetails()
+
+        binding.readBookBtn.setOnClickListener{
+            val intent = Intent(this, BookViewActivity::class.java)
+            intent.putExtra("bookId", bookId);
+            startActivity(Intent(intent))
+        }
     }
 
 

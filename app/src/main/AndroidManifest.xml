@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LoginAndSignUp">
         <activity
+            android:name=".BookViewActivity"
+            android:exported="false" />
+        <activity
             android:name=".BookDetailActivity"
             android:exported="false" />
         <activity
