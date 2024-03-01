@@ -61,6 +61,12 @@ class AdapterBookAdmin :RecyclerView.Adapter<AdapterBookAdmin.HolderBookAdmin>, 
         holder.moreBtn.setOnClickListener{
             moreOptionsDialog(model, holder)
         }
+
+        holder.itemView.setOnClickListener{
+            val intent = Intent(context, BookDetailActivity::class.java)
+            intent.putExtra("bookId", bookId)
+            context.startActivity(intent)
+        }
     }
 
     private fun moreOptionsDialog(model: ModelBook, holder: AdapterBookAdmin.HolderBookAdmin) {

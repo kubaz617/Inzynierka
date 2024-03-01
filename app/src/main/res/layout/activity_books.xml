@@ -66,7 +66,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/add_Book"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -75,16 +75,18 @@
             android:paddingRight="10dp"
             android:text="Dodaj książke"
             android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"/>
+            android:layout_marginStart="10dp"
+            android:background="@color/cyan"/>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/addCategory"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Dodaj kategorie"
             android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"/>
+            android:layout_marginStart="10dp"
+            android:background="@color/cyan"/>
 
     </LinearLayout>
 
