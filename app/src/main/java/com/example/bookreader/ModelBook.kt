@@ -10,7 +10,7 @@ class ModelBook {
     var url:String = ""
     var timestamp:Long = 0
     var viewsCount:Long = 0
-    var downloadsCount:Long = 0
+    var downloadCount:Long = 0
     var isDone:Boolean = false
 
     constructor()
@@ -23,7 +23,7 @@ class ModelBook {
         url: String,
         timestamp: Long,
         viewsCount: Long,
-        downloadsCount: Long,
+        downloadCount: Long,
         isDone: Boolean
     ) {
         this.uid = uid
@@ -34,7 +34,7 @@ class ModelBook {
         this.url = url
         this.timestamp = timestamp
         this.viewsCount = viewsCount
-        this.downloadsCount = downloadsCount
+        this.downloadCount = downloadCount
         this.isDone = isDone
     }
 

@@ -1,20 +1,27 @@
 package com.example.bookreader
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.ColorSpace.Model
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.example.bookreader.databinding.ActivityUserScreenBinding
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class UserScreen : AppCompatActivity() {
 
     private lateinit var binding: ActivityUserScreenBinding
 
     private lateinit var firebaseAuth: FirebaseAuth
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +39,7 @@ class UserScreen : AppCompatActivity() {
         checkUser()
 
 
+
         logout_Btn.setOnClickListener {
             firebaseAuth.signOut()
             navigateToActivity(SignInActivity::class.java)
@@ -39,7 +47,7 @@ class UserScreen : AppCompatActivity() {
         }
 
         book_Btn.setOnClickListener {
-            navigateToActivity(BooksActivity::class.java)
+            navigateToActivity(UserBooksActivity::class.java)
         }
 
         quiz_Btn.setOnClickListener {
@@ -54,6 +62,7 @@ class UserScreen : AppCompatActivity() {
             navigateToActivity(SimiliarActivity::class.java)
         }
     }
+
 
     private fun checkUser()  {
     val firebaseUser = firebaseAuth.currentUser

@@ -5,9 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Display.Mode
 import android.widget.Button
-import com.example.bookreader.databinding.ActivityAdminScreenBinding
 import com.example.bookreader.databinding.ActivityBooksBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -15,7 +13,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class BooksActivity : AppCompatActivity() {
+class AdminBooksActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityBooksBinding
 
@@ -75,12 +73,11 @@ class BooksActivity : AppCompatActivity() {
 
                     categoryArrayList.add(model!!)
                 }
-                adapterCategory = AdapterCategory(this@BooksActivity,categoryArrayList)
+                adapterCategory = AdapterCategory(this@AdminBooksActivity,categoryArrayList)
                 binding.categoriesRv.adapter = adapterCategory
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
             }
         })
     }

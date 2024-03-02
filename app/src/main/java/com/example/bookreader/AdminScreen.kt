@@ -33,7 +33,7 @@ class AdminScreen : AppCompatActivity() {
         }
 
         book_Btn.setOnClickListener {
-            navigateToActivity(BooksActivity::class.java)
+            navigateToActivity(AdminBooksActivity::class.java)
         }
 
         challenge_btn.setOnClickListener {
