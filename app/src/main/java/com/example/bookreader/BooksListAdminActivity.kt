@@ -16,7 +16,7 @@ class BooksListAdminActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBooksListAdminBinding
 
     private companion object{
-        const val TAG = "PDF_LIST_ADMIN_TAG"
+        const val TAG = "BOOKS_LIST_ADMIN_TAG"
     }
 
     private var categoryId = ""

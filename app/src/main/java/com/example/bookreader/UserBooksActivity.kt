@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -23,6 +25,8 @@ class UserBooksActivity : AppCompatActivity() {
     private lateinit var categoryArrayList: ArrayList<ModelCategory>
     private lateinit var viewPagerAdapter: ViewPagerAdapter
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUserBooksBinding.inflate(layoutInflater)
@@ -32,17 +36,15 @@ class UserBooksActivity : AppCompatActivity() {
 
         setupWithViewPagerAdapter(binding.viewPager)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
+
+
     }
 
     private fun checkUser() {
         val firebaseUser = firebaseAuth.currentUser
-        if (firebaseUser == null) {
-            startActivity(Intent(this, SignInActivity::class.java))
-            finish()
-        } else {
-            val email = firebaseUser.email
+            val email = firebaseUser!!.email
             binding.titleTv.text = email
-        }
+
     }
 
         private fun setupWithViewPagerAdapter(viewPager: ViewPager){
@@ -59,9 +61,9 @@ class UserBooksActivity : AppCompatActivity() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     categoryArrayList.clear()
 
-                    val modelAll = ModelCategory("01,","All",1,"")
-                    val modelMostViewed = ModelCategory("01,","Most viewed",1,"")
-                    val modelMostDownloaded = ModelCategory("01,","Most Downloaded",1,"")
+                    val modelAll = ModelCategory("01,","Wszystkie",1,"")
+                    val modelMostViewed = ModelCategory("01,","Najczęściej oglądane",1,"")
+                    val modelMostDownloaded = ModelCategory("01,","Najczęściej pobierane",1,"")
                     categoryArrayList.add(modelAll)
                     categoryArrayList.add(modelMostViewed)
                     categoryArrayList.add(modelMostDownloaded)

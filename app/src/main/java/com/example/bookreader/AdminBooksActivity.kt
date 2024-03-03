@@ -89,13 +89,8 @@ class AdminBooksActivity : AppCompatActivity() {
 
     private fun checkUser() {
         val firebaseUser = firebaseAuth.currentUser
-        if (firebaseUser == null){
-            startActivity(Intent(this,SignInActivity::class.java))
-            finish()
-        }
-        else {
-            val email = firebaseUser.email
+            val email = firebaseUser!!.email
             binding.titleTv.text = email
-        }
+
     }
 }

@@ -19,7 +19,7 @@ class BooksUserFragment : Fragment {
 
     private lateinit var binding: FragmentBooksUserBinding
 
-    companion object{
+    public companion object{
         private const val TAG = "BOOKS_USER_TAG"
         public fun newInstance(categoryId: String, category: String, uid: String): BooksUserFragment{
             val fragment = BooksUserFragment()
@@ -57,30 +57,31 @@ class BooksUserFragment : Fragment {
         // Inflate the layout for this fragment
         binding = FragmentBooksUserBinding.inflate(LayoutInflater.from(context), container, false)
         Log.d(TAG, "onCreateView: Category: $category")
-        if (category == "All"){
+        if (category == "Wszystkie"){
             loadAllBooks()
         }
-        else if (category == "Most viewed"){
+        else if (category == "Najczęściej oglądane"){
             loadMostViewedDownloadedBooks("viewsCount")
         }
-        else if (category == "Most Downloaded"){
+        else if (category == "Najczęściej pobierane"){
             loadMostViewedDownloadedBooks("downloadCount")
         }
         else{
             loadCategorizedBooks()
         }
-        binding.searchEt.addTextChangedListener { object :TextWatcher{
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    try {
-                        adapterBookUser.filter.filter(s)
-                    }
-                    catch (e: Exception){
-                        Log.d(TAG, "onTextChanged: Search Exception: ${e.message}")
-                    }
-                }
 
+
+        binding.searchEt.addTextChangedListener { object :TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                try {
+                    adapterBookUser.filter.filter(s)
+                } catch (e: Exception) {
+                    Log.d(TAG, "onTextChanged: Search Exception: ${e.message}")
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {

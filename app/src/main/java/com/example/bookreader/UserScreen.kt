@@ -6,6 +6,7 @@ import android.graphics.ColorSpace.Model
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -66,14 +67,9 @@ class UserScreen : AppCompatActivity() {
 
     private fun checkUser()  {
     val firebaseUser = firebaseAuth.currentUser
-    if (firebaseUser == null){
-        startActivity(Intent(this,SignInActivity::class.java))
-        finish()
-    }
-    else {
-        val email = firebaseUser.email
+        val email = firebaseUser!!.email
         binding.titleTv.text = email
-    }
+
 }
 
     private fun navigateToActivity(activityClass: Class<*>) {

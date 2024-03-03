@@ -8,21 +8,20 @@ class FilterBookUser: Filter {
 
     var adapterBookUser: AdapterBookUser
 
-    constructor(filterList: ArrayList<ModelBook>, adapterBookUser: AdapterBookUser) : super() {
+    constructor(filterList: ArrayList<ModelBook>, adapterBookUser: AdapterBookUser) {
         this.filterList = filterList
         this.adapterBookUser = adapterBookUser
     }
 
-    override fun performFiltering(constraint: CharSequence): FilterResults {
-        var constraint: CharSequence? = constraint
+    override fun performFiltering(constraint: CharSequence?): FilterResults {
+        var constraint:CharSequence? = constraint
         val results = FilterResults()
 
         if (constraint != null && constraint.isNotEmpty()){
-
-            constraint = constraint.toString().uppercase()
-            val filteredModels = ArrayList<ModelBook>()
+            constraint = constraint.toString().lowercase()
+            var filteredModels = ArrayList<ModelBook>()
             for (i in filterList.indices){
-                if (filterList[i].title.uppercase().contains(constraint)){
+                if (filterList[i].title.lowercase().contains(constraint)){
                     filteredModels.add(filterList[i])
                 }
             }
@@ -33,6 +32,7 @@ class FilterBookUser: Filter {
             results.count = filterList.size
             results.values = filterList
         }
+
         return results
     }
 

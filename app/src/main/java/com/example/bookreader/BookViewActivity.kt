@@ -17,7 +17,7 @@ class BookViewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBookViewBinding
 
     private companion object{
-        const val TAG = "PDF_VIEW_TAG"
+        const val TAG = "BOOK_VIEW_TAG"
     }
 
     var bookId = ""

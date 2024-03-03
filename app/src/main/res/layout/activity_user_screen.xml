@@ -11,11 +11,20 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent">
 
+        <ImageView
+            android:id="@+id/user_sign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_user_sign">
+        </ImageView>
+
         <TextView
             android:id="@+id/titleTv"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_below="@id/user_sign"
             android:layout_centerHorizontal="true"
             android:text="abc@exmaple.com"
             android:textColor="@color/black">

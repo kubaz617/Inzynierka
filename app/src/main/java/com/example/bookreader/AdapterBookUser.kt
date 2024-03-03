@@ -2,37 +2,42 @@ package com.example.bookreader
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
+import com.example.bookreader.databinding.RowBookAdminBinding
 import com.example.bookreader.databinding.RowBookUserBinding
 
 class AdapterBookUser : RecyclerView.Adapter<AdapterBookUser.HolderBookUser>, Filterable{
 
     private var context: Context
 
-    public var filterList: ArrayList<ModelBook>
+    private val filterList: ArrayList<ModelBook>
     public var bookArrayList: ArrayList<ModelBook>
+    private val TAG = "PDF_ADD_TAG"
 
     private lateinit var binding: RowBookUserBinding
 
     private var filter: FilterBookUser? = null
 
-    constructor(context: Context, bookArrayList: ArrayList<ModelBook>) {
+    constructor(context: Context, bookArrayList: ArrayList<ModelBook>) : super() {
         this.context = context
         this.bookArrayList = bookArrayList
         this.filterList = bookArrayList
     }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HolderBookUser {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterBookUser.HolderBookUser {
         binding = RowBookUserBinding.inflate(LayoutInflater.from(context),parent,false)
         return HolderBookUser(binding.root)
     }
-
+    override fun getItemCount(): Int {
+        return bookArrayList.size
+    }
 
     override fun onBindViewHolder(holder: HolderBookUser, position: Int) {
         val model = bookArrayList[position]
@@ -40,19 +45,17 @@ class AdapterBookUser : RecyclerView.Adapter<AdapterBookUser.HolderBookUser>, Fi
         val categoryId = model.categoryId
         val title = model.title
         val description = model.description
-        val uid = model.uid
         val bookUrl = model.url
         val timestamp = model.timestamp
-
         val date = MyApplication.formatTimeStamp(timestamp)
 
         holder.titleTv.text = title
         holder.descriptionTv.text = description
         holder.dateTv.text = date
 
-        MyApplication.loadBookFromUrlSinglePage(bookUrl, title, holder.bookView, holder.progressBar, null)
-
         MyApplication.loadCategory(categoryId, holder.categoryTv)
+
+        MyApplication.loadBookFromUrlSinglePage(bookUrl, title, holder.bookView, holder.progressBar, null)
 
         MyApplication.loadBookSize(bookUrl, title, holder.sizeTv)
 
@@ -63,14 +66,12 @@ class AdapterBookUser : RecyclerView.Adapter<AdapterBookUser.HolderBookUser>, Fi
         }
     }
 
-    override fun getItemCount(): Int {
-        return bookArrayList.size
-    }
 
     override fun getFilter(): Filter {
         if (filter == null) {
             filter = FilterBookUser(filterList, this)
         }
+        Log.d(TAG, "getFilter: Rozpoczynam filtrowanie")
         return filter as FilterBookUser
     }
 
@@ -81,7 +82,6 @@ class AdapterBookUser : RecyclerView.Adapter<AdapterBookUser.HolderBookUser>, Fi
         var descriptionTv = binding.descriptionTv
         var categoryTv = binding.categoryTv
         var sizeTv = binding.sizeTv
-
         var dateTv = binding.dateTv
 
     }

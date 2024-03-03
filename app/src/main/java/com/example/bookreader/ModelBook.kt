@@ -11,7 +11,6 @@ class ModelBook {
     var timestamp:Long = 0
     var viewsCount:Long = 0
     var downloadCount:Long = 0
-    var isDone:Boolean = false
 
     constructor()
     constructor(
@@ -24,7 +23,6 @@ class ModelBook {
         timestamp: Long,
         viewsCount: Long,
         downloadCount: Long,
-        isDone: Boolean
     ) {
         this.uid = uid
         this.id = id
@@ -35,7 +33,6 @@ class ModelBook {
         this.timestamp = timestamp
         this.viewsCount = viewsCount
         this.downloadCount = downloadCount
-        this.isDone = isDone
     }
 
 
