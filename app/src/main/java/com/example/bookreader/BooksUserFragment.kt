@@ -8,8 +8,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import com.example.bookreader.databinding.FragmentBooksUserBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -19,6 +21,7 @@ class BooksUserFragment : Fragment {
 
     private lateinit var binding: FragmentBooksUserBinding
 
+    private lateinit var firebaseAuth: FirebaseAuth
     public companion object{
         private const val TAG = "BOOKS_USER_TAG"
         public fun newInstance(categoryId: String, category: String, uid: String): BooksUserFragment{
@@ -45,6 +48,7 @@ class BooksUserFragment : Fragment {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        firebaseAuth = FirebaseAuth.getInstance()
         val args = arguments
         if (args != null){
             categoryId = args.getString("categoryId")!!
@@ -65,6 +69,9 @@ class BooksUserFragment : Fragment {
         }
         else if (category == "Najczęściej pobierane"){
             loadMostViewedDownloadedBooks("downloadCount")
+        }
+        else if (category == "Ulubione"){
+            loadFavoriteBooks()
         }
         else{
             loadCategorizedBooks()
@@ -92,6 +99,7 @@ class BooksUserFragment : Fragment {
         return binding.root
     }
 
+
     private fun loadAllBooks() {
         pdfArrayList = ArrayList()
         val ref = FirebaseDatabase.getInstance().getReference("Books")
@@ -109,6 +117,48 @@ class BooksUserFragment : Fragment {
 
             override fun onCancelled(error: DatabaseError) {
 
+            }
+        })
+    }
+
+    private fun loadFavoriteBooks() {
+        pdfArrayList = ArrayList()
+        val favoriteBookIds = mutableListOf<String>()
+        val ref = FirebaseDatabase.getInstance().getReference("Users").child(firebaseAuth.uid!!).child("Favorites")
+        ref.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    for (ds in snapshot.children) {
+                        val bookId = ds.child("bookId").getValue(String::class.java)
+                        bookId?.let { favoriteBookIds.add(it) }
+                    }
+                    val booksRef = FirebaseDatabase.getInstance().getReference("Books")
+                    booksRef.addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(booksSnapshot: DataSnapshot) {
+                            pdfArrayList.clear()
+                            for (ds in booksSnapshot.children) {
+                                val model = ds.getValue(ModelBook::class.java)
+                                model?.let {
+                                    if (favoriteBookIds.contains(model.id)) {
+                                        pdfArrayList.add(model)
+                                    }
+                                }
+                            }
+                            adapterBookUser = AdapterBookUser(context!!, pdfArrayList)
+                            binding.BooksRv.adapter = adapterBookUser
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            // Obsługa błędów pobierania danych z zakładki "Books"
+                        }
+                    })
+                } else {
+                    //Toast.makeText(this, "Brak ulubionych książek", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Obsługa błędów pobierania danych z zakładki "Favorites"
             }
         })
     }

@@ -64,9 +64,11 @@ class UserBooksActivity : AppCompatActivity() {
                     val modelAll = ModelCategory("01,","Wszystkie",1,"")
                     val modelMostViewed = ModelCategory("01,","Najczęściej oglądane",1,"")
                     val modelMostDownloaded = ModelCategory("01,","Najczęściej pobierane",1,"")
+                    val modelFavorites = ModelCategory("01,","Ulubione",1,"")
                     categoryArrayList.add(modelAll)
                     categoryArrayList.add(modelMostViewed)
                     categoryArrayList.add(modelMostDownloaded)
+                    categoryArrayList.add(modelFavorites)
                     viewPagerAdapter.addFragment(
                         BooksUserFragment.newInstance(
                             "${modelAll.id}",
@@ -87,6 +89,13 @@ class UserBooksActivity : AppCompatActivity() {
                             "${modelMostDownloaded.category}",
                             "${modelMostDownloaded.uid}"
                         ), modelMostDownloaded.category
+                    )
+                    viewPagerAdapter.addFragment(
+                        BooksUserFragment.newInstance(
+                            "${modelFavorites.id}",
+                            "${modelFavorites.category}",
+                            "${modelFavorites.uid}"
+                        ), modelFavorites.category
                     )
                     viewPagerAdapter.notifyDataSetChanged()
 

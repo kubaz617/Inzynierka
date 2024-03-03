@@ -13,7 +13,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bookreader.databinding.RowCategoryBinding
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class AdapterCategory :RecyclerView.Adapter<AdapterCategory.HolderCategory>, Filterable{
 
@@ -23,6 +26,7 @@ class AdapterCategory :RecyclerView.Adapter<AdapterCategory.HolderCategory>, Fil
     private var filter: FilterCategory? = null
 
     private lateinit var binding: RowCategoryBinding
+
 
     constructor(context: Context, categoryArrayList: ArrayList<ModelCategory>) {
         this.context = context
@@ -38,6 +42,7 @@ class AdapterCategory :RecyclerView.Adapter<AdapterCategory.HolderCategory>, Fil
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HolderCategory {
         binding = RowCategoryBinding.inflate(LayoutInflater.from(context), parent, false)
+
 
         return HolderCategory(binding.root)
     }
@@ -78,17 +83,35 @@ class AdapterCategory :RecyclerView.Adapter<AdapterCategory.HolderCategory>, Fil
     }
 
     private fun deleteCategory(model: ModelCategory, holder: HolderCategory) {
-        val id = model.id
-        val ref = FirebaseDatabase.getInstance().getReference("Categories")
-        ref.child(id)
-            .removeValue()
-            .addOnSuccessListener {
-                Toast.makeText(context,"Kategoria usunięta",Toast.LENGTH_SHORT).show()
+        val categoryId = model.id
+        val categoryRef = FirebaseDatabase.getInstance().getReference("Categories").child(categoryId)
+
+        val ref = FirebaseDatabase.getInstance().getReference("Books").orderByChild("categoryId").equalTo(categoryId)
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    // Kategoria zawiera książki, nie można jej usunąć
+                    Toast.makeText(context, "Nie można usunąć kategorii, ponieważ zawiera książki", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Brak książek w kategorii, można ją usunąć
+                    categoryRef.removeValue()
+                        .addOnSuccessListener {
+                            Toast.makeText(context, "Kategoria usunięta", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener { e ->
+                            Toast.makeText(context, "Nie udało się usunąć kategorii z powodu błędu ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                }
             }
-            .addOnFailureListener{e->
-                Toast.makeText(context,"Nie udało się usunąć kategorii z powodu błędu ${e.message}",Toast.LENGTH_SHORT).show()
+
+            override fun onCancelled(error: DatabaseError) {
+                // Obsługa błędu pobierania danych z kategorii
+                Toast.makeText(context, "Błąd podczas sprawdzania książek w kategorii: ${error.message}", Toast.LENGTH_SHORT).show()
             }
+        })
     }
+
+
 
     override fun getFilter(): Filter {
         if (filter == null){
