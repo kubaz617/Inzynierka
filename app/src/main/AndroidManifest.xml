@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LoginAndSignUp">
         <activity
+            android:name=".QuizScreen"
+            android:exported="false" />
+        <activity
             android:name=".BookViewActivity"
             android:exported="false" />
         <activity
@@ -66,7 +69,7 @@
             android:exported="true" />
         <activity
             android:name=".UserBooksActivity"
-            android:exported="true"/>
+            android:exported="true" />
     </application>
 
 </manifest>

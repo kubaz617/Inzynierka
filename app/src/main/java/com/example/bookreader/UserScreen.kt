@@ -1,22 +1,11 @@
 package com.example.bookreader
 
-import android.content.Context
 import android.content.Intent
-import android.graphics.ColorSpace.Model
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import android.widget.ImageButton
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.viewpager.widget.ViewPager
 import com.example.bookreader.databinding.ActivityUserScreenBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 
 class UserScreen : AppCompatActivity() {
 
@@ -52,7 +41,7 @@ class UserScreen : AppCompatActivity() {
         }
 
         quiz_Btn.setOnClickListener {
-            navigateToActivity(QuizActivity::class.java)
+            navigateToActivity(QuizScreen::class.java)
         }
 
         challenge_btn.setOnClickListener {
