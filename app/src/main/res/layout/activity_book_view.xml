@@ -4,27 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BookViewActivity">
+    tools:context=".activities.BookViewActivity">
 
     <RelativeLayout
         android:id="@+id/toolbarRl"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize">
 
-        <TextView
-            android:id="@+id/toolbarTitleTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
-            android:text="Czytaj książkę"
-            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/toolbarSubtitleTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbarTitleTv"
             android:layout_centerHorizontal="true"
             android:text="N/N"
             android:textSize="12sp"/>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BookDetailActivity">
+    tools:context=".activities.BookDetailActivity">
 
     <RelativeLayout
         android:id="@+id/toolbarRl"
@@ -89,7 +89,7 @@
                     </TableRow>
 
                     <TableRow
-                        android:layout_marginTop="5dp">
+                        android:layout_marginTop="10dp">
                         <TextView
                             android:id="@+id/dateLabelTv"
                             style="@style/TextAppearance.MaterialComponents.Caption"
@@ -109,7 +109,7 @@
                     </TableRow>
 
                     <TableRow
-                        android:layout_marginTop="5dp">
+                        android:layout_marginTop="10dp">
                         <TextView
                             android:id="@+id/sizeLabelTv"
                             style="@style/TextAppearance.MaterialComponents.Caption"
@@ -129,7 +129,7 @@
                     </TableRow>
 
                     <TableRow
-                        android:layout_marginTop="5dp">
+                        android:layout_marginTop="10dp">
                         <TextView
                             android:id="@+id/viewsLabelTv"
                             style="@style/TextAppearance.MaterialComponents.Caption"
@@ -149,27 +149,7 @@
                     </TableRow>
 
                     <TableRow
-                        android:layout_marginTop="5dp">
-                        <TextView
-                            android:id="@+id/downloadsLabelTv"
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Pobrania"
-                            android:layout_marginEnd="5dp"/>
-
-                        <TextView
-                            android:id="@+id/downloadsTv"
-                            android:layout_weight="1"
-                            style="@style/TextAppearance.MaterialComponents.Caption"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Niedostępne"
-                            android:layout_marginEnd="5dp"/>
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_marginTop="5dp">
+                        android:layout_marginTop="10dp">
                         <TextView
                             android:id="@+id/pagesLabelTv"
                             style="@style/TextAppearance.MaterialComponents.Caption"
@@ -218,14 +198,7 @@
             android:text="Czytaj"
             android:background="@color/cyan"
             android:layout_weight="1"/>
-        
-        <Button
-            android:id="@+id/downloadBookBtn"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="Pobierz"
-            android:layout_weight="1"
-            android:background="@color/cyan"/>
+
 
 
         <Button
