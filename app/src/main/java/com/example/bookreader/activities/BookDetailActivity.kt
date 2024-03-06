@@ -14,7 +14,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.FirebaseDatabase.*
 import com.google.firebase.database.ValueEventListener
 
 class BookDetailActivity : AppCompatActivity() {
@@ -83,9 +82,9 @@ class BookDetailActivity : AppCompatActivity() {
 
 
     private fun loadBookDetails() {
-        val ref = getInstance().getReference("Books")
+        val ref = FirebaseDatabase.getInstance().getReference("Books")
         ref.child(bookId)
-            .addListenerForSingleValueEvent(object: ValueEventListener{
+            .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val categoryId = "${snapshot.child("categoryId").value}"
                     val description = "${snapshot.child("description").value}"
@@ -107,6 +106,7 @@ class BookDetailActivity : AppCompatActivity() {
                         binding.progressBar,
                         binding.pagesTv
                     )
+
                     MyApplication.loadBookSize("$bookUrl", "$bookTitle", binding.sizeTv)
 
                     binding.titleTv.text = bookTitle
@@ -114,14 +114,30 @@ class BookDetailActivity : AppCompatActivity() {
                     binding.viewsTv.text = viewsCount
                     binding.dateTv.text = date
 
+                    checkIfBookRead()
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-
                 }
             })
     }
 
+    private fun checkIfBookRead() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId != null) {
+            val userRef = FirebaseDatabase.getInstance().getReference("Users").child(userId)
+            userRef.child("bookDetails").child(bookId).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val isBookFullyRead = snapshot.child("isBookFullyRead").value as? Boolean ?: false
+                    val readStatus = if (isBookFullyRead) "Tak" else "Nie"
+                    binding.isDoneTv.text = readStatus
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                }
+            })
+        }
+    }
 
     private fun checkIsFavorite(){
         Log.d(TAG, "checkIsFavorite: Sprawdzanie czy książka jest w ulubionych")

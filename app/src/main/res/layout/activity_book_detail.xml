@@ -89,7 +89,7 @@
                     </TableRow>
 
                     <TableRow
-                        android:layout_marginTop="10dp">
+                        android:layout_marginTop="5dp">
                         <TextView
                             android:id="@+id/dateLabelTv"
                             style="@style/TextAppearance.MaterialComponents.Caption"
@@ -109,7 +109,7 @@
                     </TableRow>
 
                     <TableRow
-                        android:layout_marginTop="10dp">
+                        android:layout_marginTop="5dp">
                         <TextView
                             android:id="@+id/sizeLabelTv"
                             style="@style/TextAppearance.MaterialComponents.Caption"
@@ -129,7 +129,7 @@
                     </TableRow>
 
                     <TableRow
-                        android:layout_marginTop="10dp">
+                        android:layout_marginTop="5dp">
                         <TextView
                             android:id="@+id/viewsLabelTv"
                             style="@style/TextAppearance.MaterialComponents.Caption"
@@ -149,7 +149,7 @@
                     </TableRow>
 
                     <TableRow
-                        android:layout_marginTop="10dp">
+                        android:layout_marginTop="5dp">
                         <TextView
                             android:id="@+id/pagesLabelTv"
                             style="@style/TextAppearance.MaterialComponents.Caption"
@@ -160,6 +160,26 @@
 
                         <TextView
                             android:id="@+id/pagesTv"
+                            android:layout_weight="1"
+                            style="@style/TextAppearance.MaterialComponents.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Niedostępne"
+                            android:layout_marginEnd="5dp"/>
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_marginTop="5dp">
+                        <TextView
+                            android:id="@+id/isDoneLabel"
+                            style="@style/TextAppearance.MaterialComponents.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Czy skończona"
+                            android:layout_marginEnd="5dp"/>
+
+                        <TextView
+                            android:id="@+id/isDoneTv"
                             android:layout_weight="1"
                             style="@style/TextAppearance.MaterialComponents.Caption"
                             android:layout_width="wrap_content"

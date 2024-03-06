@@ -154,7 +154,7 @@ class BookEditActivity : AppCompatActivity() {
     }
 
     private fun loadCategories() {
-        Log.d(TAG, "loadCategories: ładowanie kategorii")
+        Log.d(TAG, "loadCategories: Ładowanie kategorii")
 
         categoryTitleArrayList = ArrayList()
         categoryIdArrayList = ArrayList()

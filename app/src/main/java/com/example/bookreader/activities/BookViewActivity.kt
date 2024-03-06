@@ -7,6 +7,7 @@ import android.view.View
 import com.example.bookreader.utils.Constants
 import com.example.bookreader.databinding.ActivityBookViewBinding
 import com.example.bookreader.utils.MyApplication
+import com.github.barteksc.pdfviewer.PDFView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -17,6 +18,7 @@ import com.google.firebase.storage.FirebaseStorage
 class BookViewActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityBookViewBinding
+    private lateinit var pdfView: PDFView
 
     private companion object{
         const val TAG = "BOOK_VIEW_TAG"
@@ -43,7 +45,7 @@ class BookViewActivity : AppCompatActivity() {
     }
 
     private fun loadBookDetails() {
-        Log.d(TAG, "loadBookDetails: Get Book Url from db")
+        Log.d(TAG, "loadBookDetails: Pobierz adres url książki z bazy danych")
         val ref = FirebaseDatabase.getInstance().getReference("Books")
         ref.child(bookId)
             .addListenerForSingleValueEvent(object: ValueEventListener{
@@ -67,50 +69,60 @@ class BookViewActivity : AppCompatActivity() {
     }
 
     private fun loadBookFromUrl(pdfUrl: String) {
-        Log.d(TAG, "loadBookFromUrl: Get Book from firebase storage using URL")
+        Log.d(TAG, "loadBookFromUrl: Pobieranie książki z bazy danych przy pomocy adresu Url")
 
         val reference = FirebaseStorage.getInstance().getReferenceFromUrl(pdfUrl)
         reference.getBytes(Constants.MAX_BYTES_PDF)
-            .addOnSuccessListener {bytes ->
-                Log.d(TAG, "loadBookFromUrl: pdf got from url")
+            .addOnSuccessListener { bytes ->
+                Log.d(TAG, "loadBookFromUrl: Udało się pobrać adres url")
 
-                binding.bookView.fromBytes(bytes)
+                pdfView = binding.bookView
+
+                pdfView.fromBytes(bytes)
                     .swipeHorizontal(false)
-                    .onPageChange{page, pageCount ->
-                        val currentPage = page+1
-                        furthestPageRead = maxOf(furthestPageRead, page+1)
+                    .onPageChange { page, pageCount ->
+                        val currentPage = page + 1
+                        furthestPageRead = maxOf(furthestPageRead, page + 1)
                         binding.toolbarSubtitleTv.text = "$currentPage/$pageCount"
                         Log.d(TAG, "loadBookFromUrl: $currentPage/$pageCount")
 
                         isBookFullyRead = page + 1 == pageCount
-                        saveUserBookDetails(bookId, currentPage,furthestPageRead,isBookFullyRead)
+
+                        saveUserBookDetails(bookId, currentPage, furthestPageRead, isBookFullyRead)
                     }
-                    .onError{t->
+                    .onError { t ->
                         Log.d(TAG, "loadBookFromUrl: ${t.message}")
                     }
-                    .onPageError{page, t->
+                    .onPageError { page, t ->
                         Log.d(TAG, "loadBookFromUrl: ${t.message}")
                     }
                     .load()
                 binding.progressBar.visibility = View.GONE
             }
-            .addOnFailureListener {e->
-                Log.d(TAG, "loadBookFromUrl: Failed to get url due to ${e.message}")
+            .addOnFailureListener { e ->
+                Log.d(TAG, "loadBookFromUrl: Nie udało się pobrać adresu url z powodu ${e.message}")
                 binding.progressBar.visibility = View.GONE
             }
     }
 
 
-    // Dodaj tę funkcję do swojej klasy BookViewActivity
-    private fun saveUserBookDetails(bookId: String, currentPage: Int, furthestPageRead: Int, isBookFullyRead: Boolean) {
+    private fun saveUserBookDetails(
+        bookId: String,
+        currentPage: Int,
+        furthestPageRead: Int,
+        isBookFullyRead: Boolean
+    ) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
-        if (userId != null) {
+        val pdfView = this.pdfView
+
+        if (userId != null && pdfView != null) {
             val databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId)
             val newFurthestPageRead = if (currentPage > furthestPageRead) currentPage else furthestPageRead
+            val isFullyRead = if (currentPage == newFurthestPageRead && currentPage == pdfView.pageCount) true else isBookFullyRead
             val bookDetailsMap = mapOf(
                 "currentPage" to currentPage,
                 "furthestPageRead" to newFurthestPageRead,
-                "isBookFullyRead" to isBookFullyRead
+                "isBookFullyRead" to isFullyRead
             )
             databaseReference.child("bookDetails").child(bookId).setValue(bookDetailsMap)
                 .addOnSuccessListener {
@@ -120,7 +132,7 @@ class BookViewActivity : AppCompatActivity() {
                     Log.d(TAG, "saveUserBookDetails: Failed to save book details: ${e.message}")
                 }
         } else {
-            Log.d(TAG, "saveUserBookDetails: User not authenticated.")
+            Log.d(TAG, "saveUserBookDetails: User not authenticated or pdfView not initialized.")
         }
     }
 }

@@ -60,7 +60,7 @@ class AddBook : AppCompatActivity() {
     private var description = ""
     private var category = ""
     private fun validateData() {
-        Log.d(TAG, "validateData: validating data")
+        Log.d(TAG, "validateData: Walidacja danych")
 
         title = binding.titleEt.text.toString().trim()
         description = binding.descriptionEt.text.toString().trim()
@@ -84,7 +84,7 @@ class AddBook : AppCompatActivity() {
     }
 
     private fun uploadPdfToStorage() {
-        Log.d(TAG, "uploadPdfToStorage: uploading to storage... ")
+        Log.d(TAG, "uploadPdfToStorage: Dodawanie do schowka ")
 
         progressDialog.setMessage("Dodawanie książki...")
         progressDialog.show()
@@ -106,7 +106,7 @@ class AddBook : AppCompatActivity() {
 
             }
             .addOnFailureListener{e->
-                Log.d(TAG, "uploadPdfToStorage: nie udało się załadować na serwer z powodu błędu ${e.message}")
+                Log.d(TAG, "uploadPdfToStorage: Nie udało się załadować na serwer z powodu błędu ${e.message}")
                 progressDialog.dismiss()
                 Toast.makeText(this,"Nie udało się załadować z powodu błędu ${e.message} ",Toast.LENGTH_SHORT).show()
             }
@@ -134,13 +134,13 @@ class AddBook : AppCompatActivity() {
         ref.child("$timestamp")
             .setValue(hashMap)
             .addOnSuccessListener {
-                Log.d(TAG, "uploadPdfInfoToDb: dodane do bazy danych")
+                Log.d(TAG, "uploadPdfInfoToDb: Dodane do bazy danych")
                 progressDialog.dismiss()
                 Toast.makeText(this,"Załadowane do bazy danych",Toast.LENGTH_SHORT).show()
                 pdfUri = null
             }
             .addOnFailureListener{e->
-                Log.d(TAG, "uploadPdfInfoToDb: nie udało się załadować na serwer z powodu błędu ${e.message}")
+                Log.d(TAG, "uploadPdfInfoToDb: Nie udało się załadować na serwer z powodu błędu ${e.message}")
                 progressDialog.dismiss()
                 Toast.makeText(this,"Nie udało się załadować z powodu błędu ${e.message} ",Toast.LENGTH_SHORT).show()
             }
@@ -171,7 +171,7 @@ class AddBook : AppCompatActivity() {
     private var selectedCategoryId = ""
     private var selectedCategoryTitle = ""
     private fun categoryPickDialog(){
-        Log.d(TAG, "categoryPickDialog: Showing pdf category pick dialog")
+        Log.d(TAG, "categoryPickDialog: Napis wyboru kategorii")
 
         val categoriesArray = arrayOfNulls<String>(categoryArrayList.size)
         for (i in categoryArrayList.indices){
@@ -193,7 +193,7 @@ class AddBook : AppCompatActivity() {
     }
 
     private fun pdfPickIntent(){
-        Log.d(TAG, "pdfPickIntent: starting pdf pick intent")
+        Log.d(TAG, "pdfPickIntent: Rozpoczynam wybierać pliki pdf")
 
         val intent = Intent()
         intent.type = "application/pdf"
