@@ -26,7 +26,7 @@ class BookViewActivity : AppCompatActivity() {
 
 
 
-    private var currentPage: Int = 0
+
     private var furthestPageRead = 0
     private var isBookFullyRead = false
 
@@ -51,13 +51,14 @@ class BookViewActivity : AppCompatActivity() {
             .addListenerForSingleValueEvent(object: ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val pdfUrl = snapshot.child("url").value
+                    val categoryId = snapshot.child("categoryId").value.toString()
                     Log.d(TAG, "onDataChange: PDF_URL: $pdfUrl")
 
-                    loadBookFromUrl("$pdfUrl")
+                    loadBookFromUrl("$pdfUrl", categoryId)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-
+                    Log.d(TAG, "loadBookDetails: Błąd w pobieraniu danych: ${error.message}")
                 }
             })
     }
@@ -68,7 +69,7 @@ class BookViewActivity : AppCompatActivity() {
         MyApplication.isBookFullyRead = isBookFullyRead
     }
 
-    private fun loadBookFromUrl(pdfUrl: String) {
+    private fun loadBookFromUrl(pdfUrl: String, categoryId: String) { // Dodany numer kategorii
         Log.d(TAG, "loadBookFromUrl: Pobieranie książki z bazy danych przy pomocy adresu Url")
 
         val reference = FirebaseStorage.getInstance().getReferenceFromUrl(pdfUrl)
@@ -88,7 +89,7 @@ class BookViewActivity : AppCompatActivity() {
 
                         isBookFullyRead = page + 1 == pageCount
 
-                        saveUserBookDetails(bookId, currentPage, furthestPageRead, isBookFullyRead)
+                        saveUserBookDetails(bookId, categoryId, currentPage, furthestPageRead, isBookFullyRead) // Dodany numer kategorii
                     }
                     .onError { t ->
                         Log.d(TAG, "loadBookFromUrl: ${t.message}")
@@ -108,6 +109,7 @@ class BookViewActivity : AppCompatActivity() {
 
     private fun saveUserBookDetails(
         bookId: String,
+        categoryId: String,
         currentPage: Int,
         furthestPageRead: Int,
         isBookFullyRead: Boolean
@@ -122,7 +124,8 @@ class BookViewActivity : AppCompatActivity() {
             val bookDetailsMap = mapOf(
                 "currentPage" to currentPage,
                 "furthestPageRead" to newFurthestPageRead,
-                "isBookFullyRead" to isFullyRead
+                "isBookFullyRead" to isFullyRead,
+                "categoryId" to categoryId
             )
             databaseReference.child("bookDetails").child(bookId).setValue(bookDetailsMap)
                 .addOnSuccessListener {

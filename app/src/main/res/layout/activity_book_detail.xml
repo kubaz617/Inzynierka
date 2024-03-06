@@ -175,7 +175,7 @@
                             style="@style/TextAppearance.MaterialComponents.Caption"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Czy skończona"
+                            android:text="Skończona"
                             android:layout_marginEnd="5dp"/>
 
                         <TextView

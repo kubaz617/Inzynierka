@@ -128,7 +128,6 @@ class AddBook : AppCompatActivity() {
         hashMap["timestamp"] = timestamp
         hashMap["viewsCount"] = 0
         hashMap["downloadCount"] = 0
-        hashMap["isDone"] = false
 
         val ref = FirebaseDatabase.getInstance().getReference("Books")
         ref.child("$timestamp")
