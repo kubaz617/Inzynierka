@@ -25,10 +25,14 @@ class MyApplication:Application() {
     }
 
     companion object{
+
+        var furthestPageRead: Int = 0
+        var isBookFullyRead: Boolean = false
         fun formatTimeStamp(timestamp: Long) :String{
             val cal = Calendar.getInstance(Locale.ENGLISH)
             cal.timeInMillis = timestamp
             return DateFormat.format("dd/MM/yyyy",cal).toString()
+
         }
 
 
@@ -103,6 +107,7 @@ class MyApplication:Application() {
 
                 }
         }
+
 
 
         fun loadCategory(categoryId: String, categoryTv: TextView){
