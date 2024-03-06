@@ -59,15 +59,20 @@ class AddBook : AppCompatActivity() {
     private var title = ""
     private var description = ""
     private var category = ""
+    private var author = ""
     private fun validateData() {
         Log.d(TAG, "validateData: Walidacja danych")
 
         title = binding.titleEt.text.toString().trim()
+        author = binding.authorEt.text.toString().trim()
         description = binding.descriptionEt.text.toString().trim()
         category = binding.categoryTv.text.toString().trim()
 
         if (title.isEmpty()){
             Toast.makeText(this,"Wprowadź tytuł !", Toast.LENGTH_SHORT).show()
+        }
+        else if (author.isEmpty()){
+            Toast.makeText(this, "Wprowadź autora !", Toast.LENGTH_SHORT).show()
         }
         else if (description.isEmpty()){
             Toast.makeText(this, "Wprowadź opis !", Toast.LENGTH_SHORT).show()
@@ -122,12 +127,12 @@ class AddBook : AppCompatActivity() {
         hashMap["uid"] = "$uid"
         hashMap["id"] = "$timestamp"
         hashMap["title"] = "$title"
+        hashMap["author"] = "$author"
         hashMap["description"] = "$description"
         hashMap["categoryId"] = "$selectedCategoryId"
         hashMap["url"] = "$uploadedPdfUrl"
         hashMap["timestamp"] = timestamp
         hashMap["viewsCount"] = 0
-        hashMap["downloadCount"] = 0
 
         val ref = FirebaseDatabase.getInstance().getReference("Books")
         ref.child("$timestamp")

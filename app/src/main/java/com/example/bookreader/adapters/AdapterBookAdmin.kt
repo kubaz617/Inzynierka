@@ -48,6 +48,7 @@ class AdapterBookAdmin :RecyclerView.Adapter<AdapterBookAdmin.HolderBookAdmin>, 
         val bookId = model.id
         val categoryId = model.categoryId
         val title = model.title
+        val author = model.author
         val description = model.description
         val bookUrl = model.url
         val timestamp = model.timestamp
@@ -56,6 +57,7 @@ class AdapterBookAdmin :RecyclerView.Adapter<AdapterBookAdmin.HolderBookAdmin>, 
         holder.titleTv.text = title
         holder.descriptionTv.text = description
         holder.dateTv.text = formattedDate
+        holder.author.text = author
 
         MyApplication.loadCategory(categoryId, holder.categoryTv)
 
@@ -67,7 +69,6 @@ class AdapterBookAdmin :RecyclerView.Adapter<AdapterBookAdmin.HolderBookAdmin>, 
             null
         )
 
-        MyApplication.loadBookSize(bookUrl, title, holder.sizeTv)
 
         holder.moreBtn.setOnClickListener{
             moreOptionsDialog(model, holder)
@@ -114,8 +115,8 @@ class AdapterBookAdmin :RecyclerView.Adapter<AdapterBookAdmin.HolderBookAdmin>, 
         val titleTv = binding.titleTv
         val descriptionTv = binding.descriptionTv
         val categoryTv = binding.categoryTv
-        val sizeTv = binding.sizeTv
         val dateTv = binding.dateTv
+        val author = binding.authorTv
         val moreBtn = binding.moreBtn
     }
 }

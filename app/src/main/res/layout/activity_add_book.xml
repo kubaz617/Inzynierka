@@ -67,7 +67,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:layout_marginTop="5dp"
-        android:layout_below="@id/Book_title"
+        android:layout_below="@id/categoryTv"
         app:hintEnabled="false">
 
         <EditText
@@ -80,6 +80,30 @@
             android:background="@color/grey"
             android:inputType="textMultiLine|textCapSentences"
             android:drawablePadding="10dp"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/Book_author"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/Book_title"
+        app:hintEnabled="false">
+
+        <EditText
+            android:id="@+id/authorEt"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:padding="10dp"
+            android:textSize="16sp"
+            android:hint="Autor książki"
+            android:background="@color/grey"
+            android:inputType="textMultiLine|textCapSentences"
+            android:drawablePadding="10dp"/>
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -90,7 +114,7 @@
         android:layout_marginEnd="30dp"
         android:layout_marginTop="5dp"
         android:background="@color/grey"
-        android:layout_below="@id/Book_description"
+        android:layout_below="@id/Book_author"
         android:drawableEnd="@drawable/ic_drop_down"
         android:drawablePadding="10dp"
         android:padding="10dp"
@@ -104,7 +128,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:layout_marginTop="10dp"
-        android:layout_below="@id/categoryTv"
+        android:layout_below="@id/Book_description"
         android:text="Prześlij"
         android:textColor="@color/black"
         android:background="@color/cyan"/>

@@ -111,15 +111,15 @@
                     <TableRow
                         android:layout_marginTop="5dp">
                         <TextView
-                            android:id="@+id/sizeLabelTv"
+                            android:id="@+id/authorLabelTv"
                             style="@style/TextAppearance.MaterialComponents.Caption"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Rozmiar"
+                            android:text="Autor"
                             android:layout_marginEnd="5dp"/>
 
                         <TextView
-                            android:id="@+id/sizeTv"
+                            android:id="@+id/authorTv"
                             android:layout_weight="1"
                             style="@style/TextAppearance.MaterialComponents.Caption"
                             android:layout_width="wrap_content"

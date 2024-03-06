@@ -65,13 +65,13 @@
             android:text="Kategoria"/>
 
         <TextView
-            android:id="@+id/sizeTv"
+            android:id="@+id/authorTv"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_toEndOf="@+id/bookRl"
             android:maxLines="1"
-            android:text="13MB"/>
+            android:text="Autor"/>
 
         <TextView
             android:id="@+id/dateTv"
@@ -80,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_toStartOf="@+id/categoryTv"
-            android:layout_toEndOf="@+id/sizeTv"
+            android:layout_toEndOf="@+id/authorTv"
             android:maxLines="1"
             android:text="dd/MM/rrrr"
             android:textAlignment="center"/>

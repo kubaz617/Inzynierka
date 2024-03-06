@@ -47,6 +47,7 @@ class AdapterBookUser : RecyclerView.Adapter<AdapterBookUser.HolderBookUser>, Fi
         val bookId = model.id
         val categoryId = model.categoryId
         val title = model.title
+        val author = model.author
         val description = model.description
         val bookUrl = model.url
         val timestamp = model.timestamp
@@ -55,6 +56,7 @@ class AdapterBookUser : RecyclerView.Adapter<AdapterBookUser.HolderBookUser>, Fi
         holder.titleTv.text = title
         holder.descriptionTv.text = description
         holder.dateTv.text = date
+        holder.authorTv.text = author
 
         MyApplication.loadCategory(categoryId, holder.categoryTv)
 
@@ -66,7 +68,7 @@ class AdapterBookUser : RecyclerView.Adapter<AdapterBookUser.HolderBookUser>, Fi
             null
         )
 
-        MyApplication.loadBookSize(bookUrl, title, holder.sizeTv)
+
 
         holder.itemView.setOnClickListener{
             val intent = Intent(context, BookDetailActivity::class.java)
@@ -90,7 +92,7 @@ class AdapterBookUser : RecyclerView.Adapter<AdapterBookUser.HolderBookUser>, Fi
         var titleTv = binding.titleTv
         var descriptionTv = binding.descriptionTv
         var categoryTv = binding.categoryTv
-        var sizeTv = binding.sizeTv
+        var authorTv = binding.authorTv
         var dateTv = binding.dateTv
 
     }

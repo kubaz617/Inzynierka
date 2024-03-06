@@ -36,34 +36,6 @@ class MyApplication:Application() {
         }
 
 
-        fun loadBookSize(bookUrl: String, bookTitle: String, sizeTv: TextView ){
-            val TAG = "PDF_SIZE_TAG"
-
-            val ref = FirebaseStorage.getInstance().getReferenceFromUrl(bookUrl)
-            ref.metadata
-                .addOnSuccessListener { storageMetadata ->
-                    Log.d(TAG, "loadBookSize: Metadane zostały pobrane")
-                    val bytes = storageMetadata.sizeBytes.toDouble()
-                    Log.d(TAG, "loadBookSize: Rozmiar w bajtach $bytes")
-
-                    val kb = bytes/1024
-                    val mb = kb/1024
-                    if (mb>=1){
-                        sizeTv.text = "${String.format("%.2f", mb)}MB"
-                    }
-                    else if (kb>=1){
-                        sizeTv.text = "${String.format("%.2f", kb)}KB"
-                    }
-                    else{
-                        sizeTv.text = "${String.format("%.2f", bytes)}bajtów"
-                    }
-                }
-                .addOnFailureListener{e->
-                    Log.d(TAG, "loadBookSize: Błąd podczas pobierania metadanych ${e.message}")
-
-                }
-        }
-
         fun loadBookFromUrlSinglePage(
             bookUrl: String,
             bookTitle: String,

@@ -88,7 +88,7 @@ class BookDetailActivity : AppCompatActivity() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val categoryId = "${snapshot.child("categoryId").value}"
                     val description = "${snapshot.child("description").value}"
-                    val downloadCount = "${snapshot.child("downloadCount").value}"
+                    val author = "${snapshot.child("author").value}"
                     val timestamp = "${snapshot.child("timestamp").value}"
                     bookTitle = "${snapshot.child("title").value}"
                     val uid = "${snapshot.child("uid").value}"
@@ -107,12 +107,12 @@ class BookDetailActivity : AppCompatActivity() {
                         binding.pagesTv
                     )
 
-                    MyApplication.loadBookSize("$bookUrl", "$bookTitle", binding.sizeTv)
 
                     binding.titleTv.text = bookTitle
                     binding.descriptionTv.text = description
                     binding.viewsTv.text = viewsCount
                     binding.dateTv.text = date
+                    binding.authorTv.text = author
 
                     checkIfBookRead()
                 }
