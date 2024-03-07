@@ -26,6 +26,7 @@ class AdapterBookUser : RecyclerView.Adapter<AdapterBookUser.HolderBookUser>, Fi
     private lateinit var binding: RowBookUserBinding
 
     private var filter: FilterBookUser? = null
+    private var randomBook: ModelBook? = null
 
     constructor(context: Context, bookArrayList: ArrayList<ModelBook>) : super() {
         this.context = context
@@ -95,5 +96,10 @@ class AdapterBookUser : RecyclerView.Adapter<AdapterBookUser.HolderBookUser>, Fi
         var authorTv = binding.authorTv
         var dateTv = binding.dateTv
 
+    }
+
+    fun setRandomBook(randomBook: ModelBook?) {
+        this.randomBook = randomBook
+        notifyDataSetChanged()
     }
 }

@@ -1,9 +1,13 @@
 package com.example.bookreader.activities
 
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageButton
+import android.widget.Toast
+import com.example.bookreader.R
 import com.example.bookreader.utils.Constants
 import com.example.bookreader.databinding.ActivityBookViewBinding
 import com.example.bookreader.utils.MyApplication
@@ -19,17 +23,19 @@ class BookViewActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityBookViewBinding
     private lateinit var pdfView: PDFView
+    private lateinit var sharedPreferences: SharedPreferences
+
 
     private companion object{
         const val TAG = "BOOK_VIEW_TAG"
+        const val PREF_NAME = "BookReaderPrefs"
+        const val KEY_BOOKMARK_PAGE = "BookmarkPage"
     }
 
 
-
-
+    private var bookmarkedPage = 0
     private var furthestPageRead = 0
     private var isBookFullyRead = false
-
 
     var bookId = ""
 
@@ -37,11 +43,35 @@ class BookViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityBookViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE)
 
         bookId = intent.getStringExtra("bookId")!!
         furthestPageRead = MyApplication.furthestPageRead
         isBookFullyRead = MyApplication.isBookFullyRead
+        pdfView = binding.bookView
         loadBookDetails()
+
+        val LabelButton: ImageButton = findViewById(R.id.Label)
+        val AddLabel: ImageButton = findViewById(R.id.addLabel)
+
+
+        AddLabel.setOnClickListener {
+            val currentPage = pdfView.currentPage
+            bookmarkedPage = currentPage
+            saveBookmarkPage(bookId, bookmarkedPage)
+            Toast.makeText(this, "Zakładka dodana na stronie ${bookmarkedPage + 1}", Toast.LENGTH_SHORT).show()
+        }
+
+        LabelButton.setOnClickListener {
+            val bookmarkPage = getBookmarkPage(bookId)
+            if (bookmarkPage != -1) {
+                pdfView.jumpTo(bookmarkPage)
+                Toast.makeText(this, "Powrócono do zakładki na stronie ${bookmarkPage + 1}", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Brak zapisanych zakładek", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     }
 
     private fun loadBookDetails() {
@@ -106,6 +136,18 @@ class BookViewActivity : AppCompatActivity() {
             }
     }
 
+
+    private fun saveBookmarkPage(bookId: String, pageNumber: Int) {
+        val key = "$KEY_BOOKMARK_PAGE-$bookId"
+        val editor = sharedPreferences.edit()
+        editor.putInt(key, pageNumber)
+        editor.apply()
+    }
+
+    private fun getBookmarkPage(bookId: String): Int {
+        val key = "$KEY_BOOKMARK_PAGE-$bookId"
+        return sharedPreferences.getInt(key, -1)
+    }
 
     private fun saveUserBookDetails(
         bookId: String,

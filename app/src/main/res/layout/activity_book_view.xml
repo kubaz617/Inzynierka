@@ -25,7 +25,30 @@
         android:id="@+id/bookView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbarRl"/>
+        android:layout_below="@+id/toolbarRl" />
+
+    <ImageButton
+        android:id="@+id/addLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Click me"
+        android:src="@drawable/ic_add_label"
+        android:background="@color/transparent"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:rotation="90"/>
+
+    <ImageButton
+        android:id="@+id/Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Click me"
+        android:layout_toEndOf="@+id/addLabel"
+        android:src="@drawable/ic_label"
+        android:background="@color/transparent"
+        android:paddingLeft="10dp"
+        android:rotation="90"/>
 
     <ProgressBar
         android:id="@+id/progressBar"
