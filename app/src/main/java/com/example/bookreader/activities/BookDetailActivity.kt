@@ -5,6 +5,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.RatingBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.bookreader.utils.MyApplication
@@ -31,6 +33,7 @@ class BookDetailActivity : AppCompatActivity() {
     private var bookTitle = ""
     private var bookUrl = ""
 
+    private lateinit var ratingBar: RatingBar
     private lateinit var progressDialog: ProgressDialog
 
     private var isInMyFavorite = false
@@ -47,11 +50,14 @@ class BookDetailActivity : AppCompatActivity() {
         progressDialog.setTitle("Prosze czekać")
         progressDialog.setCanceledOnTouchOutside(false)
 
+        ratingBar = binding.ratingBtn
         MyApplication.incrementBookViewCount(bookId)
 
         loadBookDetails()
 
         checkIsFavorite()
+
+        displayAverageRating(bookId)
 
 
         binding.readBookBtn.setOnClickListener{
@@ -68,16 +74,68 @@ class BookDetailActivity : AppCompatActivity() {
                 addToFavorite()
             }
         }
+
+
+
+        ratingBar.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener { _, rating, _ ->
+            addOrUpdateBookRating(bookId, rating)
+        }
+
+        if (savedInstanceState != null) {
+            val savedRating = savedInstanceState.getFloat("rating", 0.0f)
+            ratingBar.rating = savedRating
+        }
+
     }
 
-    private val requestStoragePermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()){isGranted:Boolean ->
-        if (isGranted){
-            Log.d(TAG, "onCreate: Dostęp do schowka przyznany")
-        }
-        else{
-            Log.d(TAG, "onCreate: Dostęp do schowka odrzucony")
-            Toast.makeText(this, "Dostęp do schowka odrzucony", Toast.LENGTH_SHORT).show()
-        }
+    private fun addOrUpdateBookRating(bookId: String, newRating: Float) {
+        val ratingRef = FirebaseDatabase.getInstance().getReference("Books").child(bookId).child("rating")
+        val currentUserUid = firebaseAuth.currentUser!!.uid
+
+        ratingRef.child("allRatings").child(currentUserUid).setValue(newRating)
+            .addOnSuccessListener {
+                updateAverageRating(bookId)
+            }
+    }
+
+    private fun updateAverageRating(bookId: String) {
+        val ratingRef = FirebaseDatabase.getInstance().getReference("Books").child(bookId).child("rating")
+        ratingRef.child("allRatings").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var totalRating = 0.0
+                var totalUsers = 0
+
+                snapshot.children.forEach { ratingSnapshot ->
+                    val ratingValue = ratingSnapshot.getValue(Double::class.java)
+                    ratingValue?.let {
+                        totalRating += it
+                        totalUsers++
+                    }
+                }
+
+                val averageRating = if (totalUsers > 0) totalRating / totalUsers else 0.0
+
+                ratingRef.child("averageRating").setValue(averageRating)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(TAG, "Błąd podczas obliczania średniej oceny: ${error.message}")
+            }
+        })
+    }
+
+    private fun displayAverageRating(bookId: String) {
+        val ratingRef = FirebaseDatabase.getInstance().getReference("Books").child(bookId).child("rating")
+        ratingRef.child("averageRating").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val averageRating = snapshot.getValue(Double::class.java) ?: 0.0
+                binding.averageRatingTextView.text = String.format("Średnia ocena: %.1f", averageRating)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(TAG, "Błąd podczas pobierania średniej oceny: ${error.message}")
+            }
+        })
     }
 
 
@@ -107,7 +165,6 @@ class BookDetailActivity : AppCompatActivity() {
                         binding.pagesTv
                     )
 
-
                     binding.titleTv.text = bookTitle
                     binding.descriptionTv.text = description
                     binding.viewsTv.text = viewsCount
@@ -121,6 +178,7 @@ class BookDetailActivity : AppCompatActivity() {
                 }
             })
     }
+
 
     private fun checkIfBookRead() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
@@ -165,7 +223,6 @@ class BookDetailActivity : AppCompatActivity() {
             })
     }
 
-
     private fun addToFavorite(){
         Log.d(TAG, "addToFavorite: Dodawanie do ulubionych")
         val timestamp = System.currentTimeMillis()
@@ -201,6 +258,4 @@ class BookDetailActivity : AppCompatActivity() {
                 Toast.makeText(this, "Nie udało się usunąć z ulubionych z powodu${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
-
-
 }
