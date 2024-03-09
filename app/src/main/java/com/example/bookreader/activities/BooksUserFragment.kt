@@ -23,9 +23,9 @@ class BooksUserFragment : Fragment {
     private lateinit var binding: FragmentBooksUserBinding
 
     private lateinit var firebaseAuth: FirebaseAuth
-    public companion object{
+     companion object{
         private const val TAG = "BOOKS_USER_TAG"
-        public fun newInstance(categoryId: String, category: String, uid: String): BooksUserFragment {
+         fun newInstance(categoryId: String, category: String, uid: String): BooksUserFragment {
             val fragment = BooksUserFragment()
 
             val args = Bundle()

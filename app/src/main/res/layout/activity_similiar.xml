@@ -5,10 +5,30 @@
     android:padding="16dp"
     tools:context=".activities.SimiliarActivity">
 
+    <ImageView
+        android:id="@+id/user_sign"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_user_sign">
+    </ImageView>
+
+    <TextView
+        android:id="@+id/titleTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="abc@exmaple.com"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:layout_below="@id/user_sign">
+    </TextView>
+
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/titleTv"
         android:textSize="24sp"
         android:textStyle="bold"
         android:visibility="gone"
@@ -24,14 +44,28 @@
         android:visibility="gone"
         android:layout_below="@id/titleTextView"/>
 
-    <ImageView
-        android:id="@+id/recommendedBookCoverImageView"
-        android:layout_width="match_parent"
+
+    <TextView
+        android:id="@+id/noBooksTextAbv"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true"
+        android:textSize="20sp"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/black"
+        android:gravity="center"
         android:visibility="gone"
-        android:layout_marginTop="16dp"/>
+        android:layout_above="@+id/noBooksImageView"/>
+
+    <TextView
+        android:id="@+id/noBooksTextBlw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_below="@+id/noBooksImageView"/>
 
     <TextView
         android:id="@+id/recommendedBookAuthorTextView"
@@ -43,6 +77,14 @@
         android:visibility="gone"
         android:layout_below="@id/recommendedBookTitleTextView"/>
 
+    <ImageView
+        android:id="@+id/noBooksImageView"
+        android:layout_width="265dp"
+        android:layout_height="245dp"
+        android:layout_gravity="center"
+        android:src="@drawable/no_book"
+        android:visibility="gone"
+        android:layout_centerInParent="true"/>
 
 
 </RelativeLayout>

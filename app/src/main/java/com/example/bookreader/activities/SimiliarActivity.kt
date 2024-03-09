@@ -1,8 +1,10 @@
 package com.example.bookreader.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.bookreader.R
@@ -12,10 +14,14 @@ import com.google.firebase.database.*
 
 class SimiliarActivity : AppCompatActivity() {
 
+
     private lateinit var recommendedBookTitleTextView: TextView
     private lateinit var recommendedBookAuthorTextView: TextView
-
+    private lateinit var no_books: ImageView
     private lateinit var suggestedCategoryTextView: TextView
+    private lateinit var noBooksTextViewAbv: TextView
+    private lateinit var noBooksTextViewBlw: TextView
+    private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +30,13 @@ class SimiliarActivity : AppCompatActivity() {
         suggestedCategoryTextView = findViewById(R.id.titleTextView)
         recommendedBookTitleTextView = findViewById(R.id.recommendedBookTitleTextView)
         recommendedBookAuthorTextView = findViewById(R.id.recommendedBookAuthorTextView)
+        no_books = findViewById(R.id.noBooksImageView)
+        noBooksTextViewAbv = findViewById(R.id.noBooksTextAbv)
+        noBooksTextViewBlw = findViewById(R.id.noBooksTextBlw)
+
+        suggestedCategoryTextView.textSize = 20f
+        recommendedBookTitleTextView.textSize = 20f
+        recommendedBookAuthorTextView.textSize = 20f
 
         val userId = FirebaseAuth.getInstance().currentUser?.uid
 
@@ -79,15 +92,37 @@ class SimiliarActivity : AppCompatActivity() {
             }
         }
 
-        maxCategory?.let { categoryId ->
-            val categoryName = categoriesSnapshot.child(categoryId).child("category").getValue(String::class.java)
-            categoryName?.let {
-                suggestedCategoryTextView.text = "Najczęściej czytana kategoria: $it"
-                recommendedBookFromCategory(categoryId, uid)
+        if (maxCategory != null) {
+            val maxCategories = categoryCountMap.filterValues { it == maxCount }.keys
+            if (maxCategories.size == 1) {
+                val categoryName = categoriesSnapshot.child(maxCategory).child("category").getValue(String::class.java)
+                categoryName?.let {
+                    suggestedCategoryTextView.text = "Najczęściej czytana kategoria: $it"
+                    recommendedBookFromCategory(maxCategory, uid)
+                    suggestedCategoryTextView.visibility = View.VISIBLE
+                }
+            } else {
+                suggestedCategoryTextView.text = "Masz dwie lub więcej ulubionych kategorii, przeczytaj z jednej z nich coś jeszcze a coś dla ciebie wybierzemy"
                 suggestedCategoryTextView.visibility = View.VISIBLE
             }
+        } else {
+            no_books.visibility = View.VISIBLE
+            noBooksTextViewAbv.text = "Ups, nic tutaj nie ma."
+            noBooksTextViewBlw.text = "Zacznij czytać a coś ci zaproponujemy"
+            noBooksTextViewAbv.visibility = View.VISIBLE
+            noBooksTextViewBlw.visibility = View.VISIBLE
+
         }
     }
+
+    /*
+    private fun checkUser() {
+        val firebaseUser = firebaseAuth.currentUser
+            val email = firebaseUser.email
+            binding.titleTv.text = email
+    }
+    */
+
 
     private fun recommendedBookFromCategory(categoryId: String, uid: String) {
         val booksRef = FirebaseDatabase.getInstance().getReference("Books")
@@ -114,10 +149,10 @@ class SimiliarActivity : AppCompatActivity() {
                                 }
 
                                 if (unreadBooks.isNotEmpty()) {
-                                    val randomBooks = unreadBooks.shuffled().take(3)
+                                    val randomBooks = unreadBooks.shuffled().take(5)
 
-                                    val recommendedBooksTitlesAndAuthors = randomBooks.joinToString("\n\n") {
-                                        "${it.title}\n${it.author}"
+                                    val recommendedBooksTitlesAndAuthors = randomBooks.joinToString("\n\n") { book ->
+                                        "Tytuł: ${book.title}\nAutor: ${book.author}"
                                     }
 
                                     recommendedBookTitleTextView.text = recommendedBooksTitlesAndAuthors
@@ -140,7 +175,5 @@ class SimiliarActivity : AppCompatActivity() {
             }
         })
     }
-
-
 
 }
