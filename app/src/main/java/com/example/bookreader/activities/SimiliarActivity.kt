@@ -5,34 +5,25 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bookreader.R
-import com.example.bookreader.adapters.AdapterBookUser
-import com.example.bookreader.databinding.ActivitySimiliarBinding
 import com.example.bookreader.models.ModelBook
-import com.example.bookreader.utils.MyApplication
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
 class SimiliarActivity : AppCompatActivity() {
 
-    private lateinit var adapter: AdapterBookUser
-    private lateinit var bookList: ArrayList<ModelBook>
-    private lateinit var binding: ActivitySimiliarBinding
+    private lateinit var recommendedBookTitleTextView: TextView
+    private lateinit var recommendedBookAuthorTextView: TextView
 
     private lateinit var suggestedCategoryTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySimiliarBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_similiar)
 
         suggestedCategoryTextView = findViewById(R.id.titleTextView)
-
-        bookList = ArrayList()
-        adapter = AdapterBookUser(this, bookList)
-        binding.booksRecyclerView.adapter = adapter
-        binding.booksRecyclerView.layoutManager = LinearLayoutManager(this)
+        recommendedBookTitleTextView = findViewById(R.id.recommendedBookTitleTextView)
+        recommendedBookAuthorTextView = findViewById(R.id.recommendedBookAuthorTextView)
 
         val userId = FirebaseAuth.getInstance().currentUser?.uid
 
@@ -46,23 +37,23 @@ class SimiliarActivity : AppCompatActivity() {
                     categoriesRef.addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(categoriesSnapshot: DataSnapshot) {
                             Log.d("SimiliarActivity", "Categories snapshot: $categoriesSnapshot")
-                            findMostReadCategory(userBookDetailsSnapshot, categoriesSnapshot)
+                            findMostReadCategory(userBookDetailsSnapshot, categoriesSnapshot, uid)
                         }
 
                         override fun onCancelled(error: DatabaseError) {
-                            Log.e("SimiliarActivity", "Failed to read categories: $error")
+                            Log.e("SimiliarActivity", "Nie udało się odczytać kategori: $error")
                         }
                     })
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    Log.e("SimiliarActivity", "Failed to read user book details: $error")
+                    Log.e("SimiliarActivity", "Nie udało się pobrać informacji o użytkowniku: $error")
                 }
             })
         }
     }
 
-    private fun findMostReadCategory(userBookDetailsSnapshot: DataSnapshot, categoriesSnapshot: DataSnapshot) {
+    private fun findMostReadCategory(userBookDetailsSnapshot: DataSnapshot, categoriesSnapshot: DataSnapshot, uid: String) {
         val categoryCountMap = mutableMapOf<String, Int>()
 
         for (userBookDetailSnapshot in userBookDetailsSnapshot.children) {
@@ -92,45 +83,64 @@ class SimiliarActivity : AppCompatActivity() {
             val categoryName = categoriesSnapshot.child(categoryId).child("category").getValue(String::class.java)
             categoryName?.let {
                 suggestedCategoryTextView.text = "Najczęściej czytana kategoria: $it"
-                recommendedBookFromCategory(categoryId)
+                recommendedBookFromCategory(categoryId, uid)
                 suggestedCategoryTextView.visibility = View.VISIBLE
             }
         }
     }
 
-    private fun recommendedBookFromCategory(categoryId: String) {
+    private fun recommendedBookFromCategory(categoryId: String, uid: String) {
         val booksRef = FirebaseDatabase.getInstance().getReference("Books")
 
         booksRef.orderByChild("categoryId").equalTo(categoryId).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val booksInCategory = mutableListOf<ModelBook>()
+                val unreadBooks = mutableListOf<ModelBook>()
 
                 for (bookSnapshot in dataSnapshot.children) {
                     val book = bookSnapshot.getValue(ModelBook::class.java)
                     book?.let {
-                        booksInCategory.add(it)
-                    }
-                }
+                        val bookDetailsRef = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("bookDetails").child(book.id)
+                        bookDetailsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(bookDetailsSnapshot: DataSnapshot) {
+                                val isBookFullyReadSnapshot = bookDetailsSnapshot.child("isBookFullyRead")
+                                val isBookFullyRead = if (isBookFullyReadSnapshot.exists()) {
+                                    isBookFullyReadSnapshot.getValue(Boolean::class.java)
+                                } else {
+                                    null
+                                }
 
-                if (booksInCategory.isNotEmpty()) {
-                    val randomBook = booksInCategory.random()
-                    Log.d("SimiliarActivity", "Recommended book: ${randomBook.title}")
-                    Log.d("SimiliarActivity", "Recommended book: ${randomBook.categoryId}")
-                    Log.d("SimiliarActivity", "Recommended book: ${randomBook.author}")
-                    Log.d("SimiliarActivity", "Recommended book: ${randomBook.id}")
-                    Log.d("SimiliarActivity", "Recommended book: ${randomBook.uid}")
-                    Log.d("SimiliarActivity", "Recommended book: ${randomBook.url}")
-                    Log.d("SimiliarActivity", "Recommended book: ${randomBook.timestamp}")
-                    Log.d("SimiliarActivity", "Recommended book: ${randomBook.viewsCount}")
-                    adapter.setRandomBook(randomBook)
-                } else {
-                    Log.d("SimiliarActivity", "No books found in this category")
+                                if (isBookFullyRead == false || isBookFullyRead == null) {
+                                    unreadBooks.add(it)
+                                }
+
+                                if (unreadBooks.isNotEmpty()) {
+                                    val randomBooks = unreadBooks.shuffled().take(3)
+
+                                    val recommendedBooksTitlesAndAuthors = randomBooks.joinToString("\n\n") {
+                                        "${it.title}\n${it.author}"
+                                    }
+
+                                    recommendedBookTitleTextView.text = recommendedBooksTitlesAndAuthors
+                                    recommendedBookTitleTextView.visibility = View.VISIBLE
+                                } else {
+                                    Log.d("SimiliarActivity", "Brak nieprzeczytanych książek w tej kategorii")
+                                }
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                Log.e("SimiliarActivity", "Nie udało się załadować szczegółów: $error")
+                            }
+                        })
+                    }
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("SimiliarActivity", "Failed to read books in category: $error")
+                Log.e("SimiliarActivity", "Nie udało się załadować książek w tej kategorii: $error")
             }
         })
     }
+
+
+
 }

@@ -14,12 +14,35 @@
         android:visibility="gone"
         android:gravity="center_horizontal"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/booksRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/titleTextView"
+    <TextView
+        android:id="@+id/recommendedBookTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
         android:layout_marginTop="16dp"
-        tools:listitem="@layout/row_book_user"/>
+        android:textColor="@color/black"
+        android:visibility="gone"
+        android:layout_below="@id/titleTextView"/>
+
+    <ImageView
+        android:id="@+id/recommendedBookCoverImageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:visibility="gone"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/recommendedBookAuthorTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/grey"
+        android:visibility="gone"
+        android:layout_below="@id/recommendedBookTitleTextView"/>
+
+
 
 </RelativeLayout>
