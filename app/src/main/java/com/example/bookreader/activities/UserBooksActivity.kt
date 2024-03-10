@@ -15,11 +15,14 @@ import androidx.viewpager.widget.ViewPager
 import com.example.bookreader.databinding.ActivityUserBooksBinding
 import com.example.bookreader.models.ModelBook
 import com.example.bookreader.models.ModelCategory
+import com.example.bookreader.utils.MyApplication
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.util.Calendar
+import java.util.Date
 
 class UserBooksActivity : AppCompatActivity() {
 
@@ -50,32 +53,17 @@ class UserBooksActivity : AppCompatActivity() {
 
         binding.checkButton.setOnClickListener {
             if (currentBookId.isNullOrEmpty()) {
-                // Jeśli nie ma przypisanej książki, wyświetl komunikat
+
                 Toast.makeText(this@UserBooksActivity, "Nie masz aktualnie żadnej książki do przeczytania", Toast.LENGTH_SHORT).show()
             } else {
-                // Jeśli jest przypisana książka, sprawdź czy została przeczytana
-                checkIfBookIsRead(currentBookId ?: "")
+
+                checkIfBookIsRead(currentBookId!!)
             }
         }
 
 
     }
 
-    override fun onStop() {
-        super.onStop()
-
-        if (!isAppRunning) {
-            // Jeśli użytkownik opuszcza aplikację, zapisz aktualny czas
-            saveRemainingTime(getRemainingTime())
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        // Ustaw flagę na true, ponieważ aplikacja jest w trakcie działania
-        isAppRunning = true
-    }
 
     private fun checkUser() {
         val firebaseUser = firebaseAuth.currentUser
@@ -155,41 +143,35 @@ class UserBooksActivity : AppCompatActivity() {
 
     private fun challengeBook() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
-
         userId?.let { uid ->
-            var bookFound = false // Definicja zmiennej bookFound
+            var bookFound = false
 
             val booksRef = FirebaseDatabase.getInstance().getReference("Books")
 
             booksRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     for (bookSnapshot in dataSnapshot.children) {
-                        val bookId = bookSnapshot.key // Pobranie ID książki
-                        Log.d("CurrentBookId", "Aktualnie wylosowane ID książki: $bookId")
+                        val bookId = bookSnapshot.key
 
-                        // Sprawdzenie, czy książka została przeczytana przez użytkownika
                         val userBooksRef = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("bookDetails").child(bookId!!)
                         userBooksRef.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(userBookSnapshot: DataSnapshot) {
-                                if (!bookFound && userBookSnapshot.exists()) { // Dodatkowy warunek sprawdzający, czy nie znaleziono jeszcze nieprzeczytanej książki
-                                    // Książka została znaleziona w węźle Users - sprawdzenie, czy jest przeczytana
+                                if (!bookFound && userBookSnapshot.exists()) {
                                     val isBookFullyRead = userBookSnapshot.child("isBookFullyRead").getValue(Boolean::class.java)
 
                                     if (isBookFullyRead == false) {
-                                        // Książka nie została przeczytana przez użytkownika - zapisanie ID książki
-                                        currentBookId = bookId // Zapisanie ID książki w zmiennej klasy
+                                        currentBookId = bookId
 
-                                        // Wyświetlenie informacji o znalezionej książce
                                         val author = bookSnapshot.child("author").getValue(String::class.java)?.toString()
                                         val title = bookSnapshot.child("title").getValue(String::class.java)?.toString()
 
                                         Log.d("BookDetails", "Autor: $author, Tytuł: $title")
-                                        bookFound = true // Ustawienie flagi na true, aby przerwać pętlę
+                                        bookFound = true
 
-                                        // Wyświetlenie autora i tytułu znalezionej książki jako komunikatu Toast
                                         val message = "Wyzwanie rozpoczęte\nTytuł książki: $title\nAutor książki: $author"
                                         Toast.makeText(this@UserBooksActivity, message, Toast.LENGTH_LONG).show()
-                                        startTimer() // Uruchomienie timera po znalezieniu pierwszej nieprzeczytanej książki
+
+                                        saveChallengeDate(uid)
                                     }
                                 }
                             }
@@ -200,7 +182,6 @@ class UserBooksActivity : AppCompatActivity() {
                         })
                     }
 
-                    // Warunek sprawdzający, czy nie znaleziono żadnej książki
                     if (!bookFound) {
                         Log.d("BookStatus", "Nie znaleziono nieprzeczytanej książki dla użytkownika o ID $uid.")
                     }
@@ -215,12 +196,47 @@ class UserBooksActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
 
-        // Jeśli użytkownik opuszcza aplikację, ustaw flagę na false, aby zapisać czas
-        isAppRunning = false
+    private fun saveChallengeDate(userId: String) {
+        val currentTimeMillis = System.currentTimeMillis()
+        val challengeTimeMillis = currentTimeMillis + (60 * 1000) // Dodanie 1 minuty w milisekundach
+
+        val challengeDateRef = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("challengeDate")
+        challengeDateRef.setValue(challengeTimeMillis)
+            .addOnSuccessListener {
+                Log.d("ChallengeDate", "Pomyślnie zapisano datę wyzwania w bazie danych.")
+            }
+            .addOnFailureListener { e ->
+                Log.e("ChallengeDate", "Błąd podczas zapisywania daty wyzwania: ${e.message}")
+            }
     }
+
+    private fun saveAndDisplayDates(uid: String, callback: (Boolean) -> Unit) {
+        saveCurrentDateToDatabase(uid)
+
+        val userRef = FirebaseDatabase.getInstance().getReference("Users").child(uid)
+
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val challengeDate = dataSnapshot.child("challengeDate").getValue(Long::class.java)
+                val currentDate = dataSnapshot.child("currentDate").getValue(Long::class.java)
+
+                if (challengeDate != null && currentDate != null) {
+                    val isChallengeCompleted = currentDate < challengeDate
+                    callback(isChallengeCompleted)
+                } else {
+                    callback(false)
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("Firebase", "Error fetching data: ${databaseError.message}")
+                callback(false)
+            }
+        })
+    }
+
+
 
     private fun checkIfBookIsRead(bookId: String) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
@@ -228,75 +244,46 @@ class UserBooksActivity : AppCompatActivity() {
         userId?.let { uid ->
             val userBookRef = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("bookDetails").child(bookId)
 
-            userBookRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val isBookFullyRead = dataSnapshot.child("isBookFullyRead").getValue(Boolean::class.java)
-                    if (isBookFullyRead == false) {
-                        Toast.makeText(this@UserBooksActivity, "Książka nieprzeczytana", Toast.LENGTH_SHORT).show()
-                        // Książka nie została przeczytana
-                        // Tutaj możesz wykonać odpowiednie działania
-                    } else {
-                        Toast.makeText(this@UserBooksActivity, "Książka przeczytana", Toast.LENGTH_SHORT).show()
-                        // Książka została przeczytana
-                        // Tutaj możesz wykonać odpowiednie działania
+            saveAndDisplayDates(uid) { isChallengeCompleted ->
+                userBookRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val isBookFullyRead = dataSnapshot.child("isBookFullyRead").getValue(Boolean::class.java)
 
-                        // Jeżeli książka została przeczytana w wyznaczonym czasie, zakończ działanie timera
-                        cancelTimer()
+                        isBookFullyRead?.let { isFullyRead ->
+                            Log.d("BookStatus", "Wartość isBookFullyRead: $isFullyRead")
+                            if (isFullyRead && isChallengeCompleted) {
+                                Log.d("BookStatus", "Wyzwanie ukończone, gratulacje")
+                            } else if (isChallengeCompleted) {
+                                Log.d("BookStatus", "Książka nadal nie jest przeczytana, czytaj dalej")
+                            } else {
+                                Log.d("BookStatus", "Wyzwanie niezaliczone, czas upłynął")
+                            }
+                        } ?: run {
+                            Log.e("BookStatus", "Brak informacji o stanie przeczytania książki")
+                        }
                     }
-                }
 
-                override fun onCancelled(databaseError: DatabaseError) {
-                    Log.e("BookStatus", "Błąd pobierania danych z bazy danych: ${databaseError.message}")
-                }
-            })
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        Log.e("BookStatus", "Błąd pobierania danych z bazy danych: ${databaseError.message}")
+                    }
+                })
+            }
         } ?: run {
             Log.e("BookStatus", "Brak zalogowanego użytkownika.")
         }
     }
 
-    private fun startTimer() {
-        timer = object : CountDownTimer(60000, 1000) { // Odliczanie od 30 sekund co 1 sekundę
-            override fun onTick(millisUntilFinished: Long) {
-                // Wykonuje się co sekundę podczas odliczania
-                Log.d("Timer", "Time remaining: ${millisUntilFinished / 1000} seconds") // Dodane logi
 
-                // Tutaj można umieścić dowolną logikę związaną z odliczaniem, jeśli jest potrzebna
+    private fun saveCurrentDateToDatabase(userId: String) {
+        val currentTimeMillis = System.currentTimeMillis()
+        val currentDateRef = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("currentDate")
+        currentDateRef.setValue(currentTimeMillis)
+            .addOnSuccessListener {
+                Log.d("ChallengeDate", "Pomyślnie zapisano obecną datę wyzwania w bazie danych.")
             }
-
-            override fun onFinish() {
-                // Wykonuje się po zakończeniu odliczania (po 30 sekundach)
-                Log.d("Timer", "Timer finished")
-                val message = "Przegrana"
-                Toast.makeText(this@UserBooksActivity, message, Toast.LENGTH_LONG).show()
-
-                // Po zakończeniu odliczania, ustaw wartość currentBookId na null
-                currentBookId = null
+            .addOnFailureListener { e ->
+                Log.e("ChallengeDate", "Błąd podczas zapisywania obecnej daty wyzwania: ${e.message}")
             }
-        }
-
-        timer.start() // Uruchomienie timera
-    }
-
-    private fun cancelTimer() {
-        // Anuluj działanie timera
-        // Sprawdź, czy timer jest włączony, aby uniknąć błędu IllegalStateException
-        if (::timer.isInitialized && timer != null) {
-            timer.cancel()
-        }
-    }
-
-    private fun saveRemainingTime(remainingTime: Long) {
-        // Zapisz pozostały czas w SharedPreferences
-        val sharedPreferences = getSharedPreferences("TimerPrefs", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putLong("remaining_time", remainingTime)
-        editor.apply()
-    }
-
-    private fun getRemainingTime(): Long {
-        // Odczytaj pozostały czas z SharedPreferences
-        val sharedPreferences = getSharedPreferences("TimerPrefs", Context.MODE_PRIVATE)
-        return sharedPreferences.getLong("remaining_time", 0)
     }
 
     class ViewPagerAdapter(fm: FragmentManager, behavior: Int, context: Context): FragmentPagerAdapter(fm, behavior){
