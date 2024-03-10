@@ -3,9 +3,6 @@ package com.example.bookreader.activities
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -13,16 +10,12 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.example.bookreader.databinding.ActivityUserBooksBinding
-import com.example.bookreader.models.ModelBook
 import com.example.bookreader.models.ModelCategory
-import com.example.bookreader.utils.MyApplication
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import java.util.Calendar
-import java.util.Date
 
 class UserBooksActivity : AppCompatActivity() {
 
@@ -31,8 +24,6 @@ class UserBooksActivity : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var categoryArrayList: ArrayList<ModelCategory>
     private lateinit var viewPagerAdapter: ViewPagerAdapter
-    private lateinit var timer: CountDownTimer
-    private var isAppRunning = true
 
 
 
@@ -52,12 +43,19 @@ class UserBooksActivity : AppCompatActivity() {
         }
 
         binding.checkButton.setOnClickListener {
-            if (currentBookId.isNullOrEmpty()) {
+            val userId = FirebaseAuth.getInstance().currentUser?.uid
 
-                Toast.makeText(this@UserBooksActivity, "Nie masz aktualnie żadnej książki do przeczytania", Toast.LENGTH_SHORT).show()
-            } else {
-
-                checkIfBookIsRead(currentBookId!!)
+            userId?.let { uid ->
+                getChallengeId(uid) { challengeId ->
+                    if (challengeId.isNullOrEmpty()) {
+                        Toast.makeText(this@UserBooksActivity, "Nie masz żadnego rozpoczętego wyzwania", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Log.d("BookStatus", "Przekazane challengeId: $challengeId")
+                        checkIfBookIsRead(challengeId)
+                    }
+                }
+            } ?: run {
+                Log.e("BookStatus", "Brak zalogowanego użytkownika.")
             }
         }
 
@@ -150,41 +148,43 @@ class UserBooksActivity : AppCompatActivity() {
 
             booksRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    for (bookSnapshot in dataSnapshot.children) {
-                        val bookId = bookSnapshot.key
+                    val allBooks = mutableListOf<String>()
 
-                        val userBooksRef = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("bookDetails").child(bookId!!)
-                        userBooksRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(userBookSnapshot: DataSnapshot) {
-                                if (!bookFound && userBookSnapshot.exists()) {
-                                    val isBookFullyRead = userBookSnapshot.child("isBookFullyRead").getValue(Boolean::class.java)
+                    dataSnapshot.children.forEach { bookSnapshot ->
+                        allBooks.add(bookSnapshot.key!!)
+                    }
 
-                                    if (isBookFullyRead == false) {
-                                        currentBookId = bookId
+                    val randomIndex = (0 until allBooks.size).random()
 
-                                        val author = bookSnapshot.child("author").getValue(String::class.java)?.toString()
-                                        val title = bookSnapshot.child("title").getValue(String::class.java)?.toString()
+                    val randomBookId = allBooks[randomIndex]
 
-                                        Log.d("BookDetails", "Autor: $author, Tytuł: $title")
-                                        bookFound = true
+                    val userBooksRef = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("bookDetails").child(randomBookId)
+                    userBooksRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(userBookSnapshot: DataSnapshot) {
+                            if (!bookFound && userBookSnapshot.exists()) {
+                                val isBookFullyRead = userBookSnapshot.child("isBookFullyRead").getValue(Boolean::class.java)
 
-                                        val message = "Wyzwanie rozpoczęte\nTytuł książki: $title\nAutor książki: $author"
-                                        Toast.makeText(this@UserBooksActivity, message, Toast.LENGTH_LONG).show()
+                                if (isBookFullyRead == false) {
+                                    currentBookId = randomBookId
 
-                                        saveChallengeDate(uid)
-                                    }
+                                    val author = dataSnapshot.child(randomBookId).child("author").getValue(String::class.java)?.toString()
+                                    val title = dataSnapshot.child(randomBookId).child("title").getValue(String::class.java)?.toString()
+
+                                    Log.d("BookDetails", "Autor: $author, Tytuł: $title")
+                                    bookFound = true
+
+                                    val message = "Wyzwanie rozpoczęte\nTytuł książki: $title\nAutor książki: $author"
+                                    Toast.makeText(this@UserBooksActivity, message, Toast.LENGTH_LONG).show()
+
+                                    saveChallengeDate(uid, currentBookId!!)
                                 }
                             }
+                        }
 
-                            override fun onCancelled(error: DatabaseError) {
-                                Log.e("BookStatus", "Błąd pobierania danych z bazy danych: ${error.message}")
-                            }
-                        })
-                    }
-
-                    if (!bookFound) {
-                        Log.d("BookStatus", "Nie znaleziono nieprzeczytanej książki dla użytkownika o ID $uid.")
-                    }
+                        override fun onCancelled(error: DatabaseError) {
+                            Log.e("BookStatus", "Błąd pobierania danych z bazy danych: ${error.message}")
+                        }
+                    })
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -197,18 +197,75 @@ class UserBooksActivity : AppCompatActivity() {
     }
 
 
-    private fun saveChallengeDate(userId: String) {
-        val currentTimeMillis = System.currentTimeMillis()
-        val challengeTimeMillis = currentTimeMillis + (60 * 1000) // Dodanie 1 minuty w milisekundach
+    private fun getChallengeId(uid: String, callback: (String?) -> Unit) {
+        val userRef = FirebaseDatabase.getInstance().getReference("Users").child(uid)
+        val challengeDetailsRef = userRef.child("challengeDetails")
 
-        val challengeDateRef = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("challengeDate")
-        challengeDateRef.setValue(challengeTimeMillis)
-            .addOnSuccessListener {
-                Log.d("ChallengeDate", "Pomyślnie zapisano datę wyzwania w bazie danych.")
+        challengeDetailsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val challengeId = dataSnapshot.children.find { it.hasChild("bookId") }?.child("bookId")?.getValue(String::class.java)
+                callback(challengeId)
             }
-            .addOnFailureListener { e ->
-                Log.e("ChallengeDate", "Błąd podczas zapisywania daty wyzwania: ${e.message}")
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("Firebase", "Error fetching data: ${databaseError.message}")
+                callback(null)
             }
+        })
+    }
+
+    private fun saveChallengeDate(userId: String, bookId: String) {
+        val currentTimeMillis = System.currentTimeMillis()
+        val challengeTimeMillis = currentTimeMillis + (10 * 60 * 60 * 1000)
+
+        val challengeDateRef = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("challengeDetails")
+
+        challengeDateRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    dataSnapshot.children.forEach { challengeSnapshot ->
+                        val challengeId = challengeSnapshot.key
+                        if (challengeId != null) {
+                            val challengeDetails = HashMap<String, Any>()
+                            challengeDetails["challengeDate"] = challengeTimeMillis
+                            challengeDetails["bookId"] = bookId
+
+                            challengeDateRef.child(challengeId)
+                                .setValue(challengeDetails)
+                                .addOnSuccessListener {
+                                    Log.d("ChallengeDate", "Pomyślnie zaktualizowano datę wyzwania w bazie danych.")
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.e("ChallengeDate", "Błąd podczas aktualizacji daty wyzwania: ${e.message}")
+                                }
+                        }
+                    }
+                } else {
+                    val challengeDetails = HashMap<String, Any>()
+                    challengeDetails["challengeDate"] = challengeTimeMillis
+                    challengeDetails["bookId"] = bookId
+
+                    val challengeId = challengeDateRef.push().key
+
+                    challengeId?.let { id ->
+                        challengeDateRef.child(id)
+                            .setValue(challengeDetails)
+                            .addOnSuccessListener {
+                                Log.d("ChallengeDate", "Pomyślnie zapisano nową datę wyzwania w bazie danych.")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("ChallengeDate", "Błąd podczas zapisywania nowej daty wyzwania: ${e.message}")
+                            }
+                    } ?: run {
+                        Log.e("ChallengeDate", "Nie udało się wygenerować klucza dla nowego wyzwania.")
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("ChallengeDate", "Błąd pobierania danych z bazy danych: ${databaseError.message}")
+            }
+        })
     }
 
     private fun saveAndDisplayDates(uid: String, callback: (Boolean) -> Unit) {
@@ -218,15 +275,19 @@ class UserBooksActivity : AppCompatActivity() {
 
         userRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val challengeDate = dataSnapshot.child("challengeDate").getValue(Long::class.java)
-                val currentDate = dataSnapshot.child("currentDate").getValue(Long::class.java)
+                val challengeDetailsSnapshot = dataSnapshot.child("challengeDetails")
+                var isChallengeCompleted = false
 
-                if (challengeDate != null && currentDate != null) {
-                    val isChallengeCompleted = currentDate < challengeDate
-                    callback(isChallengeCompleted)
-                } else {
-                    callback(false)
+                challengeDetailsSnapshot.children.forEach { challengeSnapshot ->
+                    val challengeDate = challengeSnapshot.child("challengeDate").getValue(Long::class.java)
+                    val currentDate = dataSnapshot.child("currentDate").getValue(Long::class.java)
+
+                    if (challengeDate != null && currentDate != null) {
+                        isChallengeCompleted = currentDate < challengeDate
+                    }
                 }
+
+                callback(isChallengeCompleted)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -249,16 +310,24 @@ class UserBooksActivity : AppCompatActivity() {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         val isBookFullyRead = dataSnapshot.child("isBookFullyRead").getValue(Boolean::class.java)
 
-                        isBookFullyRead?.let { isFullyRead ->
-                            Log.d("BookStatus", "Wartość isBookFullyRead: $isFullyRead")
-                            if (isFullyRead && isChallengeCompleted) {
+                        if (isBookFullyRead != null) {
+                            Log.d("BookStatus", "Wartość isBookFullyRead: $isBookFullyRead")
+                            if (isBookFullyRead && isChallengeCompleted) {
                                 Log.d("BookStatus", "Wyzwanie ukończone, gratulacje")
+                                val userRef = FirebaseDatabase.getInstance().getReference("Users").child(uid)
+                                userRef.child("challengeDetails").removeValue()
+                                    .addOnSuccessListener {
+                                        Log.d("ChallengeDetails", "Węzeł challengeDetails został pomyślnie usunięty po przeczytaniu książki.")
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Log.e("ChallengeDetails", "Błąd podczas usuwania węzła challengeDetails: ${e.message}")
+                                    }
                             } else if (isChallengeCompleted) {
                                 Log.d("BookStatus", "Książka nadal nie jest przeczytana, czytaj dalej")
                             } else {
                                 Log.d("BookStatus", "Wyzwanie niezaliczone, czas upłynął")
                             }
-                        } ?: run {
+                        } else {
                             Log.e("BookStatus", "Brak informacji o stanie przeczytania książki")
                         }
                     }
