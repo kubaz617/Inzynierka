@@ -22,7 +22,7 @@ class UserScreen : AppCompatActivity() {
 
         val book_Btn = findViewById<Button>(R.id.book_btn)
         val quiz_Btn = findViewById<Button>(R.id.quiz_btn)
-        val challenge_btn = findViewById<Button>(R.id.challenge_btn)
+        val noname = findViewById<Button>(R.id.noname_btn)
         val similiar_btn = findViewById<Button>(R.id.similiar_btn)
         val logout_Btn = findViewById<Button>(R.id.logout_btn)
 
@@ -45,7 +45,7 @@ class UserScreen : AppCompatActivity() {
             navigateToActivity(QuizScreen::class.java)
         }
 
-        challenge_btn.setOnClickListener {
+        noname.setOnClickListener {
             navigateToActivity(ChallengeActivity::class.java)
         }
 
