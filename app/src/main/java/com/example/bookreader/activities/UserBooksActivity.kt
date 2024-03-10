@@ -28,6 +28,8 @@ class UserBooksActivity : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var categoryArrayList: ArrayList<ModelCategory>
     private lateinit var viewPagerAdapter: ViewPagerAdapter
+    private lateinit var timer: CountDownTimer
+    private var isAppRunning = true
 
 
 
@@ -47,8 +49,32 @@ class UserBooksActivity : AppCompatActivity() {
         }
 
         binding.checkButton.setOnClickListener {
-            checkIfBookIsRead(currentBookId ?: "")
+            if (currentBookId.isNullOrEmpty()) {
+                // Jeśli nie ma przypisanej książki, wyświetl komunikat
+                Toast.makeText(this@UserBooksActivity, "Nie masz aktualnie żadnej książki do przeczytania", Toast.LENGTH_SHORT).show()
+            } else {
+                // Jeśli jest przypisana książka, sprawdź czy została przeczytana
+                checkIfBookIsRead(currentBookId ?: "")
+            }
         }
+
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        if (!isAppRunning) {
+            // Jeśli użytkownik opuszcza aplikację, zapisz aktualny czas
+            saveRemainingTime(getRemainingTime())
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // Ustaw flagę na true, ponieważ aplikacja jest w trakcie działania
+        isAppRunning = true
     }
 
     private fun checkUser() {
@@ -189,6 +215,13 @@ class UserBooksActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        // Jeśli użytkownik opuszcza aplikację, ustaw flagę na false, aby zapisać czas
+        isAppRunning = false
+    }
+
     private fun checkIfBookIsRead(bookId: String) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
 
@@ -199,13 +232,16 @@ class UserBooksActivity : AppCompatActivity() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val isBookFullyRead = dataSnapshot.child("isBookFullyRead").getValue(Boolean::class.java)
                     if (isBookFullyRead == false) {
-                        Toast.makeText(this@UserBooksActivity, "Ksiązka nieprzeczytana", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@UserBooksActivity, "Książka nieprzeczytana", Toast.LENGTH_SHORT).show()
                         // Książka nie została przeczytana
                         // Tutaj możesz wykonać odpowiednie działania
                     } else {
                         Toast.makeText(this@UserBooksActivity, "Książka przeczytana", Toast.LENGTH_SHORT).show()
                         // Książka została przeczytana
                         // Tutaj możesz wykonać odpowiednie działania
+
+                        // Jeżeli książka została przeczytana w wyznaczonym czasie, zakończ działanie timera
+                        cancelTimer()
                     }
                 }
 
@@ -219,7 +255,7 @@ class UserBooksActivity : AppCompatActivity() {
     }
 
     private fun startTimer() {
-        val timer = object : CountDownTimer(30000, 1000) { // Odliczanie od 30 sekund co 1 sekundę
+        timer = object : CountDownTimer(60000, 1000) { // Odliczanie od 30 sekund co 1 sekundę
             override fun onTick(millisUntilFinished: Long) {
                 // Wykonuje się co sekundę podczas odliczania
                 Log.d("Timer", "Time remaining: ${millisUntilFinished / 1000} seconds") // Dodane logi
@@ -232,10 +268,35 @@ class UserBooksActivity : AppCompatActivity() {
                 Log.d("Timer", "Timer finished")
                 val message = "Przegrana"
                 Toast.makeText(this@UserBooksActivity, message, Toast.LENGTH_LONG).show()
+
+                // Po zakończeniu odliczania, ustaw wartość currentBookId na null
+                currentBookId = null
             }
         }
 
         timer.start() // Uruchomienie timera
+    }
+
+    private fun cancelTimer() {
+        // Anuluj działanie timera
+        // Sprawdź, czy timer jest włączony, aby uniknąć błędu IllegalStateException
+        if (::timer.isInitialized && timer != null) {
+            timer.cancel()
+        }
+    }
+
+    private fun saveRemainingTime(remainingTime: Long) {
+        // Zapisz pozostały czas w SharedPreferences
+        val sharedPreferences = getSharedPreferences("TimerPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putLong("remaining_time", remainingTime)
+        editor.apply()
+    }
+
+    private fun getRemainingTime(): Long {
+        // Odczytaj pozostały czas z SharedPreferences
+        val sharedPreferences = getSharedPreferences("TimerPrefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getLong("remaining_time", 0)
     }
 
     class ViewPagerAdapter(fm: FragmentManager, behavior: Int, context: Context): FragmentPagerAdapter(fm, behavior){
