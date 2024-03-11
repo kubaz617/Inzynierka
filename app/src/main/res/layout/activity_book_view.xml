@@ -27,17 +27,20 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbarRl" />
 
+
     <TextView
         android:id="@+id/batteryLevelTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=" "
-        android:textSize="16sp"
+        android:textSize="10sp"
         android:drawableLeft="@drawable/ic_battery"
         android:layout_marginTop="16dp"
-        android:layout_toEndOf="@+id/seekBar"
+        android:layout_toEndOf="@+id/jumpToCurrentPage"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"/>
+
+
 
     <ImageButton
         android:id="@+id/addLabel"
@@ -68,6 +71,16 @@
         android:background="@color/transparent"
         android:paddingLeft="10dp"
         android:paddingRight="20dp"/>
+
+    <ImageButton
+        android:id="@+id/jumpToCurrentPage"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_toEndOf="@+id/seekBar"
+        android:src="@drawable/ic_current_page_label"
+        android:background="@color/transparent"
+        android:paddingLeft="10dp"
+        android:rotation="90" />
 
 
 

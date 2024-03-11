@@ -51,6 +51,7 @@ class BookViewActivity : AppCompatActivity() {
     private var bookmarkedPage = 0
     private var furthestPageRead = 0
     private var isBookFullyRead = false
+    private var categoryId: String = ""
 
 
     var bookId = ""
@@ -75,6 +76,7 @@ class BookViewActivity : AppCompatActivity() {
 
         val LabelButton: ImageButton = findViewById(R.id.Label)
         val AddLabel: ImageButton = findViewById(R.id.addLabel)
+        val jumpToCurrentPage: ImageButton = findViewById(R.id.jumpToCurrentPage)
 
         mediaPlayer = MediaPlayer.create(this, R.raw.book_music)
 
@@ -100,6 +102,10 @@ class BookViewActivity : AppCompatActivity() {
         val musicButton: ImageButton = findViewById(R.id.musicBtn)
         musicButton.setOnClickListener {
             toggleMusic()
+        }
+
+        jumpToCurrentPage.setOnClickListener{
+            moveToLastReadPage()
         }
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -129,7 +135,6 @@ class BookViewActivity : AppCompatActivity() {
             }
         }
 
-        // Rejestrowanie BroadcastReceiver w momencie utworzenia aktywności
         registerReceiver(batteryBroadcastReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
 
     }
@@ -141,7 +146,7 @@ class BookViewActivity : AppCompatActivity() {
             .addListenerForSingleValueEvent(object: ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val pdfUrl = snapshot.child("url").value
-                    val categoryId = snapshot.child("categoryId").value.toString()
+                    categoryId = snapshot.child("categoryId").value.toString()
                     Log.d(TAG, "onDataChange: PDF_URL: $pdfUrl")
 
                     loadBookFromUrl("$pdfUrl", categoryId)
@@ -162,7 +167,7 @@ class BookViewActivity : AppCompatActivity() {
 
     private fun setBrightnessLevel(brightness: Int) {
         val layoutParams = window.attributes
-        layoutParams.screenBrightness = brightness / 255.0f // Ustaw jasność w zakresie od 0.0 do 1.0
+        layoutParams.screenBrightness = brightness / 255.0f
         window.attributes = layoutParams
     }
 
@@ -196,14 +201,11 @@ class BookViewActivity : AppCompatActivity() {
                     .swipeHorizontal(false)
                     .onPageChange { page, pageCount ->
                         val currentPage = page + 1
-
-                        furthestPageRead = maxOf(furthestPageRead, page + 1)
                         binding.toolbarSubtitleTv.text = "$currentPage/$pageCount"
                         Log.d(TAG, "loadBookFromUrl: $currentPage/$pageCount")
 
+                        furthestPageRead = maxOf(furthestPageRead, page + 1)
                         isBookFullyRead = page + 1 == pageCount
-
-                        saveUserBookDetails(bookId, categoryId, currentPage, furthestPageRead, isBookFullyRead) // Dodany numer kategorii
                     }
                     .onError { t ->
                         Log.d(TAG, "loadBookFromUrl: ${t.message}")
@@ -220,6 +222,29 @@ class BookViewActivity : AppCompatActivity() {
             }
     }
 
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        saveUserBookDetails(bookId, categoryId, pdfView.currentPage, furthestPageRead, isBookFullyRead)
+    }
+
+    private fun moveToLastReadPage() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        val databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId!!)
+        val bookDetailsRef = databaseReference.child("bookDetails").child(bookId)
+
+        bookDetailsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val currentPage = dataSnapshot.child("currentPage").getValue(Int::class.java) ?: 0
+                pdfView.jumpTo(currentPage)
+                Toast.makeText(this@BookViewActivity, "Powrócono do ostatnio czytanej strony", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d(TAG, "moveToLastReadPage: Failed to retrieve user's last read page: ${databaseError.message}")
+            }
+        })
+    }
 
 
 
