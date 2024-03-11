@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,118 +7,92 @@
 
     <RelativeLayout
         android:id="@+id/toolbarRl"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <!-- Tu dodałem atrybuty android:layout_centerHorizontal="true" aby wyśrodkować elementy -->
         <ImageView
             android:id="@+id/user_sign"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_user_sign">
-        </ImageView>
+            android:src="@drawable/ic_user_sign" />
 
         <TextView
             android:id="@+id/titleTv"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@id/user_sign"
             android:layout_centerHorizontal="true"
-            android:text="abc@exmaple.com"
-            android:textColor="@color/black">
-
-        </TextView>
-
-        <Button
-            android:id="@+id/logout_btn"
-            android:layout_width="131dp"
-            android:layout_height="51dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="128dp"
-            android:layout_marginEnd="152dp"
-            android:layout_marginBottom="60dp"
-            android:text="Wyloguj"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.453"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintVertical_bias="0.107" />
-
-        <Button
-            android:id="@+id/book_btn"
-            android:layout_width="137dp"
-            android:layout_height="69dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="142dp"
-            android:layout_marginEnd="132dp"
-            android:layout_marginBottom="536dp"
-            android:text="Książki"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.467"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.531" />
-
-        <Button
-            android:id="@+id/noname_btn"
-            android:layout_width="137dp"
-            android:layout_height="69dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="135dp"
-            android:layout_marginEnd="139dp"
-            android:layout_marginBottom="435dp"
-            android:text="Wyzwanie"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.467"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.531" />
-
-        <Button
-            android:id="@+id/quiz_btn"
-            android:layout_width="137dp"
-            android:layout_height="69dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="145dp"
-            android:layout_marginEnd="129dp"
-            android:layout_marginBottom="335dp"
-            android:text="Quizy"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.467"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.531" />
-
-        <Button
-            android:id="@+id/similiar_btn"
-            android:layout_width="127dp"
-            android:layout_height="76dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="131dp"
-            android:layout_marginEnd="153dp"
-            android:layout_marginBottom="238dp"
-            android:text="Podobne książki"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.447"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.653" />
+            android:text="abc@example.com"
+            android:textColor="@color/black" />
     </RelativeLayout>
 
+    <Button
+        android:id="@+id/book_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Książki"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbarRl"
+        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"/>
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/quiz_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Quizy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/book_btn"
+        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"/>
+
+    <Button
+        android:id="@+id/similiar_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Podobne książki"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/quiz_btn"
+        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"/>
+
+    <Button
+        android:id="@+id/noname_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Wyzwanie"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/similiar_btn"
+        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"/>
+
+    <Button
+        android:id="@+id/logout_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Wyloguj"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/noname_btn"
+        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

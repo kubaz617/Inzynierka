@@ -8,12 +8,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.bookreader.R
+import com.example.bookreader.databinding.ActivitySimiliarBinding
 import com.example.bookreader.models.ModelBook
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
 class SimiliarActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivitySimiliarBinding
 
     private lateinit var recommendedBookTitleTextView: TextView
     private lateinit var recommendedBookAuthorTextView: TextView
@@ -25,7 +27,11 @@ class SimiliarActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_similiar)
+        binding = ActivitySimiliarBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        firebaseAuth = FirebaseAuth.getInstance()
+        checkUser()
 
         suggestedCategoryTextView = findViewById(R.id.titleTextView)
         recommendedBookTitleTextView = findViewById(R.id.recommendedBookTitleTextView)
@@ -39,6 +45,7 @@ class SimiliarActivity : AppCompatActivity() {
         recommendedBookAuthorTextView.textSize = 20f
 
         val userId = FirebaseAuth.getInstance().currentUser?.uid
+
 
         userId?.let { uid ->
             val userBookDetailsRef = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("bookDetails")
@@ -115,13 +122,13 @@ class SimiliarActivity : AppCompatActivity() {
         }
     }
 
-    /*
-    private fun checkUser() {
+
+    private fun checkUser()  {
         val firebaseUser = firebaseAuth.currentUser
-            val email = firebaseUser.email
-            binding.titleTv.text = email
+        val email = firebaseUser!!.email
+        binding.titleTv.text = email
     }
-    */
+
 
 
     private fun recommendedBookFromCategory(categoryId: String, uid: String) {

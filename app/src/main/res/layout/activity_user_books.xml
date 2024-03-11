@@ -11,26 +11,23 @@
         android:layout_height="?actionBarSize"
         android:layout_width="match_parent">
 
-
         <ImageView
             android:id="@+id/user_sign"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_user_sign">
-        </ImageView>
+            android:src="@drawable/ic_user_sign" />
 
-    <TextView
-        android:id="@+id/titleTv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="abc@exmaple.com"
-        android:layout_below="@+id/user_sign"
-        android:textColor="@color/black"
-        android:textStyle="bold"></TextView>
-
+        <TextView
+            android:id="@+id/titleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="abc@exmaple.com"
+            android:layout_below="@+id/user_sign"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <com.google.android.material.tabs.TabLayout
@@ -48,12 +45,41 @@
         app:tabIndicatorHeight="0dp"
         app:tabMode="scrollable" />
 
+    <LinearLayout
+        android:id="@+id/dateBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tabLayout"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp">
+
+        <android.widget.Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/dateTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Data wyzwania:"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:textColor="@android:color/black" />
+
+        <android.widget.Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tabLayout"
-        android:layout_above="@+id/bottomBar" />
+        android:layout_below="@id/dateBar"
+        android:layout_above="@id/bottomBar" />
 
     <LinearLayout
         android:id="@+id/bottomBar"
@@ -65,36 +91,24 @@
 
         <Button
             android:id="@+id/challenge_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Wyzwanie"
-            android:layout_gravity="start"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:layout_gravity="start" />
+
+        <android.widget.Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/checkButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Sprawdź"
-            android:layout_marginTop="16dp"
-            android:layout_gravity="end"
-            app:layout_constraintTop_toBottomOf="@+id/challenge_btn"
-            app:layout_constraintStart_toEndOf="@+id/challenge_btn"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <TextView
-            android:id="@+id/dateTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="Data wyzwania:"
-            android:layout_marginStart="16dp"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"/>
-
+            android:layout_gravity="end" />
     </LinearLayout>
 
 
