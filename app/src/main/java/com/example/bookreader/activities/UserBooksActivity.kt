@@ -42,7 +42,7 @@ class UserBooksActivity : AppCompatActivity() {
 
 
         binding.challengeBtn.setOnClickListener {
-            challengeBook()
+            challengeBook(5)
         }
 
         binding.checkButton.setOnClickListener {
@@ -144,7 +144,7 @@ class UserBooksActivity : AppCompatActivity() {
 
     private var currentBookId: String? = null
 
-    private fun challengeBook() {
+    private fun challengeBook(attempts: Int = 5) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         userId?.let { uid ->
             var bookFound = false
@@ -166,23 +166,21 @@ class UserBooksActivity : AppCompatActivity() {
                     val userBooksRef = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("bookDetails").child(randomBookId)
                     userBooksRef.addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(userBookSnapshot: DataSnapshot) {
-                            if (!bookFound && userBookSnapshot.exists()) {
-                                val isBookFullyRead = userBookSnapshot.child("isBookFullyRead").getValue(Boolean::class.java)
+                            if (!bookFound && !userBookSnapshot.exists() || userBookSnapshot.child("isBookFullyRead").value == false) {
+                                currentBookId = randomBookId
 
-                                if (isBookFullyRead == false) {
-                                    currentBookId = randomBookId
+                                val author = dataSnapshot.child(randomBookId).child("author").getValue(String::class.java)?.toString()
+                                val title = dataSnapshot.child(randomBookId).child("title").getValue(String::class.java)?.toString()
 
-                                    val author = dataSnapshot.child(randomBookId).child("author").getValue(String::class.java)?.toString()
-                                    val title = dataSnapshot.child(randomBookId).child("title").getValue(String::class.java)?.toString()
+                                Log.d("BookDetails", "Autor: $author, Tytuł: $title")
+                                bookFound = true
 
-                                    Log.d("BookDetails", "Autor: $author, Tytuł: $title")
-                                    bookFound = true
+                                val message = "Wyzwanie rozpoczęte\nTytuł książki: $title\nAutor książki: $author"
+                                Toast.makeText(this@UserBooksActivity, message, Toast.LENGTH_LONG).show()
 
-                                    val message = "Wyzwanie rozpoczęte\nTytuł książki: $title\nAutor książki: $author"
-                                    Toast.makeText(this@UserBooksActivity, message, Toast.LENGTH_LONG).show()
-
-                                    saveChallengeDate(uid, currentBookId!!)
-                                }
+                                saveChallengeDate(uid, currentBookId!!)
+                            } else if (userBookSnapshot.child("isBookFullyRead").value == true) {
+                                tryChallenge(attempts - 1)
                             }
                         }
 
@@ -200,6 +198,16 @@ class UserBooksActivity : AppCompatActivity() {
             Log.e("BookStatus", "Brak zalogowanego użytkownika.")
         }
     }
+
+    private fun tryChallenge(attemptsLeft: Int) {
+        if (attemptsLeft > 0) {
+            challengeBook(attemptsLeft)
+            Log.d("ChallengeStatus", "Wywołano tryChallenge. Pozostałe próby: $attemptsLeft")
+        } else {
+            Toast.makeText(this@UserBooksActivity, "Nie masz żadnej nieprzeczytanej książki", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 
 
     private fun getChallengeId(uid: String, callback: (String?) -> Unit) {
