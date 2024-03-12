@@ -66,7 +66,7 @@ class SignInActivity : AppCompatActivity() {
                         startActivity(Intent(this@SignInActivity, UserScreen::class.java))
                         finish()
                     } else if (userType == "admin") {
-                        startActivity(Intent(this@SignInActivity, AdminScreen::class.java))
+                        startActivity(Intent(this@SignInActivity, AdminBooksActivity::class.java))
                         finish()
                     }
                 }

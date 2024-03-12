@@ -70,10 +70,10 @@
         android:layout_marginEnd="24dp"/>
 
     <Button
-        android:id="@+id/noname_btn"
+        android:id="@+id/stats_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Wyzwanie"
+        android:text="Statystyki"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/similiar_btn"
@@ -89,7 +89,7 @@
         android:text="Wyloguj"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/noname_btn"
+        app:layout_constraintTop_toBottomOf="@id/stats_btn"
         app:layout_constraintHorizontal_bias="0.5"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"

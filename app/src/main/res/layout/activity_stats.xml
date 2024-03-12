@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.StatsActivity">
+
+
+    <RelativeLayout
+        android:id="@+id/toolbarRl"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+        <ImageView
+            android:id="@+id/user_sign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_user_sign" />
+
+        <TextView
+            android:id="@+id/titleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/user_sign"
+            android:layout_centerHorizontal="true"
+            android:text="abc@example.com"
+            android:textColor="@color/black" />
+
+
+    <TextView
+        android:id="@+id/textViewStatsHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Statystyki użytkownika"
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_below="@+id/titleTv"/>
+
+    <TextView
+        android:id="@+id/totalPagesTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Przeczytane strony: 0"
+        app:layout_constraintTop_toBottomOf="@id/textViewStatsHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_below="@+id/textViewStatsHeader"/>
+
+    <TextView
+        android:id="@+id/totalBooksTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Przeczytane książki: 0"
+        app:layout_constraintTop_toBottomOf="@id/totalPagesTv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_below="@+id/totalPagesTv"/>
+
+    <TextView
+        android:id="@+id/textViewQuizzesSolved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rozwiązane quizy: 0"
+        app:layout_constraintTop_toBottomOf="@id/totalBooksTv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_below="@+id/totalBooksTv"/>
+
+    <TextView
+        android:id="@+id/textViewChallengesCompleted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wykonane wyzwania: 0"
+        app:layout_constraintTop_toBottomOf="@id/textViewQuizzesSolved"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_below="@+id/textViewQuizzesSolved"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
