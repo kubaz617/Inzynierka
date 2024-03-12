@@ -178,6 +178,7 @@ class UserBooksActivity : AppCompatActivity() {
                                 val message = "Wyzwanie rozpoczęte\nTytuł książki: $title\nAutor książki: $author"
                                 Toast.makeText(this@UserBooksActivity, message, Toast.LENGTH_LONG).show()
 
+                                startChallengeToUser(uid)
                                 saveChallengeDate(uid, currentBookId!!)
                             } else if (userBookSnapshot.child("isBookFullyRead").value == true) {
                                 tryChallenge(attempts - 1)
@@ -198,6 +199,8 @@ class UserBooksActivity : AppCompatActivity() {
             Log.e("BookStatus", "Brak zalogowanego użytkownika.")
         }
     }
+
+
 
     private fun tryChallenge(attemptsLeft: Int) {
         if (attemptsLeft > 0) {
@@ -358,6 +361,7 @@ class UserBooksActivity : AppCompatActivity() {
                             if (isBookFullyRead && isChallengeCompleted) {
                                 Log.d("BookStatus", "Wyzwanie ukończone, gratulacje")
                                 Toast.makeText(this@UserBooksActivity, "Wyzwanie ukończone, gratulację", Toast.LENGTH_SHORT).show()
+                                addCompletedChallengeToUser(userId)
                                 val userRef = FirebaseDatabase.getInstance().getReference("Users").child(uid)
                                 userRef.child("challengeDetails").removeValue()
                                     .addOnSuccessListener {
@@ -412,6 +416,51 @@ class UserBooksActivity : AppCompatActivity() {
     }
 
 
+    private fun addCompletedChallengeToUser(userId: String) {
+        val userRef = FirebaseDatabase.getInstance().getReference("Users").child(userId)
+
+        userRef.child("completedChallenges").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val completedChallenges = dataSnapshot.getValue(Int::class.java) ?: 0
+                val newCompletedChallenges = completedChallenges + 1
+
+                userRef.child("completedChallenges").setValue(newCompletedChallenges)
+                    .addOnSuccessListener {
+                        Log.d("CompletedChallenges", "Pomyślnie dodano kolejne zakończone wyzwanie do pola completedChallenges.")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("CompletedChallenges", "Błąd podczas dodawania kolejnego zakończonego wyzwania: ${e.message}")
+                    }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("CompletedChallenges", "Błąd pobierania danych z pola completedChallenges: ${databaseError.message}")
+            }
+        })
+    }
+
+    private fun startChallengeToUser(userId: String) {
+        val userRef = FirebaseDatabase.getInstance().getReference("Users").child(userId)
+
+        userRef.child("startedChallenges").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val startedChallenges = dataSnapshot.getValue(Int::class.java) ?: 0
+                val newStartedChallenges = startedChallenges + 1
+
+                userRef.child("startedChallenges").setValue(newStartedChallenges)
+                    .addOnSuccessListener {
+                        Log.d("CompletedChallenges", "Pomyślnie dodano kolejne zakończone wyzwanie do pola completedChallenges.")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("CompletedChallenges", "Błąd podczas dodawania kolejnego zakończonego wyzwania: ${e.message}")
+                    }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("CompletedChallenges", "Błąd pobierania danych z pola completedChallenges: ${databaseError.message}")
+            }
+        })
+    }
 
     private fun saveCurrentDateToDatabase(userId: String) {
         val currentTimeMillis = System.currentTimeMillis()

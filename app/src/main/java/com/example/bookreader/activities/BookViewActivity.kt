@@ -30,7 +30,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import android.provider.Settings
 import android.widget.TextView
-import com.google.firebase.database.DatabaseReference
 
 class BookViewActivity : AppCompatActivity() {
 
@@ -53,8 +52,6 @@ class BookViewActivity : AppCompatActivity() {
     private var furthestPageRead = 0
     private var isBookFullyRead = false
     private var categoryId: String = ""
-    private var totalPages = 0
-
 
 
     var bookId = ""
@@ -161,8 +158,6 @@ class BookViewActivity : AppCompatActivity() {
             })
     }
 
-
-
     override fun onResume() {
         super.onResume()
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -209,6 +204,8 @@ class BookViewActivity : AppCompatActivity() {
                         binding.toolbarSubtitleTv.text = "$currentPage/$pageCount"
                         Log.d(TAG, "loadBookFromUrl: $currentPage/$pageCount")
 
+                        furthestPageRead = maxOf(furthestPageRead, page + 1)
+                        isBookFullyRead = page + 1 == pageCount
                     }
                     .onError { t ->
                         Log.d(TAG, "loadBookFromUrl: ${t.message}")
@@ -308,7 +305,6 @@ class BookViewActivity : AppCompatActivity() {
         mediaPlayer.release()
         unregisterReceiver(batteryBroadcastReceiver)
     }
-
 
     private fun saveUserBookDetails(
         bookId: String,

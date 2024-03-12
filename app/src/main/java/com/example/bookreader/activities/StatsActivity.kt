@@ -29,6 +29,8 @@ class StatsActivity : AppCompatActivity() {
 
         getTotalPagesRead()
         getTotalBooksRead()
+        getCompletedChallenges()
+        getStartedChallenges()
     }
 
     private fun checkUser()  {
@@ -92,6 +94,50 @@ class StatsActivity : AppCompatActivity() {
             })
         } else {
             Log.d(TAG, "getTotalBooksRead: User not authenticated.")
+        }
+    }
+
+    private fun getCompletedChallenges() {
+        val userId = firebaseAuth.currentUser?.uid
+
+        if (userId != null) {
+            val databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId)
+
+            databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val completedChallenges = dataSnapshot.child("completedChallenges").getValue(Int::class.java) ?: 0
+
+                    binding.completedChallengesTv.text = "Łączna ilość wykonanych wyzwań: $completedChallenges"
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Log.d(TAG, "getStartedChallengesCount: Failed to retrieve started challenges count: ${databaseError.message}")
+                }
+            })
+        } else {
+            Log.d(TAG, "getStartedChallengesCount: User not authenticated.")
+        }
+    }
+
+    private fun getStartedChallenges() {
+        val userId = firebaseAuth.currentUser?.uid
+
+        if (userId != null) {
+            val databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId)
+
+            databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val startedChallenges = dataSnapshot.child("startedChallenges").getValue(Int::class.java) ?: 0
+
+                    binding.startedChallengesTv.text = "Łączna ilość rozpoczętych wyzwań: $startedChallenges"
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Log.d(TAG, "getStartedChallengesCount: Failed to retrieve started challenges count: ${databaseError.message}")
+                }
+            })
+        } else {
+            Log.d(TAG, "getStartedChallengesCount: User not authenticated.")
         }
     }
 
