@@ -31,6 +31,7 @@ class StatsActivity : AppCompatActivity() {
         getTotalBooksRead()
         getCompletedChallenges()
         getStartedChallenges()
+        getCompletedTrophies()
     }
 
     private fun checkUser()  {
@@ -55,7 +56,6 @@ class StatsActivity : AppCompatActivity() {
                         totalPageCount += furthestPageRead
                     }
 
-                    // Wyświetl łączną ilość stron w polu tekstowym z odpowiednim opisem
                     binding.totalPagesTv.text = "Łączna ilość przeczytanych stron: $totalPageCount"
                 }
 
@@ -97,11 +97,12 @@ class StatsActivity : AppCompatActivity() {
         }
     }
 
+
     private fun getCompletedChallenges() {
         val userId = firebaseAuth.currentUser?.uid
 
         if (userId != null) {
-            val databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId)
+            val databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("statsDetails")
 
             databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -111,11 +112,11 @@ class StatsActivity : AppCompatActivity() {
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
-                    Log.d(TAG, "getStartedChallengesCount: Failed to retrieve started challenges count: ${databaseError.message}")
+                    Log.d(TAG, "getCompletedChallenges: Failed to retrieve completed challenges count: ${databaseError.message}")
                 }
             })
         } else {
-            Log.d(TAG, "getStartedChallengesCount: User not authenticated.")
+            Log.d(TAG, "getCompletedChallenges: User not authenticated.")
         }
     }
 
@@ -123,7 +124,7 @@ class StatsActivity : AppCompatActivity() {
         val userId = firebaseAuth.currentUser?.uid
 
         if (userId != null) {
-            val databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId)
+            val databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("statsDetails")
 
             databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -133,11 +134,39 @@ class StatsActivity : AppCompatActivity() {
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
-                    Log.d(TAG, "getStartedChallengesCount: Failed to retrieve started challenges count: ${databaseError.message}")
+                    Log.d(TAG, "getStartedChallenges: Failed to retrieve started challenges count: ${databaseError.message}")
                 }
             })
         } else {
-            Log.d(TAG, "getStartedChallengesCount: User not authenticated.")
+            Log.d(TAG, "getStartedChallenges: User not authenticated.")
+        }
+    }
+
+    private fun getCompletedTrophies() {
+        val userId = firebaseAuth.currentUser?.uid
+
+        if (userId != null) {
+            val databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("statsDetails")
+
+            databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val platinumTrophies = dataSnapshot.child("platinumTrophy").getValue(Int::class.java) ?: 0
+                    val goldTrophies = dataSnapshot.child("goldTrophy").getValue(Int::class.java) ?: 0
+                    val silverTrophies = dataSnapshot.child("silverTrophy").getValue(Int::class.java) ?: 0
+                    val bronzeTrophies = dataSnapshot.child("bronzeTrophy").getValue(Int::class.java) ?: 0
+
+                     binding.allPlatinumTrophiesTv.text = "Łączna ilość trofeów platynowych: $platinumTrophies"
+                     binding.allGoldTrophiesTv.text = "Łączna ilość trofeów złotych: $goldTrophies"
+                     binding.allSilverTrophiesTv.text = "Łączna ilość trofeów srebrnych: $silverTrophies"
+                     binding.allBronzeTrophiesTv.text = "Łączna ilość trofeów brązowych: $bronzeTrophies"
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Log.d(TAG, "getCompletedTrophies: Failed to retrieve completed trophies count: ${databaseError.message}")
+                }
+            })
+        } else {
+            Log.d(TAG, "getCompletedTrophies: User not authenticated.")
         }
     }
 

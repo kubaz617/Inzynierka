@@ -419,12 +419,12 @@ class UserBooksActivity : AppCompatActivity() {
     private fun addCompletedChallengeToUser(userId: String) {
         val userRef = FirebaseDatabase.getInstance().getReference("Users").child(userId)
 
-        userRef.child("completedChallenges").addListenerForSingleValueEvent(object : ValueEventListener {
+        userRef.child("statsDetails").child("completedChallenges").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val completedChallenges = dataSnapshot.getValue(Int::class.java) ?: 0
                 val newCompletedChallenges = completedChallenges + 1
 
-                userRef.child("completedChallenges").setValue(newCompletedChallenges)
+                userRef.child("statsDetails").child("completedChallenges").setValue(newCompletedChallenges)
                     .addOnSuccessListener {
                         Log.d("CompletedChallenges", "Pomyślnie dodano kolejne zakończone wyzwanie do pola completedChallenges.")
                     }
@@ -438,29 +438,31 @@ class UserBooksActivity : AppCompatActivity() {
             }
         })
     }
+
 
     private fun startChallengeToUser(userId: String) {
         val userRef = FirebaseDatabase.getInstance().getReference("Users").child(userId)
 
-        userRef.child("startedChallenges").addListenerForSingleValueEvent(object : ValueEventListener {
+        userRef.child("statsDetails").child("startedChallenges").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val startedChallenges = dataSnapshot.getValue(Int::class.java) ?: 0
                 val newStartedChallenges = startedChallenges + 1
 
-                userRef.child("startedChallenges").setValue(newStartedChallenges)
+                userRef.child("statsDetails").child("startedChallenges").setValue(newStartedChallenges)
                     .addOnSuccessListener {
-                        Log.d("CompletedChallenges", "Pomyślnie dodano kolejne zakończone wyzwanie do pola completedChallenges.")
+                        Log.d("StartedChallenges", "Pomyślnie dodano kolejne rozpoczęte wyzwanie do pola startedChallenges.")
                     }
                     .addOnFailureListener { e ->
-                        Log.e("CompletedChallenges", "Błąd podczas dodawania kolejnego zakończonego wyzwania: ${e.message}")
+                        Log.e("StartedChallenges", "Błąd podczas dodawania kolejnego rozpoczętego wyzwania: ${e.message}")
                     }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                Log.e("CompletedChallenges", "Błąd pobierania danych z pola completedChallenges: ${databaseError.message}")
+                Log.e("StartedChallenges", "Błąd pobierania danych z pola startedChallenges: ${databaseError.message}")
             }
         })
     }
+
 
     private fun saveCurrentDateToDatabase(userId: String) {
         val currentTimeMillis = System.currentTimeMillis()

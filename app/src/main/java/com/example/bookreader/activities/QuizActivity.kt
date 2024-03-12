@@ -1,5 +1,6 @@
 package com.example.bookreader.activities
 
+import android.content.ContentValues.TAG
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,6 +15,11 @@ import com.example.bookreader.models.QuestionModel
 import com.example.bookreader.R
 import com.example.bookreader.databinding.ActivityQuizBinding
 import com.example.bookreader.databinding.ScoreScreenBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 
 class QuizActivity : AppCompatActivity(), View.OnClickListener {
@@ -127,27 +133,140 @@ class QuizActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun displayTrophy(trophyImageView: ImageView, scorePercentage: Int) {
-        if (scorePercentage > 0) {
-            when {
-                scorePercentage >= 75 -> trophyImageView.setImageResource(R.drawable.ic_trophy_gld)
-                scorePercentage >= 50 -> trophyImageView.setImageResource(R.drawable.ic_trophy_slvr)
-                else -> trophyImageView.setImageResource(R.drawable.ic_trophy_brwn)
-            }
-        } else {
-            trophyImageView.setImageDrawable(null)
+        when {
+            scorePercentage == 100 -> trophyImageView.setImageResource(R.drawable.ic_trophy_plt)
+            scorePercentage in 75..99 -> trophyImageView.setImageResource(R.drawable.ic_trophy_gld)
+            scorePercentage in 50..74 -> trophyImageView.setImageResource(R.drawable.ic_trophy_slvr)
+            scorePercentage in 25..49 -> trophyImageView.setImageResource(R.drawable.ic_trophy_brwn)
+            else -> trophyImageView.setImageDrawable(null)
         }
     }
+
+    private fun addPlatinumTrophyToUser() {
+        FirebaseAuth.getInstance().currentUser?.uid?.let { uid ->
+            val userRef = FirebaseDatabase.getInstance().getReference("Users").child(uid)
+
+            userRef.child("statsDetails").child("platinumTrophy").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val platinumTrophyCount = dataSnapshot.getValue(Int::class.java) ?: 0
+                    val newPlatinumTrophyCount = platinumTrophyCount + 1
+
+                    userRef.child("statsDetails").child("platinumTrophy").setValue(newPlatinumTrophyCount)
+                        .addOnSuccessListener {
+                            Log.d("PlatinumTrophy", "Pomyślnie dodano platynowy puchar.")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("PlatinumTrophy", "Błąd podczas dodawania złotego pucharu: ${e.message}")
+                        }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Log.e("PlatinumTrophy", "Błąd pobierania danych o złotych pucharach: ${databaseError.message}")
+                }
+            })
+        }
+    }
+
+
+    private fun addGoldTrophyToUser() {
+        FirebaseAuth.getInstance().currentUser?.uid?.let { uid ->
+            val userRef = FirebaseDatabase.getInstance().getReference("Users").child(uid)
+
+            userRef.child("statsDetails").child("goldTrophy").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val goldTrophyCount = dataSnapshot.getValue(Int::class.java) ?: 0
+                    val newGoldTrophyCount = goldTrophyCount + 1
+
+                    userRef.child("statsDetails").child("goldTrophy").setValue(newGoldTrophyCount)
+                        .addOnSuccessListener {
+                            Log.d("GoldTrophy", "Pomyślnie dodano złoty puchar.")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("GoldTrophy", "Błąd podczas dodawania złotego pucharu: ${e.message}")
+                        }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Log.e("GoldTrophy", "Błąd pobierania danych o złotych pucharach: ${databaseError.message}")
+                }
+            })
+        }
+    }
+
+
+    private fun addSilverTrophyToUser() {
+        FirebaseAuth.getInstance().currentUser?.uid?.let { uid ->
+            val userRef = FirebaseDatabase.getInstance().getReference("Users").child(uid)
+
+            userRef.child("statsDetails").child("silverTrophy").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val silverTrophyCount = dataSnapshot.getValue(Int::class.java) ?: 0
+                    val newSilverTrophyCount = silverTrophyCount + 1
+
+                    userRef.child("statsDetails").child("silverTrophy").setValue(newSilverTrophyCount)
+                        .addOnSuccessListener {
+                            Log.d("SilverTrophy", "Pomyślnie dodano srebrny puchar.")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("SilverTrophy", "Błąd podczas dodawania srebrnego pucharu: ${e.message}")
+                        }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Log.e("SilverTrophy", "Błąd pobierania danych o srebrnych pucharach: ${databaseError.message}")
+                }
+            })
+        }
+    }
+
+
+    private fun addBronzeTrophyToUser() {
+        FirebaseAuth.getInstance().currentUser?.uid?.let { uid ->
+            val userRef = FirebaseDatabase.getInstance().getReference("Users").child(uid)
+
+            userRef.child("statsDetails").child("bronzeTrophy").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val bronzeTrophyCount = dataSnapshot.getValue(Int::class.java) ?: 0
+                    val newBronzeTrophyCount = bronzeTrophyCount + 1
+
+                    userRef.child("statsDetails").child("bronzeTrophy").setValue(newBronzeTrophyCount)
+                        .addOnSuccessListener {
+                            Log.d("BronzeTrophy", "Pomyślnie dodano brązowy puchar.")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("BronzeTrophy", "Błąd podczas dodawania brązowego pucharu: ${e.message}")
+                        }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Log.e("BronzeTrophy", "Błąd pobierania danych o brązowych pucharach: ${databaseError.message}")
+                }
+            })
+        }
+    }
+
+
+
     private fun finishQuiz(){
         val dialogBinding = ScoreScreenBinding.inflate(layoutInflater)
         val totalQuestions = questionModelList.size
         val percentage = ((score.toFloat() / totalQuestions.toFloat() ) *100 ).toInt()
 
         displayTrophy(dialogBinding.trophy, percentage)
+        if (percentage == 100) {
+            addPlatinumTrophyToUser()
+        } else if (percentage >= 75) {
+            addGoldTrophyToUser()
+        } else if (percentage in 50 until 75) {
+            addSilverTrophyToUser()
+        } else if (percentage in 25 until 50) {
+            addBronzeTrophyToUser()
+        }
 
         dialogBinding.apply {
             scoreProgressIndicator.progress = percentage
             scoreProgressText.text = "$percentage %"
-            if(percentage>40){
+            if(percentage>25){
                 scoreTitle.text = "Gratulacje! Udało ci się przejść quiz"
                 scoreTitle.setTextColor(Color.GREEN)
             }else{

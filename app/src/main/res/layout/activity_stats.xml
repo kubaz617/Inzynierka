@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Statystyki użytkownika"
-        android:textSize="24sp"
+        android:textSize="35sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,6 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Przeczytane strony: 0"
+        android:textSize="25dp"
         app:layout_constraintTop_toBottomOf="@id/textViewStatsHeader"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,6 +63,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Przeczytane książki: 0"
+        android:textSize="25dp"
         app:layout_constraintTop_toBottomOf="@id/totalPagesTv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -70,11 +72,13 @@
         android:layout_marginEnd="16dp"
         android:layout_below="@+id/totalPagesTv"/>
 
+
     <TextView
-        android:id="@+id/textViewQuizzesSolved"
+        android:id="@+id/completedChallengesTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Rozwiązane quizy: 0"
+        android:text="Wykonane wyzwania: 0"
+        android:textSize="25dp"
         app:layout_constraintTop_toBottomOf="@id/totalBooksTv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -83,24 +87,12 @@
         android:layout_marginEnd="16dp"
         android:layout_below="@+id/totalBooksTv"/>
 
-    <TextView
-        android:id="@+id/completedChallengesTv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Wykonane wyzwania: 0"
-        app:layout_constraintTop_toBottomOf="@id/textViewQuizzesSolved"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_below="@+id/textViewQuizzesSolved"/>
-
         <TextView
             android:id="@+id/startedChallengesTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Rozpoczęte wyzwania: 0"
+            android:textSize="25dp"
             app:layout_constraintTop_toBottomOf="@id/completedChallengesTv"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -108,6 +100,69 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_below="@+id/completedChallengesTv"/>
+
+        <TextView
+            android:id="@+id/allPlatinumTrophiesTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Łączna ilość trofeów platynowych: 0"
+            android:textSize="25dp"
+            app:layout_constraintTop_toBottomOf="@id/startedChallengesTv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_below="@+id/startedChallengesTv"
+            android:drawablePadding="8dp"
+            app:drawableEndCompat="@drawable/ic_trophy_plt" />
+
+        <TextView
+            android:id="@+id/allGoldTrophiesTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Łączna ilość trofeów złotych: 0"
+            android:textSize="25dp"
+            app:layout_constraintTop_toBottomOf="@id/allPlatinumTrophiesTv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_below="@+id/allPlatinumTrophiesTv"
+            android:drawablePadding="8dp"
+            app:drawableEndCompat="@drawable/ic_trophy_gld" />
+
+        <TextView
+            android:id="@+id/allSilverTrophiesTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Łączna ilość trofeów srebrnych: 0"
+            android:textSize="25dp"
+            app:layout_constraintTop_toBottomOf="@id/allGoldTrophiesTv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_below="@+id/allGoldTrophiesTv"
+            android:drawablePadding="8dp"
+            app:drawableEndCompat="@drawable/ic_trophy_slvr" />
+        <TextView
+            android:id="@+id/allBronzeTrophiesTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Łączna ilość trofeów brązowych: 0"
+            android:textSize="25dp"
+            app:layout_constraintTop_toBottomOf="@id/allSilverTrophiesTv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_below="@+id/allSilverTrophiesTv"
+            android:drawablePadding="8dp"
+            app:drawableEndCompat="@drawable/ic_trophy_brwn" />
 
     </RelativeLayout>
 
