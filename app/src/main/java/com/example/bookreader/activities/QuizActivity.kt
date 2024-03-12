@@ -1,6 +1,5 @@
 package com.example.bookreader.activities
 
-import android.content.ContentValues.TAG
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -110,7 +109,6 @@ class QuizActivity : AppCompatActivity(), View.OnClickListener {
 
         val clickedBtn = view as Button
         if(clickedBtn.id== R.id.next_btn){
-            //next button is clicked
             if(selectedAnswer.isEmpty()){
                 Toast.makeText(applicationContext,"Proszę wybrać odpowiedź żeby móc kontynuować", Toast.LENGTH_SHORT).show()
                 return;
@@ -122,7 +120,6 @@ class QuizActivity : AppCompatActivity(), View.OnClickListener {
             currentQuestionIndex++
             loadQuestions()
         }else{
-            //options button is clicked
             selectedAnswer = clickedBtn.text.toString()
             clickedBtn.setBackgroundColor(getColor(R.color.cyan))
         }

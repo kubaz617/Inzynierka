@@ -6,9 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.RatingBar
-import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import com.example.bookreader.utils.MyApplication
 import com.example.bookreader.R
 import com.example.bookreader.databinding.ActivityBookDetailBinding

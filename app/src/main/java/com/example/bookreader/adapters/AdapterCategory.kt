@@ -24,7 +24,7 @@ import com.google.firebase.database.ValueEventListener
 class AdapterCategory :RecyclerView.Adapter<AdapterCategory.HolderCategory>, Filterable{
 
     private val context: Context
-    public var categoryArrayList: ArrayList<ModelCategory>
+    var categoryArrayList: ArrayList<ModelCategory>
     private var filterList: ArrayList<ModelCategory>
     private var filter: FilterCategory? = null
 

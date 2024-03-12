@@ -20,7 +20,7 @@ class AdapterBookUser : RecyclerView.Adapter<AdapterBookUser.HolderBookUser>, Fi
     private var context: Context
 
     private val filterList: ArrayList<ModelBook>
-    public var bookArrayList: ArrayList<ModelBook>
+    var bookArrayList: ArrayList<ModelBook>
     private val TAG = "PDF_ADD_TAG"
 
     private lateinit var binding: RowBookUserBinding

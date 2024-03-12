@@ -1,15 +1,12 @@
 package com.example.bookreader.activities
 
 import android.content.BroadcastReceiver
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.media.MediaPlayer
-import android.net.Uri
 import android.os.BatteryManager
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -28,7 +25,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
-import android.provider.Settings
 import android.widget.TextView
 
 class BookViewActivity : AppCompatActivity() {
@@ -187,7 +183,7 @@ class BookViewActivity : AppCompatActivity() {
         isMusicPlaying = !isMusicPlaying
     }
 
-    private fun loadBookFromUrl(pdfUrl: String, categoryId: String) { // Dodany numer kategorii
+    private fun loadBookFromUrl(pdfUrl: String, categoryId: String) {
         Log.d(TAG, "loadBookFromUrl: Pobieranie książki z bazy danych przy pomocy adresu Url")
 
         val reference = FirebaseStorage.getInstance().getReferenceFromUrl(pdfUrl)

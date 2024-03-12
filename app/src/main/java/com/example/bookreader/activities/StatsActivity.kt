@@ -4,9 +4,7 @@ import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.example.bookreader.R
 import com.example.bookreader.databinding.ActivityStatsBinding
-import com.example.bookreader.databinding.ActivityUserScreenBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

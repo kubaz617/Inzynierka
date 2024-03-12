@@ -66,7 +66,6 @@ class SignUpActivity : AppCompatActivity() {
         val hashMap: HashMap<String, Any?> = HashMap()
         hashMap["uid"] = uid
         hashMap["email"] = email
-        hashMap["profileImage"] = ""
         hashMap["userType"] = "user"
 
         val ref = FirebaseDatabase.getInstance().getReference("Users")
