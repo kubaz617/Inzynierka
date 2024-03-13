@@ -8,80 +8,61 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import com.example.bookreader.models.ModelBook
 import com.example.bookreader.adapters.AdapterBookUser
 import com.example.bookreader.databinding.FragmentBooksUserBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 
-class BooksUserFragment : Fragment {
+class BooksUserFragment : Fragment() {
 
     private lateinit var binding: FragmentBooksUserBinding
-
     private lateinit var firebaseAuth: FirebaseAuth
-     companion object{
-        private const val TAG = "BOOKS_USER_TAG"
-         fun newInstance(categoryId: String, category: String, uid: String): BooksUserFragment {
-            val fragment = BooksUserFragment()
-
-            val args = Bundle()
-            args.putString("categoryId", categoryId)
-            args.putString("category", category)
-            args.putString("uid", uid)
-            fragment.arguments = args
-            return fragment
-        }
-    }
+    private lateinit var adapterBookUser: AdapterBookUser
+    private lateinit var pdfArrayList: ArrayList<ModelBook>
 
     private var categoryId = ""
     private var category = ""
     private var uid = ""
 
-    private lateinit var pdfArrayList: ArrayList<ModelBook>
-    private lateinit var adapterBookUser: AdapterBookUser
+    private val TAG = "BOOKS_USER_TAG"
 
-    constructor()
+    companion object {
+        fun newInstance(categoryId: String, category: String, uid: String): BooksUserFragment {
+            val fragment = BooksUserFragment()
+            val args = Bundle().apply {
+                putString("categoryId", categoryId)
+                putString("category", category)
+                putString("uid", uid)
+            }
+            fragment.arguments = args
+            return fragment
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         firebaseAuth = FirebaseAuth.getInstance()
+        pdfArrayList = ArrayList()
+        adapterBookUser = AdapterBookUser(requireContext(), pdfArrayList)
+
         val args = arguments
-        if (args != null){
-            categoryId = args.getString("categoryId")!!
-            category = args.getString("category")!!
-            uid = args.getString("uid")!!
+        if (args != null) {
+            categoryId = args.getString("categoryId") ?: ""
+            category = args.getString("category") ?: ""
+            uid = args.getString("uid") ?: ""
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentBooksUserBinding.inflate(LayoutInflater.from(context), container, false)
+        binding = FragmentBooksUserBinding.inflate(inflater, container, false)
         Log.d(TAG, "onCreateView: Category: $category")
-        if (category == "Wszystkie"){
-            loadAllBooks()
-        }
-        else if (category == "Najczęściej oglądane"){
-            loadMostViewedDownloadedBooks("viewsCount")
-        }
-        else if (category == "Najczęściej pobierane"){
-            loadMostViewedDownloadedBooks("downloadCount")
-        }
-        else if (category == "Ulubione"){
-            loadFavoriteBooks()
-        }
-        else{
-            loadCategorizedBooks()
-        }
+        binding.BooksRv.adapter = adapterBookUser
 
+        loadBooks()
 
-        binding.searchEt.addTextChangedListener { object :TextWatcher{
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
+        binding.searchEt.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 try {
@@ -91,38 +72,42 @@ class BooksUserFragment : Fragment {
                 }
             }
 
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-        } }
+            override fun afterTextChanged(s: Editable?) {}
+        })
 
         return binding.root
     }
 
-
-    private fun loadAllBooks() {
-        pdfArrayList = ArrayList()
+    private fun loadBooks() {
         val ref = FirebaseDatabase.getInstance().getReference("Books")
-        ref.addValueEventListener(object : ValueEventListener{
+        val query = when (category) {
+            "Wszystkie" -> ref
+            "Najczęściej oglądane" -> ref.orderByChild("viewsCount").limitToLast(10)
+            "Najczęściej pobierane" -> ref.orderByChild("downloadCount").limitToLast(10)
+            "Ulubione" -> {
+                loadFavoriteBooks()
+                return
+            }
+            else -> ref.orderByChild("categoryId").equalTo(categoryId)
+        }
+
+        query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 pdfArrayList.clear()
-                for (ds in snapshot.children){
+                for (ds in snapshot.children) {
                     val model = ds.getValue(ModelBook::class.java)
-
-                    pdfArrayList.add(model!!)
+                    model?.let { pdfArrayList.add(it) }
                 }
-                adapterBookUser = AdapterBookUser(context!!, pdfArrayList)
-                binding.BooksRv.adapter = adapterBookUser
+                adapterBookUser.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {
-
+                Log.e(TAG, "onCancelled: DatabaseError: ${error.message}")
             }
         })
     }
 
     private fun loadFavoriteBooks() {
-        pdfArrayList = ArrayList()
         val favoriteBookIds = mutableListOf<String>()
         val ref = FirebaseDatabase.getInstance().getReference("Users").child(firebaseAuth.uid!!).child("Favorites")
         ref.addValueEventListener(object : ValueEventListener {
@@ -144,64 +129,19 @@ class BooksUserFragment : Fragment {
                                     }
                                 }
                             }
-                            adapterBookUser = AdapterBookUser(context!!, pdfArrayList)
-                            binding.BooksRv.adapter = adapterBookUser
+                            adapterBookUser.notifyDataSetChanged()
                         }
 
                         override fun onCancelled(error: DatabaseError) {
+                            Log.e(TAG, "loadFavoriteBooks onCancelled: ${error.message}")
                         }
                     })
-                } else {
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
+                Log.e(TAG, "loadFavoriteBooks onCancelled: ${error.message}")
             }
         })
     }
-
-    private fun loadMostViewedDownloadedBooks(orderBy: String) {
-        pdfArrayList = ArrayList()
-        val ref = FirebaseDatabase.getInstance().getReference("Books")
-        ref.orderByChild(orderBy).limitToLast(10)
-            .addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                pdfArrayList.clear()
-                for (ds in snapshot.children){
-                    val model = ds.getValue(ModelBook::class.java)
-
-                    pdfArrayList.add(model!!)
-                }
-                adapterBookUser = AdapterBookUser(context!!, pdfArrayList)
-                binding.BooksRv.adapter = adapterBookUser
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-        })
-    }
-
-    private fun loadCategorizedBooks() {
-        pdfArrayList = ArrayList()
-        val ref = FirebaseDatabase.getInstance().getReference("Books")
-        ref.orderByChild("categoryId").equalTo(categoryId)
-            .addValueEventListener(object : ValueEventListener{
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    pdfArrayList.clear()
-                    for (ds in snapshot.children){
-                        val model = ds.getValue(ModelBook::class.java)
-
-                        pdfArrayList.add(model!!)
-                    }
-                    adapterBookUser = AdapterBookUser(context!!, pdfArrayList)
-                    binding.BooksRv.adapter = adapterBookUser
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-
-                }
-            })
-    }
-
 }

@@ -49,6 +49,7 @@ class AdapterBookUser : RecyclerView.Adapter<AdapterBookUser.HolderBookUser>, Fi
         val title = model.title
         val author = model.author
         val description = model.description
+        val uid = model.uid
         val bookUrl = model.url
         val timestamp = model.timestamp
         val date = MyApplication.formatTimeStamp(timestamp)
