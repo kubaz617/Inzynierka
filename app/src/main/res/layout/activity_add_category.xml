@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/screen"
     tools:context=".activities.AddCategory">
 
 
@@ -41,6 +40,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/categoryEt"
             style="@style/LoginTextInputInnerFieldStyle"
+            android:background="@color/grey"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:hint="Nowa kategoria..."

@@ -2,33 +2,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="16dp"
     tools:context=".activities.SimiliarActivity">
 
-    <ImageView
-        android:id="@+id/user_sign"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_user_sign">
-    </ImageView>
+    <RelativeLayout
+        android:background="@color/cyan"
+        android:id="@+id/toolbarRl"
+        android:layout_height="?actionBarSize"
+        android:layout_width="match_parent">
 
-    <TextView
-        android:id="@+id/titleTv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="abc@exmaple.com"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:layout_below="@id/user_sign">
-    </TextView>
+        <ImageView
+            android:id="@+id/user_sign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_user_sign" />
+
+        <TextView
+            android:id="@+id/titleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="abc@exmaple.com"
+            android:layout_below="@+id/user_sign"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/titleTv"
+        android:layout_below="@+id/toolbarRl"
         android:textSize="24sp"
         android:textStyle="bold"
         android:visibility="gone"

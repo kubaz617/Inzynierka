@@ -58,11 +58,11 @@ class StatsActivity : AppCompatActivity() {
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
-                    Log.d(TAG, "getTotalPagesRead: Failed to retrieve total pages: ${databaseError.message}")
+                    Log.d(TAG, "getTotalPagesRead: Nie udało się pobrać łącznej sumy stron: ${databaseError.message}")
                 }
             })
         } else {
-            Log.d(TAG, "getTotalPagesRead: User not authenticated.")
+            Log.d(TAG, "getTotalPagesRead: Użytkownik nie zalogowany")
         }
     }
 
@@ -87,11 +87,11 @@ class StatsActivity : AppCompatActivity() {
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
-                    Log.d(TAG, "getTotalBooksRead: Failed to retrieve total books: ${databaseError.message}")
+                    Log.d(TAG, "getTotalBooksRead: Nie udało się pobrać łącznej ilości ksiązek: ${databaseError.message}")
                 }
             })
         } else {
-            Log.d(TAG, "getTotalBooksRead: User not authenticated.")
+            Log.d(TAG, "getTotalBooksRead: Użytkownik nie zalogowany")
         }
     }
 
@@ -110,11 +110,11 @@ class StatsActivity : AppCompatActivity() {
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
-                    Log.d(TAG, "getCompletedChallenges: Failed to retrieve completed challenges count: ${databaseError.message}")
+                    Log.d(TAG, "getCompletedChallenges: Nie udało się pobrać łączej ilości wykonanych wyzwań ${databaseError.message}")
                 }
             })
         } else {
-            Log.d(TAG, "getCompletedChallenges: User not authenticated.")
+            Log.d(TAG, "getCompletedChallenges: Użytkownik nie zalogowany")
         }
     }
 
@@ -132,11 +132,11 @@ class StatsActivity : AppCompatActivity() {
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
-                    Log.d(TAG, "getStartedChallenges: Failed to retrieve started challenges count: ${databaseError.message}")
+                    Log.d(TAG, "getStartedChallenges: Nie udało się pobrać łącznej ilości rozpoczętych wyzwań ${databaseError.message}")
                 }
             })
         } else {
-            Log.d(TAG, "getStartedChallenges: User not authenticated.")
+            Log.d(TAG, "getStartedChallenges: Użytkownik nie zalogowany")
         }
     }
 
@@ -160,11 +160,11 @@ class StatsActivity : AppCompatActivity() {
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
-                    Log.d(TAG, "getCompletedTrophies: Failed to retrieve completed trophies count: ${databaseError.message}")
+                    Log.d(TAG, "getCompletedTrophies: Nie udało się pobrać łącznej ilości trofeów ${databaseError.message}")
                 }
             })
         } else {
-            Log.d(TAG, "getCompletedTrophies: User not authenticated.")
+            Log.d(TAG, "getCompletedTrophies: Użytkownik nie zalogowany")
         }
     }
 

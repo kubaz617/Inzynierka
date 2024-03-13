@@ -155,7 +155,7 @@ class BookDetailActivity : AppCompatActivity() {
 
                     MyApplication.loadCategory(categoryId, binding.categoryTv)
 
-                    MyApplication.loadBookFromUrlSinglePage(
+                    MyApplication.loadBookSinglePage(
                         "$bookUrl",
                         "$bookTitle",
                         binding.pdfView,

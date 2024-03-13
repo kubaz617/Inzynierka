@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".activities.QuizScreen"
-    android:background="@drawable/screen">
+    tools:context=".activities.QuizScreen">
 
 
     <LinearLayout
@@ -32,7 +31,7 @@
             android:layout_height="wrap_content"
             android:text="Przekonajmy się ile zapamiętałeś z przeczytanych książek"
             android:gravity="center"
-            android:textSize="18sp"
+            android:textSize="24sp"
             android:layout_margin="16dp"
             android:textColor="@color/black"
             android:textStyle="bold"/>

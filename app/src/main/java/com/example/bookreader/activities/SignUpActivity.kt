@@ -77,7 +77,7 @@ class SignUpActivity : AppCompatActivity() {
                 finish()
             }
             .addOnFailureListener{
-                Toast.makeText(this, "Błąd", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Błąd podczas wysyłanie informacji do bazy danych", Toast.LENGTH_SHORT).show()
             }
 
     }

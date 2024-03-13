@@ -23,7 +23,6 @@ import com.google.firebase.database.ValueEventListener
 
 class QuizActivity : AppCompatActivity(), View.OnClickListener {
 
-    private lateinit var dialogBinding: ScoreScreenBinding
     companion object {
         var questionModelList: List<QuestionModel> = listOf()
         var time: String = ""
@@ -153,12 +152,12 @@ class QuizActivity : AppCompatActivity(), View.OnClickListener {
                             Log.d("PlatinumTrophy", "Pomyślnie dodano platynowy puchar.")
                         }
                         .addOnFailureListener { e ->
-                            Log.e("PlatinumTrophy", "Błąd podczas dodawania złotego pucharu: ${e.message}")
+                            Log.e("PlatinumTrophy", "Błąd podczas dodawania platynowego pucharu: ${e.message}")
                         }
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
-                    Log.e("PlatinumTrophy", "Błąd pobierania danych o złotych pucharach: ${databaseError.message}")
+                    Log.e("PlatinumTrophy", "Błąd pobierania danych o platynowych pucharach: ${databaseError.message}")
                 }
             })
         }

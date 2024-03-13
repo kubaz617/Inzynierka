@@ -190,8 +190,8 @@ class AddBook : AppCompatActivity() {
 
                 binding.categoryTv.text = selectedCategoryTitle
 
-                Log.d(TAG, "categoryPickDialog: Selected Category ID: $selectedCategoryId")
-                Log.d(TAG, "categoryPickDialog: Selected Category Title: $selectedCategoryTitle")
+                Log.d(TAG, "categoryPickDialog: Wybrane id kategorii: $selectedCategoryId")
+                Log.d(TAG, "categoryPickDialog: Wybrany tytuł kategorii: $selectedCategoryTitle")
             }
             .show()
     }

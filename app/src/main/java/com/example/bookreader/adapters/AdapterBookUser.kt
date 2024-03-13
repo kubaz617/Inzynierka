@@ -61,7 +61,7 @@ class AdapterBookUser : RecyclerView.Adapter<AdapterBookUser.HolderBookUser>, Fi
 
         MyApplication.loadCategory(categoryId, holder.categoryTv)
 
-        MyApplication.loadBookFromUrlSinglePage(
+        MyApplication.loadBookSinglePage(
             bookUrl,
             title,
             holder.bookView,

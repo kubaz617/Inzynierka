@@ -122,7 +122,6 @@ class BookViewActivity : AppCompatActivity() {
                 val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
                     context.registerReceiver(null, ifilter)
                 }
-
                 val level: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
                 val scale: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
 
@@ -237,7 +236,7 @@ class BookViewActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                Log.d(TAG, "moveToLastReadPage: Failed to retrieve user's last read page: ${databaseError.message}")
+                Log.d(TAG, "moveToLastReadPage: Nie udało się pobrać danych ${databaseError.message}")
             }
         })
     }
@@ -324,13 +323,13 @@ class BookViewActivity : AppCompatActivity() {
             )
             databaseReference.child("bookDetails").child(bookId).setValue(bookDetailsMap)
                 .addOnSuccessListener {
-                    Log.d(TAG, "saveUserBookDetails: Book details saved successfully.")
+                    Log.d(TAG, "saveUserBookDetails: Dane zostały zapisane")
                 }
                 .addOnFailureListener { e ->
-                    Log.d(TAG, "saveUserBookDetails: Failed to save book details: ${e.message}")
+                    Log.d(TAG, "saveUserBookDetails: Błąd podczas zapisu danych ${e.message}")
                 }
         } else {
-            Log.d(TAG, "saveUserBookDetails: User not authenticated or pdfView not initialized.")
+            Log.d(TAG, "saveUserBookDetails: Użytkownik nie jest zalogowany")
         }
     }
 }

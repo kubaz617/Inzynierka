@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/cyan">
 
            <ImageView
             android:id="@+id/user_sign"
@@ -29,7 +30,20 @@
             android:textColor="@color/black" />
     </RelativeLayout>
 
-    <Button
+
+
+    <ImageButton
+        android:id="@+id/menuBtn"
+        android:background="@color/transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_menu_theme"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="10dp"
+        android:visibility="gone"/>
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/book_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -40,9 +54,10 @@
         app:layout_constraintHorizontal_bias="0.5"
         android:layout_marginStart="24dp"
         android:layout_marginTop="100dp"
-        android:layout_marginEnd="24dp"/>
+        android:layout_marginEnd="24dp"
+        android:background="@color/cyan"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/quiz_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -53,9 +68,10 @@
         app:layout_constraintHorizontal_bias="0.5"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"/>
+        android:layout_marginEnd="24dp"
+        android:background="@color/cyan"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/similiar_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -66,9 +82,10 @@
         app:layout_constraintHorizontal_bias="0.5"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"/>
+        android:layout_marginEnd="24dp"
+        android:background="@color/cyan"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/stats_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -79,9 +96,10 @@
         app:layout_constraintHorizontal_bias="0.5"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"/>
+        android:layout_marginEnd="24dp"
+        android:background="@color/cyan"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/logout_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -92,6 +110,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"/>
+        android:layout_marginEnd="24dp"
+        android:background="@color/cyan"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -52,10 +52,10 @@ class SimiliarActivity : AppCompatActivity() {
 
             userBookDetailsRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(userBookDetailsSnapshot: DataSnapshot) {
-                    Log.d("SimiliarActivity", "User book details snapshot: $userBookDetailsSnapshot")
+                    Log.d("SimiliarActivity", "Snapshot użytkownika: $userBookDetailsSnapshot")
                     categoriesRef.addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(categoriesSnapshot: DataSnapshot) {
-                            Log.d("SimiliarActivity", "Categories snapshot: $categoriesSnapshot")
+                            Log.d("SimiliarActivity", "Snapshot kategorii $categoriesSnapshot")
                             findMostReadCategory(userBookDetailsSnapshot, categoriesSnapshot, uid)
                         }
 

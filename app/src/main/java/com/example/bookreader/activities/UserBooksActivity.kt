@@ -96,21 +96,21 @@ class UserBooksActivity : AppCompatActivity() {
                     categoryArrayList.add(modelMostViewed)
                     categoryArrayList.add(modelFavorites)
                     viewPagerAdapter.addFragment(
-                        BooksUserFragment.newInstance(
+                        BooksListUser.newInstance(
                             "${modelAll.id}",
                             "${modelAll.category}",
                             "${modelAll.uid}"
                         ), modelAll.category
                     )
                     viewPagerAdapter.addFragment(
-                        BooksUserFragment.newInstance(
+                        BooksListUser.newInstance(
                             "${modelMostViewed.id}",
                             "${modelMostViewed.category}",
                             "${modelMostViewed.uid}"
                         ), modelMostViewed.category
                     )
                     viewPagerAdapter.addFragment(
-                        BooksUserFragment.newInstance(
+                        BooksListUser.newInstance(
                             "${modelFavorites.id}",
                             "${modelFavorites.category}",
                             "${modelFavorites.uid}"
@@ -122,7 +122,7 @@ class UserBooksActivity : AppCompatActivity() {
                         val model = ds.getValue(ModelCategory::class.java)
                         categoryArrayList.add(model!!)
                         viewPagerAdapter.addFragment(
-                            BooksUserFragment.newInstance(
+                            BooksListUser.newInstance(
                                 "${model.id}",
                                 "${model.category}",
                                 "${model.uid}"
@@ -134,7 +134,6 @@ class UserBooksActivity : AppCompatActivity() {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-
                 }
             })
 
@@ -224,7 +223,7 @@ class UserBooksActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                Log.e("Firebase", "Error fetching data: ${databaseError.message}")
+                Log.e("Firebase", "Błąd pobierania danych: ${databaseError.message}")
                 callback(null)
             }
         })
@@ -306,7 +305,7 @@ class UserBooksActivity : AppCompatActivity() {
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
-                    Log.e("Firebase", "Error fetching data: ${databaseError.message}")
+                    Log.e("Firebase", "Błąd pobierania danych: ${databaseError.message}")
                 }
             })
         }
@@ -335,7 +334,7 @@ class UserBooksActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                Log.e("Firebase", "Error fetching data: ${databaseError.message}")
+                Log.e("Firebase", "Błąd pobierania danych ${databaseError.message}")
                 callback(false)
             }
         })
@@ -477,7 +476,7 @@ class UserBooksActivity : AppCompatActivity() {
     }
 
     class ViewPagerAdapter(fm: FragmentManager, behavior: Int, context: Context): FragmentPagerAdapter(fm, behavior){
-            private val fragmentsList: ArrayList<BooksUserFragment> = ArrayList()
+            private val fragmentsList: ArrayList<BooksListUser> = ArrayList()
 
             private val fragmentTitleList: ArrayList<String> = ArrayList()
 
@@ -499,9 +498,8 @@ class UserBooksActivity : AppCompatActivity() {
                 return fragmentTitleList[position]
             }
 
-        fun addFragment(fragment: BooksUserFragment, title: String){
+        fun addFragment(fragment: BooksListUser, title: String){
                 fragmentsList.add(fragment)
-
                 fragmentTitleList.add(title)
             }
         }

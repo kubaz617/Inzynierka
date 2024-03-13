@@ -10,13 +10,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.bookreader.models.ModelBook
 import com.example.bookreader.adapters.AdapterBookUser
-import com.example.bookreader.databinding.FragmentBooksUserBinding
+import com.example.bookreader.databinding.ActivityBooksListUserBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
-class BooksUserFragment : Fragment() {
+class BooksListUser : Fragment() {
 
-    private lateinit var binding: FragmentBooksUserBinding
+    private lateinit var binding: ActivityBooksListUserBinding
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var adapterBookUser: AdapterBookUser
     private lateinit var pdfArrayList: ArrayList<ModelBook>
@@ -28,8 +28,8 @@ class BooksUserFragment : Fragment() {
     private val TAG = "BOOKS_USER_TAG"
 
     companion object {
-        fun newInstance(categoryId: String, category: String, uid: String): BooksUserFragment {
-            val fragment = BooksUserFragment()
+        fun newInstance(categoryId: String, category: String, uid: String): BooksListUser {
+            val fragment = BooksListUser()
             val args = Bundle().apply {
                 putString("categoryId", categoryId)
                 putString("category", category)
@@ -55,7 +55,7 @@ class BooksUserFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentBooksUserBinding.inflate(inflater, container, false)
+        binding = ActivityBooksListUserBinding.inflate(inflater, container, false)
         Log.d(TAG, "onCreateView: Category: $category")
         binding.BooksRv.adapter = adapterBookUser
 

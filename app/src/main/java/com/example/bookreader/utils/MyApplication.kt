@@ -36,7 +36,7 @@ class MyApplication:Application() {
         }
 
 
-        fun loadBookFromUrlSinglePage(
+        fun loadBookSinglePage(
             bookUrl: String,
             bookTitle: String,
             pdfView: PDFView,

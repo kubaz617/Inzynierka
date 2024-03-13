@@ -20,7 +20,7 @@ class AdapterBookAdmin :RecyclerView.Adapter<AdapterBookAdmin.HolderBookAdmin>, 
 
     private var context: Context
 
-    public var bookArrayList: ArrayList<ModelBook>
+    var bookArrayList: ArrayList<ModelBook>
     private val filterList:ArrayList<ModelBook>
 
     private lateinit var binding:RowBookAdminBinding
@@ -61,7 +61,7 @@ class AdapterBookAdmin :RecyclerView.Adapter<AdapterBookAdmin.HolderBookAdmin>, 
 
         MyApplication.loadCategory(categoryId, holder.categoryTv)
 
-        MyApplication.loadBookFromUrlSinglePage(
+        MyApplication.loadBookSinglePage(
             bookUrl,
             title,
             holder.bookView,

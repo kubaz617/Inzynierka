@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:gravity="center"
     android:padding="16dp"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/white">
 
     <TextView
         android:layout_width="match_parent"
@@ -70,7 +71,8 @@
         tools:text="2 na 10 poprawnych"
         android:gravity="center" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
+        android:background="@color/cyan"
         android:id="@+id/finish_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

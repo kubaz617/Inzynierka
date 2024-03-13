@@ -5,20 +5,23 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".activities.BooksUserFragment">
+    tools:context=".activities.BooksListUser"
+    android:background="@color/transparent">
 
     <EditText
         android:id="@+id/search_Et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="@color/white"
+        android:background="@color/transparent"
         android:hint="Wyszukaj"
         android:padding="10dp"
         android:textColor="@color/black"
-        android:textColorHint="@color/grey"/>
+        android:textColorHint="@color/black"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:background="@color/transparent"
         android:id="@+id/BooksRv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

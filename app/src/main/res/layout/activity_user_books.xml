@@ -7,6 +7,7 @@
     tools:context=".activities.UserBooksActivity">
 
     <RelativeLayout
+        android:background="@color/cyan"
         android:id="@+id/toolbarRl"
         android:layout_height="?actionBarSize"
         android:layout_width="match_parent">
@@ -35,10 +36,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbarRl"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
         android:background="@color/transparent"
         app:tabBackground="@drawable/tab_selector"
         app:tabIndicatorFullWidth="false"
@@ -46,6 +43,7 @@
         app:tabMode="scrollable" />
 
     <LinearLayout
+        android:background="@color/transparent"
         android:id="@+id/dateBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -75,6 +73,7 @@
     </LinearLayout>
 
     <androidx.viewpager.widget.ViewPager
+        android:background="@color/transparent"
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -89,25 +88,27 @@
         android:orientation="horizontal"
         android:padding="16dp">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/challenge_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Wyzwanie"
-            android:layout_gravity="start" />
+            android:layout_gravity="start"
+            android:background="@color/cyan"/>
 
         <android.widget.Space
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="0.25" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/checkButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Sprawdź"
+            android:background="@color/cyan"
             android:layout_gravity="end" />
     </LinearLayout>
 

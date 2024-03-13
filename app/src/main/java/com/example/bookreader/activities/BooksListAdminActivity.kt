@@ -43,7 +43,6 @@ class BooksListAdminActivity : AppCompatActivity() {
 
         binding.searchEt.addTextChangedListener(object: TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
             }
 
             override fun onTextChanged(s: CharSequence, p1: Int, p2: Int, p3: Int) {
@@ -56,7 +55,6 @@ class BooksListAdminActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-
             }
         })
     }
@@ -81,7 +79,7 @@ class BooksListAdminActivity : AppCompatActivity() {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-
+                    Log.e(TAG, "onCancelled: DatabaseError: ${error.message}")
                 }
             })
 

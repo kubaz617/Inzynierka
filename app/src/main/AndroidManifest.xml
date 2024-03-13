@@ -18,7 +18,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.LoginAndSignUp">
+        android:theme="@style/Theme.Default">
         <activity
             android:name=".activities.StatsActivity"
             android:exported="false" />
@@ -51,9 +51,6 @@
             android:exported="false" />
         <activity
             android:name=".activities.SimiliarActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.ChallengeActivity"
             android:exported="false" />
         <activity
             android:name=".activities.QuizActivity"

@@ -9,8 +9,9 @@
 
 
     <RelativeLayout
+        android:background="@color/cyan"
         android:id="@+id/toolbarRl"
-        android:layout_height="match_parent"
+        android:layout_height="?actionBarSize"
         android:layout_width="match_parent">
 
         <ImageView
@@ -29,6 +30,8 @@
             android:text="abc@example.com"
             android:textColor="@color/black" />
 
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/textViewStatsHeader"
@@ -42,7 +45,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_below="@+id/titleTv"/>
+        android:layout_below="@+id/toolbarRl"/>
 
     <TextView
         android:id="@+id/totalPagesTv"
@@ -164,6 +167,5 @@
             android:drawablePadding="8dp"
             app:drawableEndCompat="@drawable/ic_trophy_brwn" />
 
-    </RelativeLayout>
 
 </RelativeLayout>

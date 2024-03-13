@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.BooksListAdminActivity">
+    tools:context=".activities.BooksListAdminActivity"
+    android:background="@color/transparent">
 
     <RelativeLayout
         android:id="@+id/toolbarRl"
         android:layout_height="?actionBarSize"
-        android:layout_width="match_parent">
+        android:layout_width="match_parent"
+        android:background="@color/cyan">
 
 
         <TextView
@@ -39,23 +41,18 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_below="@+id/toolbarRl"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="10dp"
-        android:drawablePadding="10dp"
         android:padding="10dp"
         android:hint="Wyszukaj"
-        android:background="@color/grey"/>
+        android:background="@color/transparent"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:background="@color/transparent"
         android:id="@+id/BooksRv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/search_Et"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/row_book_admin" />
 

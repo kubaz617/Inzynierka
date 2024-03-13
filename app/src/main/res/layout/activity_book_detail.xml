@@ -7,6 +7,7 @@
     tools:context=".activities.BookDetailActivity">
 
     <RelativeLayout
+        android:background="@color/cyan"
         android:id="@+id/toolbarRl"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize">
@@ -227,7 +228,7 @@
         android:background="@color/black"
         android:layout_alignParentBottom="true">
         
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/readBookBtn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -236,8 +237,7 @@
             android:layout_weight="1"/>
 
 
-
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/favoriteBookBtn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

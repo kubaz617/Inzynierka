@@ -21,7 +21,6 @@ class AdminScreen : AppCompatActivity() {
         
         val logout_Btn = findViewById<Button>(R.id.logout_btn)
         val book_Btn = findViewById<Button>(R.id.book_btn)
-        val challenge_btn = findViewById<Button>(R.id.challenge_btn)
         val quiz_btn = findViewById<Button>(R.id.quiz_btn)
         val similiar_btn = findViewById<Button>(R.id.similiar_btn)
         firebaseAuth = FirebaseAuth.getInstance()
