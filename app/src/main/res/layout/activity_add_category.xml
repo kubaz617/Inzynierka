@@ -14,6 +14,8 @@
         android:layout_width="284dp"
         android:layout_height="106dp"
         android:text="Dodaj nową kategorię"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
         android:textSize="40dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -25,25 +27,25 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/categoryLayout"
-        style="@style/LoginTextInputOuterFieldStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="300dp"
-        app:boxStrokeColor="@color/cyan"
-        app:hintTextColor="@color/cyan"
+        app:boxStrokeColor="@color/black"
+        app:hintTextColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
             android:id="@+id/categoryEt"
-            style="@style/LoginTextInputInnerFieldStyle"
             android:background="@color/grey"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:hint="Nowa kategoria..."
+            android:textColorHint="@color/black"
+            android:textColor="@color/black"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 

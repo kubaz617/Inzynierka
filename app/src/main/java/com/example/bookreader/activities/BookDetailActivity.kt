@@ -114,6 +114,7 @@ class BookDetailActivity : AppCompatActivity() {
                 val averageRating = if (totalUsers > 0) totalRating / totalUsers else 0.0
 
                 ratingRef.child("averageRating").setValue(averageRating)
+                binding.averageRatingTextView.text = String.format("Średnia ocena: %.1f", averageRating)
             }
 
             override fun onCancelled(error: DatabaseError) {

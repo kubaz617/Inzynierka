@@ -61,9 +61,11 @@ class BookEditActivity : AppCompatActivity() {
                     selectedCategoryId = snapshot.child("categoryId").value.toString()
                    val description = snapshot.child("description").value.toString()
                     val title = snapshot.child("title").value.toString()
+                    val author = snapshot.child("author").value.toString()
 
                     binding.titleEt.setText(title)
                     binding.descriptionEt.setText(description)
+                    binding.authorEt.setText(author)
 
                     Log.d(TAG, "onDataChange: Ładowanie kategorii")
                     val refBookCategory = FirebaseDatabase.getInstance().getReference("Categories")
@@ -87,13 +89,18 @@ class BookEditActivity : AppCompatActivity() {
     }
 
     private var title =""
+    private var author =""
     private var description =""
     private fun validateData() {
             title = binding.titleEt.text.toString().trim()
+            author = binding.authorEt.text.toString().trim()
             description = binding.descriptionEt.text.toString().trim()
 
             if (title.isEmpty()){
                 Toast.makeText(this, "Wprowadź tytuł", Toast.LENGTH_SHORT).show()
+            }
+            else if (author.isEmpty()){
+                Toast.makeText(this, "Wprowadź autora", Toast.LENGTH_SHORT).show()
             }
         else if (description.isEmpty()){
                 Toast.makeText(this, "Wprowadź opis", Toast.LENGTH_SHORT).show()
@@ -114,6 +121,7 @@ class BookEditActivity : AppCompatActivity() {
 
         val hashMap = HashMap<String, Any>()
         hashMap["title"] = "$title"
+        hashMap["author"] = "$author"
         hashMap["description"] = "$description"
         hashMap["categoryId"] = "$selectedCategoryId"
 

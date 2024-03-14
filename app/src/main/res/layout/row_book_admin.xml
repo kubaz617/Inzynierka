@@ -6,10 +6,12 @@
     android:layout_marginBottom="5dp"
     app:cardCornerRadius="5dp"
     app:cardElevation="0dp"
-    app:contentPadding="5dp">
+    app:contentPadding="5dp"
+    android:background="@color/transparent">
 
 
     <RelativeLayout
+        android:background="@color/transparent"
         android:layout_height="match_parent"
         android:layout_width="match_parent">
 
@@ -41,7 +43,8 @@
             android:layout_toStartOf="@+id/moreBtn"
             android:maxLines="1"
             android:text="Tytuł książki"
-            android:ellipsize="end"/>
+            android:ellipsize="end"
+            android:background="@color/transparent"/>
 
         <TextView
             android:id="@+id/descriptionTv"
@@ -53,7 +56,8 @@
             android:ellipsize="end"
             android:layout_toEndOf="@+id/BookRl"
             android:maxLines="4"
-            android:text="Opis książki"/>
+            android:text="Opis książki"
+            android:background="@color/transparent"/>
 
         <TextView
             android:id="@+id/categoryTv"
@@ -63,7 +67,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:maxLines="1"
-            android:text="Kategoria"/>
+            android:text="Kategoria"
+            android:background="@color/transparent"/>
 
         <TextView
             android:id="@+id/authorTv"
@@ -72,7 +77,8 @@
             android:layout_alignParentBottom="true"
             android:layout_toEndOf="@+id/BookRl"
             android:maxLines="1"
-            android:text="Autor"/>
+            android:text="Autor"
+            android:background="@color/transparent"/>
 
         <TextView
             android:id="@+id/dateTv"
@@ -84,7 +90,8 @@
             android:layout_toEndOf="@+id/authorTv"
             android:maxLines="1"
             android:text="dd/MM/rrrr"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            android:background="@color/transparent"/>
 
         <ImageButton
             android:id="@+id/moreBtn"

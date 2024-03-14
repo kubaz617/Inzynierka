@@ -45,7 +45,7 @@
         android:hint="Wyszukaj kategorie"
         android:textColorHint="@color/black"
         android:padding="10dp"
-        android:background="@color/grey"/>
+        android:background="@color/transparent"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/categoriesRv"
