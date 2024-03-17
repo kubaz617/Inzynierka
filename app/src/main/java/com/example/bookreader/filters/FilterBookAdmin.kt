@@ -7,7 +7,7 @@ import com.example.bookreader.adapters.AdapterBookAdmin
 class FilterBookAdmin : Filter {
     var filterList: ArrayList<ModelBook>
 
-    var adapterBookAdmin: AdapterBookAdmin
+    private var adapterBookAdmin: AdapterBookAdmin
 
     constructor(filterList: ArrayList<ModelBook>, adapterBookAdmin: AdapterBookAdmin) {
         this.filterList = filterList

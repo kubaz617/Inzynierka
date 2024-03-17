@@ -50,7 +50,7 @@ class BookViewActivity : AppCompatActivity() {
     private var categoryId: String = ""
 
 
-    var bookId = ""
+    private var bookId = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

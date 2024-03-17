@@ -2,19 +2,19 @@ package com.example.bookreader.models
 
 
 data class QuizModel(
-    val id : String,
-    val title : String,
-    val subtitle : String,
-    val time : String,
-    val questionList : List<QuestionModel>
+    var id : String,
+    var title : String,
+    var subtitle : String,
+    var time : String,
+    var questionList : List<QuestionModel>
 ){
     constructor() : this("","","","", emptyList())
 }
 
 data class QuestionModel(
-    val question : String,
-    val options : List<String>,
-    val correct : String,
+    var question : String,
+    var options : List<String>,
+    var correct : String,
 ){
     constructor() : this ("", emptyList(),"")
 }

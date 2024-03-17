@@ -30,9 +30,9 @@ class QuizActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var binding: ActivityQuizBinding
 
-    var currentQuestionIndex = 0;
-    var selectedAnswer = ""
-    var score = 0;
+    private var currentQuestionIndex = 0;
+    private var selectedAnswer = ""
+    private var score = 0;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

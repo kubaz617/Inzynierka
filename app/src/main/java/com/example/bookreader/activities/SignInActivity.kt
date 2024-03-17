@@ -1,7 +1,9 @@
 package com.example.bookreader.activities
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.bookreader.databinding.ActivitySignInBinding
@@ -72,7 +74,7 @@ class SignInActivity : AppCompatActivity() {
                 }
 
                 override fun onCancelled(error: DatabaseError){
-
+                    Log.d(TAG, "onCancelled: Wystąpił błąd podczas logowania")
                 }
 
                 })

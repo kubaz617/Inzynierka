@@ -8,7 +8,7 @@ class FilterBookUser: Filter {
 
     var filterList: ArrayList<ModelBook>
 
-    var adapterBookUser: AdapterBookUser
+    private var adapterBookUser: AdapterBookUser
 
     constructor(filterList: ArrayList<ModelBook>, adapterBookUser: AdapterBookUser) {
         this.filterList = filterList

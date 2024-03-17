@@ -12,8 +12,8 @@ class SignUpActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignUpBinding
     private lateinit var firebaseAuth: FirebaseAuth
-    var email = ""
-    var pass = ""
+    private var email = ""
+    private var pass = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +57,7 @@ class SignUpActivity : AppCompatActivity() {
 
     }
 
-    fun updateUserInfo(){
+    private fun updateUserInfo(){
 
         val timestamp = System.currentTimeMillis()
 

@@ -6,7 +6,7 @@ import com.example.bookreader.adapters.AdapterCategory
 
 class FilterCategory: Filter {
 
-    private var filterList: ArrayList<ModelCategory>
+    var filterList: ArrayList<ModelCategory>
     private var adapterCategory: AdapterCategory
 
     constructor(filterList: ArrayList<ModelCategory>, adapterCategory: AdapterCategory) : super() {

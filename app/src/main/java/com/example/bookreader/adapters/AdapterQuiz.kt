@@ -10,9 +10,14 @@ import com.example.bookreader.activities.QuizActivity
 import com.example.bookreader.databinding.RowQuizBinding
 
 class AdapterQuiz(private val quizModelList : List<QuizModel>) :
-    RecyclerView.Adapter<AdapterQuiz.MyViewHolder>() {
+    RecyclerView.Adapter<AdapterQuiz.HolderQuiz>() {
 
-    class MyViewHolder(private val binding: RowQuizBinding) : RecyclerView.ViewHolder(binding.root) {
+    class HolderQuiz : RecyclerView.ViewHolder {
+        private val binding: RowQuizBinding
+        constructor(binding: RowQuizBinding) : super(binding.root) {
+            this.binding = binding
+        }
+
         fun bind(model : QuizModel){
             binding.apply {
                 quizTitleText.text = model.title
@@ -28,18 +33,16 @@ class AdapterQuiz(private val quizModelList : List<QuizModel>) :
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HolderQuiz {
         val binding = RowQuizBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return MyViewHolder(binding)
+        return HolderQuiz(binding)
     }
 
     override fun getItemCount(): Int {
         return quizModelList.size
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: HolderQuiz, position: Int) {
         holder.bind(quizModelList[position])
     }
 }
-
-

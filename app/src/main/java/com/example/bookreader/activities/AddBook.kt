@@ -37,7 +37,7 @@ class AddBook : AppCompatActivity() {
         setContentView(binding.root)
 
         firebaseAuth = FirebaseAuth.getInstance()
-        loadPDFCategories()
+        loadBookCategories()
 
         progressDialog = ProgressDialog(this)
         progressDialog.setTitle("Proszę czekać")
@@ -107,7 +107,7 @@ class AddBook : AppCompatActivity() {
                 while (!uriTask.isSuccessful);
                 val uploadedPdfUrl = "${uriTask.result}"
 
-                uploadPdfInfoToDb(uploadedPdfUrl, timestamp)
+                uploadBookInfoToDb(uploadedPdfUrl, timestamp)
 
             }
             .addOnFailureListener{e->
@@ -117,8 +117,8 @@ class AddBook : AppCompatActivity() {
             }
     }
 
-    private fun uploadPdfInfoToDb(uploadedPdfUrl: String, timestamp: Long) {
-        Log.d(TAG, "uploadPdfInfoToDb: ")
+    private fun uploadBookInfoToDb(uploadedPdfUrl: String, timestamp: Long) {
+        Log.d(TAG, "uploadBookInfoToDb: ")
         progressDialog.setMessage("Ładowanie informacji o pliku")
 
         val uid = firebaseAuth.uid
@@ -138,21 +138,21 @@ class AddBook : AppCompatActivity() {
         ref.child("$timestamp")
             .setValue(hashMap)
             .addOnSuccessListener {
-                Log.d(TAG, "uploadPdfInfoToDb: Dodane do bazy danych")
+                Log.d(TAG, "uploadBookInfoToDb: Dodane do bazy danych")
                 progressDialog.dismiss()
                 Toast.makeText(this,"Załadowane do bazy danych",Toast.LENGTH_SHORT).show()
                 pdfUri = null
             }
             .addOnFailureListener{e->
-                Log.d(TAG, "uploadPdfInfoToDb: Nie udało się załadować na serwer z powodu błędu ${e.message}")
+                Log.d(TAG, "uploadBookInfoToDb: Nie udało się załadować na serwer z powodu błędu ${e.message}")
                 progressDialog.dismiss()
                 Toast.makeText(this,"Nie udało się załadować z powodu błędu ${e.message} ",Toast.LENGTH_SHORT).show()
             }
 
     }
 
-    private fun loadPDFCategories() {
-        Log.d(TAG, "loadPDFCategories: Ładowanie kategorii")
+    private fun loadBookCategories() {
+        Log.d(TAG, "loadBookCategories: Ładowanie kategorii")
         categoryArrayList = ArrayList()
 
         val ref = FirebaseDatabase.getInstance().getReference("Categories")

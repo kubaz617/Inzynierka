@@ -10,9 +10,9 @@ import com.example.bookreader.models.QuizModel
 import com.google.firebase.database.FirebaseDatabase
 
 class QuizScreen : AppCompatActivity() {
-    lateinit var binding: ActivityQuizScreenBinding
-    lateinit var quizModelList : MutableList<QuizModel>
-    lateinit var adapter: AdapterQuiz
+    private lateinit var binding: ActivityQuizScreenBinding
+    private lateinit var quizModelList : MutableList<QuizModel>
+    private lateinit var adapter: AdapterQuiz
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

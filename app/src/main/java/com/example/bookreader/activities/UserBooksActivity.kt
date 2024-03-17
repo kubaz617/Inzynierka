@@ -147,7 +147,6 @@ class UserBooksActivity : AppCompatActivity() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         userId?.let { uid ->
             var bookFound = false
-
             val booksRef = FirebaseDatabase.getInstance().getReference("Books")
 
             booksRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -157,11 +156,8 @@ class UserBooksActivity : AppCompatActivity() {
                     dataSnapshot.children.forEach { bookSnapshot ->
                         allBooks.add(bookSnapshot.key!!)
                     }
-
                     val randomIndex = (0 until allBooks.size).random()
-
                     val randomBookId = allBooks[randomIndex]
-
                     val userBooksRef = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("bookDetails").child(randomBookId)
                     userBooksRef.addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(userBookSnapshot: DataSnapshot) {
