@@ -336,10 +336,6 @@ class UserBooksActivity : AppCompatActivity() {
         })
     }
 
-
-
-
-
     private fun checkIfChallengeComplete(bookId: String) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
 

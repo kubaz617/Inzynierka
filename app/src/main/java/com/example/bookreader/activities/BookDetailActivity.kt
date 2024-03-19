@@ -94,6 +94,9 @@ class BookDetailActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 updateAverageRating(bookId)
             }
+            .addOnFailureListener {e->
+                Log.d(TAG, "addOrUpdateBookRating: Nie udało się dodać oceny ${e.message}")
+            }
     }
 
     private fun updateAverageRating(bookId: String) {
@@ -102,7 +105,6 @@ class BookDetailActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 var totalRating = 0.0
                 var totalUsers = 0
-
                 snapshot.children.forEach { ratingSnapshot ->
                     val ratingValue = ratingSnapshot.getValue(Double::class.java)
                     ratingValue?.let {

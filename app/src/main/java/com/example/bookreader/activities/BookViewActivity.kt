@@ -143,10 +143,8 @@ class BookViewActivity : AppCompatActivity() {
                     val pdfUrl = snapshot.child("url").value
                     categoryId = snapshot.child("categoryId").value.toString()
                     Log.d(TAG, "onDataChange: PDF_URL: $pdfUrl")
-
                     loadBookFromUrl("$pdfUrl", categoryId)
                 }
-
                 override fun onCancelled(error: DatabaseError) {
                     Log.d(TAG, "loadBookDetails: Błąd w pobieraniu danych: ${error.message}")
                 }
@@ -184,21 +182,17 @@ class BookViewActivity : AppCompatActivity() {
 
     private fun loadBookFromUrl(pdfUrl: String, categoryId: String) {
         Log.d(TAG, "loadBookFromUrl: Pobieranie książki z bazy danych przy pomocy adresu Url")
-
         val reference = FirebaseStorage.getInstance().getReferenceFromUrl(pdfUrl)
         reference.getBytes(Constants.MAX_BYTES_PDF)
             .addOnSuccessListener { bytes ->
                 Log.d(TAG, "loadBookFromUrl: Udało się pobrać adres url")
-
                 pdfView = binding.bookView
-
                 pdfView.fromBytes(bytes)
                     .swipeHorizontal(false)
                     .onPageChange { page, pageCount ->
                         val currentPage = page + 1
                         binding.toolbarSubtitleTv.text = "$currentPage/$pageCount"
                         Log.d(TAG, "loadBookFromUrl: $currentPage/$pageCount")
-
                         furthestPageRead = maxOf(furthestPageRead, page + 1)
                         isBookFullyRead = page + 1 == pageCount
                     }

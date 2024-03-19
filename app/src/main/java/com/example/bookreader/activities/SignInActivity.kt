@@ -30,6 +30,10 @@ class SignInActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.forgotPass.setOnClickListener {
+            startActivity(Intent(this, ForgotPasswordActivity::class.java))
+        }
+
         binding.button.setOnClickListener {
             val email = binding.emailEt.text.toString()
             val pass = binding.passET.text.toString()

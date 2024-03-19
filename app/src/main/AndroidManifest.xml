@@ -20,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Default">
         <activity
+            android:name=".activities.ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.StatsActivity"
             android:exported="false" />
         <activity
