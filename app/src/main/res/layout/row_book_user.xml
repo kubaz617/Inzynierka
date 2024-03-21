@@ -41,7 +41,8 @@
             style="@style/TextAppearance.MaterialComponents.Headline6"
             android:text="Tytuł książki"
             android:layout_toEndOf="@id/bookRl"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/descriptionTv"
@@ -51,9 +52,11 @@
             android:text="Opis książki"
             android:layout_toEndOf="@id/bookRl"
             android:layout_below="@id/titleTv"
-            android:maxLines="4"
+            android:maxLines="3"
             android:layout_marginTop="8dp"
-            android:ellipsize="end"/>
+            android:ellipsize="end"
+            android:textColor="@color/black"
+            android:paddingBottom="10dp"/>
 
         <TextView
             android:id="@+id/categoryTv"
@@ -63,7 +66,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:maxLines="1"
-            android:text="Kategoria"/>
+            android:text="Kategoria"
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/authorTv"
@@ -72,7 +76,9 @@
             android:layout_alignParentBottom="true"
             android:layout_toEndOf="@+id/bookRl"
             android:maxLines="1"
-            android:text="Autor"/>
+            android:text="Autor"
+            android:paddingRight="5dp"
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/dateTv"
@@ -84,7 +90,9 @@
             android:layout_toEndOf="@+id/authorTv"
             android:maxLines="1"
             android:text="dd/MM/rrrr"
-            android:textAlignment="center"/>
+            android:paddingRight="5dp"
+            android:textAlignment="center"
+            android:textColor="@color/black"/>
 
     </RelativeLayout>
 

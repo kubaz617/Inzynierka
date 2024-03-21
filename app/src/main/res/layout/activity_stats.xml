@@ -45,7 +45,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_below="@+id/toolbarRl"/>
+        android:layout_below="@+id/toolbarRl"
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/totalPagesTv"
@@ -59,7 +60,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_below="@+id/textViewStatsHeader"/>
+        android:layout_below="@+id/textViewStatsHeader"
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/totalBooksTv"
@@ -73,7 +75,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_below="@+id/totalPagesTv"/>
+        android:layout_below="@+id/totalPagesTv"
+        android:textColor="@color/black"/>
 
 
     <TextView
@@ -88,7 +91,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_below="@+id/totalBooksTv"/>
+        android:layout_below="@+id/totalBooksTv"
+        android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/startedChallengesTv"
@@ -102,7 +106,8 @@
             android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_below="@+id/completedChallengesTv"/>
+            android:layout_below="@+id/completedChallengesTv"
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/allPlatinumTrophiesTv"
@@ -118,7 +123,8 @@
             android:layout_marginEnd="16dp"
             android:layout_below="@+id/startedChallengesTv"
             android:drawablePadding="8dp"
-            app:drawableEndCompat="@drawable/ic_trophy_plt" />
+            app:drawableEndCompat="@drawable/ic_trophy_plt"
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/allGoldTrophiesTv"
@@ -134,7 +140,8 @@
             android:layout_marginEnd="16dp"
             android:layout_below="@+id/allPlatinumTrophiesTv"
             android:drawablePadding="8dp"
-            app:drawableEndCompat="@drawable/ic_trophy_gld" />
+            app:drawableEndCompat="@drawable/ic_trophy_gld"
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/allSilverTrophiesTv"
@@ -150,7 +157,8 @@
             android:layout_marginEnd="16dp"
             android:layout_below="@+id/allGoldTrophiesTv"
             android:drawablePadding="8dp"
-            app:drawableEndCompat="@drawable/ic_trophy_slvr" />
+            app:drawableEndCompat="@drawable/ic_trophy_slvr"
+            android:textColor="@color/black"/>
         <TextView
             android:id="@+id/allBronzeTrophiesTv"
             android:layout_width="wrap_content"
@@ -165,7 +173,8 @@
             android:layout_marginEnd="16dp"
             android:layout_below="@+id/allSilverTrophiesTv"
             android:drawablePadding="8dp"
-            app:drawableEndCompat="@drawable/ic_trophy_brwn" />
+            app:drawableEndCompat="@drawable/ic_trophy_brwn"
+            android:textColor="@color/black"/>
 
 
 </RelativeLayout>

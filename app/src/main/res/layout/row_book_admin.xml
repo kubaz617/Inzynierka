@@ -7,7 +7,7 @@
     app:cardCornerRadius="5dp"
     app:cardElevation="0dp"
     app:contentPadding="5dp"
-    android:background="@color/transparent">
+    app:cardBackgroundColor="@color/transparent">
 
 
     <RelativeLayout
@@ -55,9 +55,10 @@
             android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:layout_toEndOf="@+id/BookRl"
-            android:maxLines="4"
+            android:maxLines="3"
             android:text="Opis książki"
-            android:background="@color/transparent"/>
+            android:textColor="@color/black"
+            android:paddingBottom="10dp"/>
 
         <TextView
             android:id="@+id/categoryTv"
@@ -68,7 +69,7 @@
             android:layout_alignParentBottom="true"
             android:maxLines="1"
             android:text="Kategoria"
-            android:background="@color/transparent"/>
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/authorTv"
@@ -78,7 +79,8 @@
             android:layout_toEndOf="@+id/BookRl"
             android:maxLines="1"
             android:text="Autor"
-            android:background="@color/transparent"/>
+            android:paddingRight="10dp"
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/dateTv"
@@ -91,7 +93,8 @@
             android:maxLines="1"
             android:text="dd/MM/rrrr"
             android:textAlignment="center"
-            android:background="@color/transparent"/>
+            android:paddingRight="10dp"
+            android:textColor="@color/black"/>
 
         <ImageButton
             android:id="@+id/moreBtn"
