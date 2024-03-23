@@ -392,7 +392,28 @@ class UserBooksActivity : AppCompatActivity() {
                                 userRef.child("challengeDetails").removeValue()
                             }
                         } else {
-                            Log.e("BookStatus", "Brak informacji o stanie przeczytania książki")
+                            Toast.makeText(this@UserBooksActivity, "Książka nie została jeszcze rozpoczęta", Toast.LENGTH_SHORT).show()
+                            val booksRef = FirebaseDatabase.getInstance().getReference("Books")
+                            booksRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(booksSnapshot: DataSnapshot) {
+                                    booksSnapshot.children.forEach { bookSnapshot ->
+                                        if (bookSnapshot.key == bookId) {
+                                            val author = bookSnapshot.child("author").getValue(String::class.java)
+                                            val title = bookSnapshot.child("title").getValue(String::class.java)
+                                            Log.d("BookDetails", "Autor: $author, Tytuł: $title")
+
+                                            val message = "Autor: $author,Tytuł: $title"
+                                            Toast.makeText(this@UserBooksActivity, message, Toast.LENGTH_LONG).show()
+
+                                            return@forEach
+                                        }
+                                    }
+                                }
+
+                                override fun onCancelled(databaseError: DatabaseError) {
+                                    Log.e("BookStatus", "Błąd pobierania danych z bazy danych: ${databaseError.message}")
+                                }
+                            })
                         }
                     }
 
