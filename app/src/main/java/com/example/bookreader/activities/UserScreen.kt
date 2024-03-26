@@ -30,6 +30,7 @@ class UserScreen : AppCompatActivity() {
         val similiar_btn = findViewById<Button>(R.id.similiar_btn)
         val logout_Btn = findViewById<Button>(R.id.logout_btn)
         val menu_Btn = findViewById<ImageButton>(R.id.menuBtn)
+        val challenge_btn = findViewById<Button>(R.id.challenge_btn)
 
         firebaseAuth = FirebaseAuth.getInstance()
         checkUser()
@@ -54,6 +55,10 @@ class UserScreen : AppCompatActivity() {
 
         stats_Btn.setOnClickListener {
             navigateToActivity(StatsActivity::class.java)
+        }
+
+        challenge_btn.setOnClickListener {
+            navigateToActivity(ChallengeActivity::class.java)
         }
 
         /*
