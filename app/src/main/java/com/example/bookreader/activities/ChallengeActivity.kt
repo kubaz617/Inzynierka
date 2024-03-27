@@ -1,12 +1,17 @@
 package com.example.bookreader.activities
 
 import android.content.pm.ActivityInfo
+import android.graphics.PorterDuff
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import com.example.bookreader.R
 import com.example.bookreader.databinding.ActivityChallengeBinding
 import com.example.bookreader.databinding.ActivityUserBooksBinding
@@ -39,9 +44,11 @@ class ChallengeActivity : AppCompatActivity() {
                         // Wyświetl dialog z pytaniem, czy użytkownik chce rozpocząć nowe wyzwanie
                         AlertDialog.Builder(this)
                             .setTitle("Aktywne wyzwanie")
-                            .setMessage("Masz obecnie aktywne wyzwanie. Czy chcesz rozpocząć nowe? Rozpoczęcie nowego wyzwania spowoduje anulowanie obecnego.")
+                            .setMessage("Masz obecnie aktywne wyzwanie. Czy chcesz rozpocząć nowe? Uważaj, rozpoczęcie nowego wyzwania odejmie część posiadanych przez ciebie punktów.")
                             .setPositiveButton("Tak") { _, _ ->
                                 // Rozpocznij nowe wyzwanie
+                                decreasePoints(100)
+                                startChallengeToUser(userId)
                                 challengeBook(5)
                             }
                             .setNegativeButton("Nie") { _, _ ->
@@ -50,7 +57,7 @@ class ChallengeActivity : AppCompatActivity() {
                             }
                             .show()
                     } else {
-                        // Brak aktywnego wyzwania, rozpocznij nowe
+                        startChallengeToUser(userId)
                         challengeBook(5)
                     }
                 }
@@ -67,9 +74,10 @@ class ChallengeActivity : AppCompatActivity() {
                         // Istnieje aktywne wyzwanie
                         AlertDialog.Builder(this)
                             .setTitle("Aktywne wyzwanie")
-                            .setMessage("Masz obecnie aktywne wyzwanie. Czy chcesz rozpocząć nowe? Rozpoczęcie nowego wyzwania spowoduje anulowanie obecnego.")
+                            .setMessage("Masz obecnie aktywne wyzwanie. Czy chcesz rozpocząć nowe? Uważaj, rozpoczęcie nowego wyzwania odejmie część posiadanych przez ciebie punktów")
                             .setPositiveButton("Tak") { _, _ ->
-                                // Rozpocznij nowe wyzwanie
+                                startChallengeToUser(userId)
+                                decreasePoints(25)
                                 showBookSelectionDialog()
                             }
                             .setNegativeButton("Nie") { _, _ ->
@@ -77,7 +85,7 @@ class ChallengeActivity : AppCompatActivity() {
                             }
                             .show()
                     } else {
-                        // Brak aktywnego wyzwania, rozpocznij nowe
+                        startChallengeToUser(userId)
                         showBookSelectionDialog()
                     }
                 }
@@ -97,7 +105,7 @@ class ChallengeActivity : AppCompatActivity() {
                         // Jeśli cooldown jest aktywny, wyświetl odpowiedni komunikat
                         Toast.makeText(this@ChallengeActivity, "Wyzwanie nie jest jeszcze aktywne", Toast.LENGTH_SHORT).show()
                     } else {
-                        // Jeśli cooldown nie jest aktywny, rozpocznij nowe wyzwanie z książką
+                        startChallengeToUser(userId)
                         challengeWithNewBook()
                     }
                 }
@@ -170,11 +178,157 @@ class ChallengeActivity : AppCompatActivity() {
             }
         }
 
+        getPointsFromFirebase()
+
         displayRandomBookInfo()
         displayChoosenBookInfo()
         displayNewBookInfo()
 
+        val userPoints = 0 // Pobierz aktualną liczbę punktów użytkownika z odpowiedniego źródła danych
+        updateProgressBar(userPoints)
+
     }
+
+    private fun updateProgressBar(points: Int) {
+        val progressBar = findViewById<ProgressBar>(R.id.pointsProgressBar)
+        val levelIcon = findViewById<ImageView>(R.id.levelIcon) // ImageView dla ikonki poziomu
+        val pointsText = findViewById<TextView>(R.id.pointsTextView) // TextView dla wyświetlenia liczby punktów
+
+        val maxPointsForLevel1 = 500
+        val maxPointsForLevel2 = 1500
+        val maxPointsForLevel3 = 3000
+        val maxPointsForLevel4 = 6000
+
+        // Sprawdź, który poziom użytkownika osiągnął na podstawie liczby punktów
+        val level = when {
+            points < maxPointsForLevel1 -> 1
+            points < maxPointsForLevel2 -> 2
+            points < maxPointsForLevel3 -> 3
+            else -> 4 // Dodaj więcej poziomów według potrzeb
+        }
+
+        val progressBarColor = when (level) {
+            1 -> R.color.brown // Kolor brązowy na pierwszym poziomie
+            2 -> R.color.grey // Kolor srebrny na drugim poziomie
+            3 -> R.color.yellow // Kolor złoty na trzecim poziomie
+            else -> R.color.blue // Kolor niebieski na czwartym poziomie
+        }
+
+        progressBar.progressDrawable.setColorFilter(
+            ContextCompat.getColor(this, progressBarColor),
+            PorterDuff.Mode.SRC_IN
+        )
+
+        // Oblicz liczbę punktów potrzebnych do obecnie osiągniętego poziomu
+        val pointsToCurrentLevel = when (level) {
+            1 -> 0
+            2 -> maxPointsForLevel1
+            3 -> maxPointsForLevel2
+            else -> maxPointsForLevel3
+        }
+
+        // Oblicz liczbę punktów potrzebnych do następnego poziomu
+        val pointsToNextLevel = when (level) {
+            1 -> maxPointsForLevel1
+            2 -> maxPointsForLevel2
+            3 -> maxPointsForLevel3
+            else -> maxPointsForLevel4
+        }
+
+        // Oblicz postęp w aktualnym poziomie
+        val currentLevelProgress = points - pointsToCurrentLevel
+
+        // Ustaw wartość postępu paska
+        progressBar.max = pointsToNextLevel - pointsToCurrentLevel
+        progressBar.progress = currentLevelProgress
+
+        // Ustaw ikonkę w zależności od poziomu
+        val iconResource = when (level) {
+            1 -> R.drawable.ic_1_lvl
+            2 -> R.drawable.ic_lvl_2
+            3 -> R.drawable.ic_lvl_3
+            else -> R.drawable.ic_lvl_4 // Dodaj więcej ikon według potrzeb
+        }
+        levelIcon.setImageResource(iconResource)
+
+        // Wyświetl punkty w TextView
+        val pointsDisplay = "$points / $pointsToNextLevel"
+        pointsText.text = pointsDisplay
+    }
+
+
+
+
+
+    fun getPointsFromFirebase() {
+        val database = FirebaseDatabase.getInstance()
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+
+        val userStatsRef = database.getReference("Users").child(userId!!).child("statsDetails")
+
+        userStatsRef.child("points").get().addOnSuccessListener { snapshot ->
+            val points = snapshot.getValue(Int::class.java) ?: 0
+            // Po pobraniu punktów z bazy danych, aktualizujemy pasek postępu
+            updateProgressBar(points)
+        }.addOnFailureListener { e ->
+            // Obsługa błędu, jeśli nie uda się pobrać punktów z bazy danych
+        }
+    }
+
+
+    fun increasePoints(increaseAmount: Int) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        userId?.let { uid ->
+            val database = FirebaseDatabase.getInstance()
+            val userStatsRef = database.getReference("Users").child(uid).child("statsDetails")
+
+            userStatsRef.child("points").get().addOnSuccessListener { snapshot ->
+                val currentPoints = snapshot.value as? Long ?: 0
+                val newPoints = currentPoints + increaseAmount
+
+                // Sprawdź, czy nowa liczba punktów nie przekracza 6000
+                val updatedPoints = if (newPoints > 6000) 6000 else newPoints
+
+                userStatsRef.child("points").setValue(updatedPoints)
+                    .addOnSuccessListener {
+                        // Sukces - punkty zostały zaktualizowane i zapisane do bazy danych
+                        // Tutaj możesz wykonać dodatkowe operacje, jeśli są wymagane
+                    }
+                    .addOnFailureListener { e ->
+                        // Obsługa błędu
+                    }
+            }.addOnFailureListener { e ->
+                // Obsługa błędu
+            }
+        }
+    }
+
+
+    fun decreasePoints(decreaseAmount: Int) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        userId?.let { uid ->
+            val database = FirebaseDatabase.getInstance()
+            val userStatsRef = database.getReference("Users").child(uid).child("statsDetails")
+
+            userStatsRef.child("points").get().addOnSuccessListener { snapshot ->
+                val currentPoints = snapshot.value as? Long ?: 0
+                val newPoints = (currentPoints - decreaseAmount).coerceAtLeast(0)
+
+                userStatsRef.child("points").setValue(newPoints)
+                    .addOnSuccessListener {
+                        // Sukces - punkty zostały zaktualizowane i zapisane do bazy danych
+                        // Tutaj możesz wykonać dodatkowe operacje, jeśli są wymagane
+                    }
+                    .addOnFailureListener { e ->
+                        // Obsługa błędu, jeśli nie udało się zapisać punktów do bazy danych
+                    }
+            }.addOnFailureListener { e ->
+                // Obsługa błędu, jeśli nie udało się pobrać punktów z bazy danych
+            }
+        }
+    }
+
+
 
     private fun displayChoosenBookDialog() {
         // Inflacja widoku dialogu z pliku XML
@@ -352,6 +506,7 @@ class ChallengeActivity : AppCompatActivity() {
                                         .addOnSuccessListener {
                                             Log.d("ChallengeStatus", "Utworzono węzeł ChallengeEasy i zapisano dane.")
                                             displayNewBookInfo()
+                                            Toast.makeText(applicationContext, "Wyzwanie rozpoczęte", Toast.LENGTH_SHORT).show()
                                         }
                                         .addOnFailureListener { e ->
                                             Log.e("ChallengeStatus", "Błąd podczas tworzenia węzła ChallengeEasy: ${e.message}")
@@ -392,9 +547,9 @@ class ChallengeActivity : AppCompatActivity() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val currentPage = dataSnapshot.child("bookDetails").child(bookId).child("currentPage").getValue(Int::class.java) ?: 0
                     val currentTimeMillis = System.currentTimeMillis()
-                    val challengeTimeMillis = currentTimeMillis + ( 5 * 60 * 1000)
+                    val challengeTimeMillis = currentTimeMillis + ( 90 * 60 * 1000)
 
-                    val challengePage = currentPage + 10
+                    val challengePage = currentPage + 30
 
                     val challengeData: MutableMap<String, Any> = HashMap()
                     challengeData["challengePage"] = challengePage
@@ -417,7 +572,9 @@ class ChallengeActivity : AppCompatActivity() {
                             challengeMediumRef.setValue(challengeData)
                                 .addOnSuccessListener {
                                     Log.d("ChallengeStatus", "Utworzono węzeł ChallengeMedium i zapisano dane.")
+                                    Toast.makeText(applicationContext, "Wyzwanie rozpoczęte", Toast.LENGTH_SHORT).show()
                                     displayChoosenBookInfo()
+                                    getPointsFromFirebase()
                                 }
                                 .addOnFailureListener { e ->
                                     Log.e("ChallengeStatus", "Błąd podczas tworzenia węzła ChallengeMedium: ${e.message}")
@@ -484,6 +641,7 @@ class ChallengeActivity : AppCompatActivity() {
 
                 userRef.child("statsDetails").child("startedChallenges").setValue(newStartedChallenges)
                     .addOnSuccessListener {
+                        displayRandomBookInfo()
                         Log.d("StartedChallenges", "Pomyślnie dodano kolejne rozpoczęte wyzwanie do pola startedChallenges.")
                     }
                     .addOnFailureListener { e ->
@@ -555,7 +713,7 @@ class ChallengeActivity : AppCompatActivity() {
 
     private fun saveChallengeDate(userId: String, bookId: String, bookTitle: String, bookAuthor: String) {
         val currentTimeMillis = System.currentTimeMillis()
-        val challengeTimeMillis = currentTimeMillis + (1 * 24 * 60 * 60 * 1000)
+        val challengeTimeMillis = currentTimeMillis + (21 * 24 * 60 * 60 * 1000)
 
         val challengeDateRef = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("challengeDetails").child("ChallengeHard")
 
@@ -568,7 +726,7 @@ class ChallengeActivity : AppCompatActivity() {
         challengeDateRef.setValue(challengeDetails)
             .addOnSuccessListener {
                 Log.d("ChallengeDate", "Pomyślnie zapisano nową datę wyzwania w bazie danych.")
-                displayRandomBookInfo()
+                getPointsFromFirebase()
             }
             .addOnFailureListener { e ->
                 Log.e("ChallengeDate", "Błąd podczas zapisywania nowej daty wyzwania: ${e.message}")
@@ -782,9 +940,13 @@ class ChallengeActivity : AppCompatActivity() {
                             checkTimeTenPagesChallenge(uid) { isChallengeTimeUp ->
                                 // Usuń węzeł ChallengeMedium, jeśli wyzwanie jest ukończone i czas nie minął
                                 if (isPagesRead && !isChallengeTimeUp) {
+                                    increasePoints(50)
                                     challengeDetailsRef.removeValue().addOnSuccessListener {
                                         Log.d("Firebase", "Węzeł ChallengeMedium został pomyślnie usunięty po ukończeniu wyzwania.")
                                         Toast.makeText(FirebaseApp.getInstance().applicationContext, "Wyzwanie ukończone, gratulacje", Toast.LENGTH_SHORT).show()
+                                        getPointsFromFirebase()
+                                        displayChoosenBookInfo()
+                                        addCompletedChallengeToUser(userId)
                                     }.addOnFailureListener { e ->
                                         Log.e("Firebase", "Błąd podczas usuwania węzła ChallengeMedium: ${e.message}")
                                     }
@@ -793,9 +955,12 @@ class ChallengeActivity : AppCompatActivity() {
                                     Toast.makeText(FirebaseApp.getInstance().applicationContext, "Wyzwanie nadal trwa, czytaj dalej", Toast.LENGTH_SHORT).show()
                                 } else {
                                     // Usuń węzeł ChallengeMedium, jeśli czas wyzwania minął
+                                    decreasePoints(25)
                                     challengeDetailsRef.removeValue().addOnSuccessListener {
                                         Log.d("Firebase", "Węzeł ChallengeMedium został pomyślnie usunięty po upływie czasu.")
                                         Toast.makeText(FirebaseApp.getInstance().applicationContext, "Czas wyzwania minął", Toast.LENGTH_SHORT).show()
+                                        getPointsFromFirebase()
+                                        displayChoosenBookInfo()
                                     }.addOnFailureListener { e ->
                                         Log.e("Firebase", "Błąd podczas usuwania węzła ChallengeMedium: ${e.message}")
                                     }
@@ -843,18 +1008,22 @@ class ChallengeActivity : AppCompatActivity() {
                                 val isChallengePagesReached = currentPage >= challengePages
 
                                 if (isChallengePagesReached) {
-                                    Log.d("Firebase", "ChallengePages zostały przeczytane.")
+                                    increasePoints(25)
                                     startCooldown()
+                                    addCompletedChallengeToUser(userId)
+                                    Toast.makeText(applicationContext, "Wyzwanie ukończone, gratulacje", Toast.LENGTH_SHORT).show()
 
                                     // Usuń węzeł ChallengeEasy, jeśli wyzwanie zostało ukończone
                                     challengeMediumRef.removeValue().addOnSuccessListener {
+                                        getPointsFromFirebase()
+                                        displayNewBookInfo()
                                         Log.d("Firebase", "Węzeł ChallengeEasy został pomyślnie usunięty po ukończeniu wyzwania.")
                                     }.addOnFailureListener { e ->
                                         Log.e("Firebase", "Błąd podczas usuwania węzła ChallengeEasy: ${e.message}")
                                     }
                                 } else {
                                     Log.d("Firebase", "ChallengePages nie zostały jeszcze przeczytane.")
-                                    // Tutaj możesz dodać kod, który ma być wykonany, gdy challengePages nie zostaną jeszcze przeczytane
+                                    Toast.makeText(applicationContext, "Wyzwanie nie zostało jeszcze ukończone", Toast.LENGTH_SHORT).show()
                                 }
                             }
 
@@ -869,15 +1038,18 @@ class ChallengeActivity : AppCompatActivity() {
 
                 override fun onCancelled(databaseError: DatabaseError) {
                     Log.e("Firebase", "Błąd pobierania danych: ${databaseError.message}")
+                    Toast.makeText(applicationContext, "Błąd pobierania danych: ${databaseError.message}", Toast.LENGTH_SHORT).show()
                 }
             })
         } ?: run {
             Log.e("Firebase", "Brak zalogowanego użytkownika.")
+            Toast.makeText(applicationContext, "Brak zalogowanego użytkownika.", Toast.LENGTH_SHORT).show()
         }
     }
 
+
     private fun startCooldown() {
-        val cooldownEndTime = System.currentTimeMillis() + (1 * 60 * 1000) // 10 minut * 60 sekund * 1000 milisekund
+        val cooldownEndTime = System.currentTimeMillis() + (24 * 60 * 60 * 1000)
 
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         userId?.let { uid ->
@@ -1001,12 +1173,14 @@ class ChallengeActivity : AppCompatActivity() {
                         if (isBookFullyRead != null) {
                             Log.d("BookStatus", "Wartość isBookFullyRead: $isBookFullyRead")
                             if (isBookFullyRead && isChallengeCompleted) {
-                                Log.d("BookStatus", "Wyzwanie ukończone, gratulacje")
+                                increasePoints(500)
                                 Toast.makeText(this@ChallengeActivity, "Wyzwanie ukończone, gratulację", Toast.LENGTH_SHORT).show()
                                 addCompletedChallengeToUser(userId)
                                 val userRef = FirebaseDatabase.getInstance().getReference("Users").child(uid)
                                 userRef.child("challengeDetails").child("ChallengeHard").removeValue()
                                     .addOnSuccessListener {
+                                        getPointsFromFirebase()
+                                        displayRandomBookInfo()
                                         Log.d("ChallengeDetails", "Węzeł challengeDetails został pomyślnie usunięty po przeczytaniu książki.")
                                     }
                                     .addOnFailureListener { e ->
@@ -1015,57 +1189,19 @@ class ChallengeActivity : AppCompatActivity() {
                             } else if (isChallengeCompleted) {
                                 Log.d("BookStatus", "Książka nadal nie jest przeczytana, czytaj dalej")
                                 Toast.makeText(this@ChallengeActivity, "Książka nadal nie jest przeczytana, czytaj dalej", Toast.LENGTH_SHORT).show()
-                                val booksRef = FirebaseDatabase.getInstance().getReference("Books")
-                                booksRef.addListenerForSingleValueEvent(object :
-                                    ValueEventListener {
-                                    override fun onDataChange(booksSnapshot: DataSnapshot) {
-                                        booksSnapshot.children.forEach { bookSnapshot ->
-                                            if (bookSnapshot.key == bookId) {
-                                                val author = bookSnapshot.child("author").getValue(String::class.java)
-                                                val title = bookSnapshot.child("title").getValue(String::class.java)
-                                                Log.d("BookDetails", "Autor: $author, Tytuł: $title")
-
-                                                val message = "Autor: $author,Tytuł: $title"
-                                                Toast.makeText(this@ChallengeActivity, message, Toast.LENGTH_LONG).show()
-
-                                                return@forEach
-                                            }
-                                        }
-                                    }
-
-                                    override fun onCancelled(databaseError: DatabaseError) {
-                                        Log.e("BookStatus", "Błąd pobierania danych z bazy danych: ${databaseError.message}")
-                                    }
-                                })
                             } else {
                                 Log.d("BookStatus", "Wyzwanie niezaliczone, czas upłynął")
                                 Toast.makeText(this@ChallengeActivity, "Wyzwanie niezaliczone, czas upłynął", Toast.LENGTH_SHORT).show()
+                                decreasePoints(250)
                                 val userRef = FirebaseDatabase.getInstance().getReference("Users").child(uid)
                                 userRef.child("challengeDetails").child("ChallengeHard").removeValue()
+                                    .addOnSuccessListener {
+                                        getPointsFromFirebase()
+                                        displayRandomBookInfo()
+                                    }
                             }
                         } else {
                             Toast.makeText(this@ChallengeActivity, "Książka nie została jeszcze rozpoczęta", Toast.LENGTH_SHORT).show()
-                            val booksRef = FirebaseDatabase.getInstance().getReference("Books")
-                            booksRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                                override fun onDataChange(booksSnapshot: DataSnapshot) {
-                                    booksSnapshot.children.forEach { bookSnapshot ->
-                                        if (bookSnapshot.key == bookId) {
-                                            val author = bookSnapshot.child("author").getValue(String::class.java)
-                                            val title = bookSnapshot.child("title").getValue(String::class.java)
-                                            Log.d("BookDetails", "Autor: $author, Tytuł: $title")
-
-                                            val message = "Autor: $author,Tytuł: $title"
-                                            Toast.makeText(this@ChallengeActivity, message, Toast.LENGTH_LONG).show()
-
-                                            return@forEach
-                                        }
-                                    }
-                                }
-
-                                override fun onCancelled(databaseError: DatabaseError) {
-                                    Log.e("BookStatus", "Błąd pobierania danych z bazy danych: ${databaseError.message}")
-                                }
-                            })
                         }
                     }
 

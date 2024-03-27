@@ -19,7 +19,7 @@
         android:id="@+id/dialogDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Wylosuj książkę, której jeszcze nie rozpocząłeś i przeczytaj ją do końca. Masz na to miesiąc czasu. W przypadku zwycięztwa otrzymasz 500 pkt, w przypadku porażki stracisz 250 pkt."
+        android:text="Wylosuj książkę, której jeszcze nie rozpocząłeś i przeczytaj ją do końca. Masz na to 21 dni. W przypadku zwycięztwa otrzymasz 500 pkt, a w przypadku porażki stracisz 250 pkt."
         android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@id/dialogTitle"
         app:layout_constraintStart_toStartOf="parent"
