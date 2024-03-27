@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.example.bookreader.databinding.ActivityStatsBinding
+import com.example.bookreader.utils.MyApplication
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -30,6 +31,9 @@ class StatsActivity : AppCompatActivity() {
         getCompletedChallenges()
         getStartedChallenges()
         getCompletedTrophies()
+
+        val selectedBackground = getSelectedBackground()
+        window.setBackgroundDrawableResource(selectedBackground)
     }
 
     private fun checkUser()  {
@@ -37,6 +41,10 @@ class StatsActivity : AppCompatActivity() {
         val email = firebaseUser!!.email
         binding.titleTv.text = email
 
+    }
+
+    private fun getSelectedBackground(): Int {
+        return MyApplication.getSelectedBackground(this)
     }
 
     private fun getTotalPagesRead() {

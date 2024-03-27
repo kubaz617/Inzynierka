@@ -1,5 +1,6 @@
 package com.example.bookreader.activities
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.widget.ImageButton
 import android.widget.PopupMenu
 import com.example.bookreader.R
 import com.example.bookreader.databinding.ActivityUserScreenBinding
+import com.example.bookreader.utils.MyApplication
 import com.google.firebase.auth.FirebaseAuth
 
 class UserScreen : AppCompatActivity() {
@@ -29,8 +31,8 @@ class UserScreen : AppCompatActivity() {
         val stats_Btn = findViewById<Button>(R.id.stats_btn)
         val similiar_btn = findViewById<Button>(R.id.similiar_btn)
         val logout_Btn = findViewById<Button>(R.id.logout_btn)
-        val menu_Btn = findViewById<ImageButton>(R.id.menuBtn)
         val challenge_btn = findViewById<Button>(R.id.challenge_btn)
+        val theme_btn = findViewById<ImageButton>(R.id.themeBtn)
 
         firebaseAuth = FirebaseAuth.getInstance()
         checkUser()
@@ -61,11 +63,15 @@ class UserScreen : AppCompatActivity() {
             navigateToActivity(ChallengeActivity::class.java)
         }
 
-        /*
-        menu_Btn.setOnClickListener { view ->
-            showPopupMenu(view)
+        theme_btn.setOnClickListener {
+            showThemeMenu()
         }
-         */
+
+        val selectedBackground = getSelectedBackground()
+
+        setAppBackground(selectedBackground)
+
+
     }
 
     private fun checkUser() {
@@ -79,51 +85,63 @@ class UserScreen : AppCompatActivity() {
         startActivity(intent)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.theme_menu, menu)
-        return true
-    }
-
-
-    /*
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.theme_default -> {
-                changeTheme(R.style.Theme_Default)
+                applyTheme(R.style.Theme_Default)
                 return true
             }
             R.id.theme_pink -> {
-                changeTheme(R.style.Theme_Pink)
+                applyTheme(R.style.Theme_Pink)
                 return true
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    private fun showPopupMenu(view: View) {
-        val popupMenu = PopupMenu(this, view)
-        popupMenu.inflate(R.menu.theme_menu)
+    private fun applyTheme(themeId: Int) {
+        setTheme(themeId)
+        recreate() // Przeładuj aktywność, aby zastosować nowy motyw
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.theme_menu, menu)
+        return true
+    }
+
+    private fun showThemeMenu() {
+        val popupMenu = PopupMenu(this, binding.themeBtn)
+        popupMenu.menuInflater.inflate(R.menu.theme_menu, popupMenu.menu)
         popupMenu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.theme_default -> {
-                    changeTheme(R.style.Theme_Default)
-                    return@setOnMenuItemClickListener true
+                    setAppBackground(R.drawable.screen_1)
+                    saveSelectedBackground(R.drawable.screen_1) // Zapisz wybrane tło do SharedPreferences
+                    true
                 }
                 R.id.theme_pink -> {
-                    changeTheme(R.style.Theme_Pink)
-                    return@setOnMenuItemClickListener true
+                    setAppBackground(R.drawable.screen_2)
+                    saveSelectedBackground(R.drawable.screen_2) // Zapisz wybrane tło do SharedPreferences
+                    true
                 }
+                else -> false
             }
-            false
         }
         popupMenu.show()
     }
 
-    private fun changeTheme(themeId: Int) {
-        setTheme(themeId)
-        recreate()
+
+    private fun setAppBackground(backgroundId: Int) {
+        window.setBackgroundDrawableResource(backgroundId)
     }
 
+    private fun saveSelectedBackground(backgroundId: Int) {
+        MyApplication.saveSelectedBackground(this, backgroundId)
+    }
 
-     */
+    // Wywołanie metody pobierającej tło w innej aktywności
+    private fun getSelectedBackground(): Int {
+        return MyApplication.getSelectedBackground(this)
+    }
+
 }

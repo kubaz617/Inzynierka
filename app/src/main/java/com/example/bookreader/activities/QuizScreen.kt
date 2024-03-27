@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bookreader.adapters.AdapterQuiz
 import com.example.bookreader.databinding.ActivityQuizScreenBinding
 import com.example.bookreader.models.QuizModel
+import com.example.bookreader.utils.MyApplication
 import com.google.firebase.database.FirebaseDatabase
 
 class QuizScreen : AppCompatActivity() {
@@ -22,7 +23,13 @@ class QuizScreen : AppCompatActivity() {
         quizModelList = mutableListOf()
         getDataFromFirebase()
 
+        val selectedBackground = getSelectedBackground()
+        window.setBackgroundDrawableResource(selectedBackground)
 
+    }
+
+    private fun getSelectedBackground(): Int {
+        return MyApplication.getSelectedBackground(this)
     }
 
     private fun setupRecyclerView(){

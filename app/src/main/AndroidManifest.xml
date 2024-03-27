@@ -22,7 +22,8 @@
         android:screenOrientation="portrait">
         <activity
             android:name=".activities.ChallengeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Pink"/>
         <activity
             android:name=".activities.ForgotPasswordActivity"
             android:exported="false" />
@@ -55,7 +56,7 @@
             android:exported="false" />
         <activity
             android:name=".activities.UserScreen"
-            android:exported="false" />
+            android:exported="false"/>
         <activity
             android:name=".activities.SimiliarActivity"
             android:exported="false" />

@@ -14,6 +14,7 @@ import com.example.bookreader.models.QuestionModel
 import com.example.bookreader.R
 import com.example.bookreader.databinding.ActivityQuizBinding
 import com.example.bookreader.databinding.ScoreScreenBinding
+import com.example.bookreader.utils.MyApplication
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -49,6 +50,14 @@ class QuizActivity : AppCompatActivity(), View.OnClickListener {
         shuffleQuestions()
         loadQuestions()
         startTimer()
+
+        val selectedBackground = getSelectedBackground()
+
+        window.setBackgroundDrawableResource(selectedBackground)
+    }
+
+    private fun getSelectedBackground(): Int {
+        return MyApplication.getSelectedBackground(this)
     }
 
     override fun onBackPressed() {

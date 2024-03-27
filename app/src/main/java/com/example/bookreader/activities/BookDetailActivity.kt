@@ -84,6 +84,13 @@ class BookDetailActivity : AppCompatActivity() {
             ratingBar.rating = savedRating
         }
 
+        val selectedBackground = getSelectedBackground()
+        window.setBackgroundDrawableResource(selectedBackground)
+
+    }
+
+    private fun getSelectedBackground(): Int {
+        return MyApplication.getSelectedBackground(this)
     }
 
     private fun addOrUpdateBookRating(bookId: String, newRating: Float) {

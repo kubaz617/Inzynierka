@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import com.example.bookreader.R
 import com.github.barteksc.pdfviewer.PDFView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -33,6 +34,18 @@ class MyApplication:Application() {
             cal.timeInMillis = timestamp
             return DateFormat.format("dd/MM/yyyy",cal).toString()
 
+        }
+
+        fun saveSelectedBackground(context: Context, backgroundId: Int) {
+            val sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putInt("BACKGROUND_ID", backgroundId)
+            editor.apply()
+        }
+
+        fun getSelectedBackground(context: Context): Int {
+            val sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+            return sharedPreferences.getInt("BACKGROUND_ID", R.drawable.screen_2)
         }
 
 

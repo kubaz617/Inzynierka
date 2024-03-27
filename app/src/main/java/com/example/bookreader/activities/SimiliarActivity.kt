@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.bookreader.R
 import com.example.bookreader.databinding.ActivitySimiliarBinding
 import com.example.bookreader.models.ModelBook
+import com.example.bookreader.utils.MyApplication
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
@@ -45,6 +46,9 @@ class SimiliarActivity : AppCompatActivity() {
 
         val userId = FirebaseAuth.getInstance().currentUser?.uid
 
+        val selectedBackground = getSelectedBackground()
+        window.setBackgroundDrawableResource(selectedBackground)
+
 
         userId?.let { uid ->
             val userBookDetailsRef = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("bookDetails")
@@ -70,6 +74,10 @@ class SimiliarActivity : AppCompatActivity() {
                 }
             })
         }
+    }
+
+    private fun getSelectedBackground(): Int {
+        return MyApplication.getSelectedBackground(this)
     }
 
     private fun findMostReadCategory(userBookDetailsSnapshot: DataSnapshot, categoriesSnapshot: DataSnapshot, uid: String) {

@@ -42,75 +42,15 @@
         app:tabIndicatorHeight="0dp"
         app:tabMode="scrollable" />
 
-    <LinearLayout
-        android:background="@color/transparent"
-        android:id="@+id/dateBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tabLayout"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="16dp">
 
-        <android.widget.Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/dateTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Data wyzwania:"
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:textColor="@android:color/black" />
-
-        <android.widget.Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-    </LinearLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:background="@color/transparent"
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/dateBar"
-        android:layout_above="@id/bottomBar" />
+        android:layout_below="@id/tabLayout" />
 
-    <LinearLayout
-        android:id="@+id/bottomBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:padding="16dp">
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/challenge_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Wyzwanie"
-            android:layout_gravity="start"
-            android:background="@color/cyan"/>
-
-        <android.widget.Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.25" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/checkButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Sprawdź"
-            android:background="@color/cyan"
-            android:layout_gravity="end" />
-    </LinearLayout>
 
 
 </RelativeLayout>

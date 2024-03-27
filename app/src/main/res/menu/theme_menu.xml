@@ -1,18 +1,8 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/theme_item"
-        android:title="Wybierz motyw"
-        app:showAsAction="always"
-        android:orderInCategory="100">
-        <menu>
-            <item
-                android:id="@+id/theme_default"
-                android:title="Domyślny" />
-            <item
-                android:id="@+id/theme_pink"
-                android:title="Różowy"/>
-        </menu>
-    </item>
+        android:id="@+id/theme_default"
+        android:title="Default Background" />
+    <item
+        android:id="@+id/theme_pink"
+        android:title="Pink Background" />
 </menu>

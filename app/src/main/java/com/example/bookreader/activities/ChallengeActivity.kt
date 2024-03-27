@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import com.example.bookreader.R
 import com.example.bookreader.databinding.ActivityChallengeBinding
 import com.example.bookreader.databinding.ActivityUserBooksBinding
+import com.example.bookreader.utils.MyApplication
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -33,6 +34,10 @@ class ChallengeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+        val selectedBackground = getSelectedBackground()
+
+        window.setBackgroundDrawableResource(selectedBackground)
 
         binding.challengeBtn.setOnClickListener {
             // Pobierz identyfikator wyzwania
@@ -187,6 +192,10 @@ class ChallengeActivity : AppCompatActivity() {
         val userPoints = 0 // Pobierz aktualną liczbę punktów użytkownika z odpowiedniego źródła danych
         updateProgressBar(userPoints)
 
+    }
+
+    private fun getSelectedBackground(): Int {
+        return MyApplication.getSelectedBackground(this)
     }
 
     private fun updateProgressBar(points: Int) {
