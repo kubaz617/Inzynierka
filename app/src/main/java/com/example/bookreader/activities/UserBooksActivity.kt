@@ -43,6 +43,7 @@ class UserBooksActivity : AppCompatActivity() {
 
         val selectedBackground = getSelectedBackground()
         window.setBackgroundDrawableResource(selectedBackground)
+        window.statusBarColor = MyApplication.getStatusBarColor(this)
 
     }
 

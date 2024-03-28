@@ -10,8 +10,7 @@
         android:id="@+id/toolbarRl"
         android:layout_height="?actionBarSize"
         android:layout_width="match_parent"
-        android:background="@color/cyan">
-
+        android:background="@color/transparent">
 
         <ImageView
             android:id="@+id/admin_sign"
@@ -32,7 +31,29 @@
             android:textColor="@color/black"
             android:textStyle="bold">
         </TextView>
+
+        <ImageButton
+            android:id="@+id/logout_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_logout"
+            android:layout_alignParentEnd="true"
+            android:background="@color/transparent"
+            android:paddingTop="10dp"
+            android:paddingRight="10dp"/>
+
+        <ImageButton
+            android:id="@+id/themeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_menu_theme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@color/transparent"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"/>
     </RelativeLayout>
+
 
     <EditText
         android:id="@+id/search_Et"

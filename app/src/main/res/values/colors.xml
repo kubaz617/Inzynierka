@@ -14,4 +14,6 @@
     <color name="dark_grey">#A9A9A9</color>
     <color name="brown"> #6C3B1C</color>
     <color name="blue"> #1E90FF</color>
+    <color name="pink"> #FFC0CB </color>
+    <color name="light_yellow">#CAE2A9</color>
 </resources>

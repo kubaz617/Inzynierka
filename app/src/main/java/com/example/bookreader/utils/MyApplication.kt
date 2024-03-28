@@ -3,12 +3,16 @@ package com.example.bookreader.utils
 import android.app.Application
 import android.app.ProgressDialog
 import android.content.Context
+import android.graphics.Color
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.example.bookreader.R
 import com.github.barteksc.pdfviewer.PDFView
 import com.google.firebase.database.DataSnapshot
@@ -46,6 +50,46 @@ class MyApplication:Application() {
         fun getSelectedBackground(context: Context): Int {
             val sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
             return sharedPreferences.getInt("BACKGROUND_ID", R.drawable.screen_2)
+        }
+
+        fun saveSelectedColor(context: Context, color: Int) {
+            val sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putInt("SELECTED_COLOR", color)
+            editor.apply()
+        }
+
+        fun getSelectedColor(context: Context): Int {
+            val sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+            val defaultColor = ContextCompat.getColor(context, R.color.cyan)
+            return sharedPreferences.getInt("SELECTED_COLOR", defaultColor)
+        }
+
+        fun saveStatusBarColor(context: Context, color: Int) {
+            val sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putInt("STATUS_BAR_COLOR", color)
+            editor.apply()
+        }
+
+        fun getStatusBarColor(context: Context): Int {
+            val sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+            val defaultColor = ContextCompat.getColor(context, R.color.cyan) // Domyślny kolor paska stanu
+            return sharedPreferences.getInt("STATUS_BAR_COLOR", defaultColor)
+        }
+
+        fun setViewBackgroundColor(view: View, color: Int) {
+            if (view is ViewGroup) {
+                for (i in 0 until view.childCount) {
+                    val child = view.getChildAt(i)
+                    if (child is Button) {
+                        child.setBackgroundColor(color)
+                    }
+                    if (child is ViewGroup) {
+                        setViewBackgroundColor(child, color)
+                    }
+                }
+            }
         }
 
 

@@ -78,7 +78,8 @@
             android:hint="Opis książki"
             android:background="@color/grey"
             android:inputType="textMultiLine|textCapSentences"
-            android:drawablePadding="10dp"/>
+            android:drawablePadding="10dp"
+            android:maxLines="15"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 

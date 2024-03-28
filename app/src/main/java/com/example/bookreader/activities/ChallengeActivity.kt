@@ -29,6 +29,7 @@ import java.util.Locale
 class ChallengeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChallengeBinding
+    private lateinit var firebaseAuth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityChallengeBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
@@ -36,8 +37,13 @@ class ChallengeActivity : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         val selectedBackground = getSelectedBackground()
-
         window.setBackgroundDrawableResource(selectedBackground)
+
+        val selectedColor = MyApplication.getSelectedColor(this)
+        setAllButtonsColor(selectedColor)
+
+        firebaseAuth = FirebaseAuth.getInstance()
+        checkUser()
 
         binding.challengeBtn.setOnClickListener {
             // Pobierz identyfikator wyzwania
@@ -131,57 +137,11 @@ class ChallengeActivity : AppCompatActivity() {
             displayNewBookDialog()
         }
 
-        binding.checkNewBook.setOnClickListener {
-            val userId = FirebaseAuth.getInstance().currentUser?.uid
 
-            userId?.let { uid ->
-                getChallengeEasyBookId(uid,
-                    onSuccess = { challengeId ->
-                        Log.d("BookStatus", "Przekazane challengeId: $challengeId")
-                        checkIfNewBookPagesRead(challengeId)
-                    },
-                    onFailure = {
-                        Toast.makeText(this@ChallengeActivity, "Nie masz żadnego rozpoczętego wyzwania", Toast.LENGTH_SHORT).show()
-                    }
-                )
-            } ?: run {
-                Log.e("BookStatus", "Brak zalogowanego użytkownika.")
-            }
-        }
+        checkNewBook()
+        checkButton2()
+        checkButton()
 
-        binding.checkButton2.setOnClickListener {
-            val userId = FirebaseAuth.getInstance().currentUser?.uid
-
-            userId?.let { uid ->
-                getTenPageId(uid) { challengeId ->
-                    if (challengeId.isNullOrEmpty()) {
-                        Toast.makeText(this@ChallengeActivity, "Nie masz żadnego rozpoczętego wyzwania", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Log.d("BookStatus", "Przekazane challengeId: $challengeId")
-                        checkIfPagesRead(challengeId)
-                    }
-                }
-            } ?: run {
-                Log.e("BookStatus", "Brak zalogowanego użytkownika.")
-            }
-        }
-
-        binding.checkButton.setOnClickListener {
-            val userId = FirebaseAuth.getInstance().currentUser?.uid
-
-            userId?.let { uid ->
-                getChallengeId(uid) { challengeId ->
-                    if (challengeId.isNullOrEmpty()) {
-                        Toast.makeText(this@ChallengeActivity, "Nie masz żadnego rozpoczętego wyzwania", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Log.d("BookStatus", "Przekazane challengeId: $challengeId")
-                        checkIfChallengeComplete(challengeId)
-                    }
-                }
-            } ?: run {
-                Log.e("BookStatus", "Brak zalogowanego użytkownika.")
-            }
-        }
 
         getPointsFromFirebase()
 
@@ -189,10 +149,73 @@ class ChallengeActivity : AppCompatActivity() {
         displayChoosenBookInfo()
         displayNewBookInfo()
 
+        window.statusBarColor = MyApplication.getStatusBarColor(this)
+
         val userPoints = 0 // Pobierz aktualną liczbę punktów użytkownika z odpowiedniego źródła danych
         updateProgressBar(userPoints)
 
     }
+
+    private fun checkNewBook() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+
+        userId?.let { uid ->
+            getChallengeEasyBookId(uid,
+                onSuccess = { challengeId ->
+                    Log.d("BookStatus", "Przekazane challengeId: $challengeId")
+                    checkIfNewBookPagesRead(challengeId)
+                },
+                onFailure = {
+                }
+            )
+        } ?: run {
+            Log.e("BookStatus", "Brak zalogowanego użytkownika.")
+        }
+    }
+
+    private fun checkButton2() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+
+        userId?.let { uid ->
+            getTenPageId(uid) { challengeId ->
+                challengeId?.let {
+                    Log.d("BookStatus", "Przekazane challengeId: $it")
+                    checkIfPagesRead(it)
+                }
+            }
+        } ?: run {
+            Log.e("BookStatus", "Brak zalogowanego użytkownika.")
+        }
+    }
+
+    private fun checkButton() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+
+        userId?.let { uid ->
+            getChallengeId(uid) { challengeId ->
+                challengeId?.let {
+                    Log.d("BookStatus", "Przekazane challengeId: $it")
+                    checkIfChallengeComplete(it)
+                } ?: run {
+                }
+            }
+        } ?: run {
+            Log.e("BookStatus", "Brak zalogowanego użytkownika.")
+        }
+    }
+
+
+    private fun checkUser() {
+        val firebaseUser = firebaseAuth.currentUser
+        val email = firebaseUser!!.email
+        binding.titleTv.text = email
+    }
+
+    private fun setAllButtonsColor(color: Int) {
+        val rootView = window.decorView.rootView
+        MyApplication.setViewBackgroundColor(rootView, color)
+    }
+
 
     private fun getSelectedBackground(): Int {
         return MyApplication.getSelectedBackground(this)
@@ -961,7 +984,6 @@ class ChallengeActivity : AppCompatActivity() {
                                     }
                                 } else if (!isPagesRead && !isChallengeTimeUp) {
                                     // Wyświetlanie informacji, że wyzwanie nadal trwa
-                                    Toast.makeText(FirebaseApp.getInstance().applicationContext, "Wyzwanie nadal trwa, czytaj dalej", Toast.LENGTH_SHORT).show()
                                 } else {
                                     // Usuń węzeł ChallengeMedium, jeśli czas wyzwania minął
                                     decreasePoints(25)
@@ -1032,7 +1054,6 @@ class ChallengeActivity : AppCompatActivity() {
                                     }
                                 } else {
                                     Log.d("Firebase", "ChallengePages nie zostały jeszcze przeczytane.")
-                                    Toast.makeText(applicationContext, "Wyzwanie nie zostało jeszcze ukończone", Toast.LENGTH_SHORT).show()
                                 }
                             }
 
@@ -1197,7 +1218,6 @@ class ChallengeActivity : AppCompatActivity() {
                                     }
                             } else if (isChallengeCompleted) {
                                 Log.d("BookStatus", "Książka nadal nie jest przeczytana, czytaj dalej")
-                                Toast.makeText(this@ChallengeActivity, "Książka nadal nie jest przeczytana, czytaj dalej", Toast.LENGTH_SHORT).show()
                             } else {
                                 Log.d("BookStatus", "Wyzwanie niezaliczone, czas upłynął")
                                 Toast.makeText(this@ChallengeActivity, "Wyzwanie niezaliczone, czas upłynął", Toast.LENGTH_SHORT).show()
@@ -1209,8 +1229,6 @@ class ChallengeActivity : AppCompatActivity() {
                                         displayRandomBookInfo()
                                     }
                             }
-                        } else {
-                            Toast.makeText(this@ChallengeActivity, "Książka nie została jeszcze rozpoczęta", Toast.LENGTH_SHORT).show()
                         }
                     }
 

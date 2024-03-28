@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/cyan">
+        android:background="@color/transparent">
 
            <ImageView
             android:id="@+id/user_sign"

@@ -54,8 +54,17 @@ class QuizActivity : AppCompatActivity(), View.OnClickListener {
         val selectedBackground = getSelectedBackground()
 
         window.setBackgroundDrawableResource(selectedBackground)
+        window.statusBarColor = MyApplication.getStatusBarColor(this)
+
+        val selectedColor = MyApplication.getSelectedColor(this)
+        setAllButtonsColor(selectedColor)
+
     }
 
+    private fun setAllButtonsColor(color: Int) {
+        val rootView = window.decorView.rootView
+        MyApplication.setViewBackgroundColor(rootView, color)
+    }
     private fun getSelectedBackground(): Int {
         return MyApplication.getSelectedBackground(this)
     }
@@ -108,12 +117,8 @@ class QuizActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
 
-        binding.apply {
-            btnA.setBackgroundColor(getColor(R.color.grey))
-            btnB.setBackgroundColor(getColor(R.color.grey))
-            btnC.setBackgroundColor(getColor(R.color.grey))
-            btnD.setBackgroundColor(getColor(R.color.grey))
-        }
+        val selectedColor = MyApplication.getSelectedColor(this)
+        setAllButtonsColor(selectedColor)
 
         val clickedBtn = view as Button
         if(clickedBtn.id== R.id.next_btn){
@@ -129,7 +134,7 @@ class QuizActivity : AppCompatActivity(), View.OnClickListener {
             loadQuestions()
         }else{
             selectedAnswer = clickedBtn.text.toString()
-            clickedBtn.setBackgroundColor(getColor(R.color.cyan))
+            clickedBtn.setBackgroundColor(getColor(R.color.dark_grey))
         }
     }
 
@@ -256,6 +261,8 @@ class QuizActivity : AppCompatActivity(), View.OnClickListener {
         val dialogBinding = ScoreScreenBinding.inflate(layoutInflater)
         val totalQuestions = questionModelList.size
         val percentage = ((score.toFloat() / totalQuestions.toFloat() ) *100 ).toInt()
+
+
 
         displayTrophy(dialogBinding.trophy, percentage)
         if (percentage == 100) {

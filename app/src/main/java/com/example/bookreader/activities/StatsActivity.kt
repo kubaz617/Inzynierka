@@ -34,6 +34,7 @@ class StatsActivity : AppCompatActivity() {
 
         val selectedBackground = getSelectedBackground()
         window.setBackgroundDrawableResource(selectedBackground)
+        window.statusBarColor = MyApplication.getStatusBarColor(this)
     }
 
     private fun checkUser()  {

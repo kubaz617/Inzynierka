@@ -48,6 +48,7 @@ class SimiliarActivity : AppCompatActivity() {
 
         val selectedBackground = getSelectedBackground()
         window.setBackgroundDrawableResource(selectedBackground)
+        window.statusBarColor = MyApplication.getStatusBarColor(this)
 
 
         userId?.let { uid ->

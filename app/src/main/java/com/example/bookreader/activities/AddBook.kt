@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.example.bookreader.models.ModelCategory
 
 import com.example.bookreader.databinding.ActivityAddBookBinding
+import com.example.bookreader.utils.MyApplication
 import com.google.android.gms.tasks.Task
 
 import com.google.firebase.auth.FirebaseAuth
@@ -55,6 +56,14 @@ class AddBook : AppCompatActivity() {
 
             validateData()
         }
+
+        val selectedBackground = getSelectedBackground()
+        window.setBackgroundDrawableResource(selectedBackground)
+
+        val selectedColor = MyApplication.getSelectedColor(this)
+        setAllButtonsColor(selectedColor)
+
+        window.statusBarColor = MyApplication.getStatusBarColor(this)
     }
     private var title = ""
     private var description = ""
@@ -220,5 +229,15 @@ class AddBook : AppCompatActivity() {
         }
     )
 
+    private fun setAllButtonsColor(color: Int) {
+        val rootView = window.decorView.rootView
+        MyApplication.setViewBackgroundColor(rootView, color)
+    }
+
+
+
+    private fun getSelectedBackground(): Int {
+        return MyApplication.getSelectedBackground(this)
+    }
 
 }

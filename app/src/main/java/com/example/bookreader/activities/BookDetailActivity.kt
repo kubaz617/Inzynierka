@@ -50,6 +50,7 @@ class BookDetailActivity : AppCompatActivity() {
 
         ratingBar = binding.ratingBtn
         MyApplication.incrementBookViewCount(bookId)
+        window.statusBarColor = MyApplication.getStatusBarColor(this)
 
         loadBookDetails()
 
@@ -87,6 +88,14 @@ class BookDetailActivity : AppCompatActivity() {
         val selectedBackground = getSelectedBackground()
         window.setBackgroundDrawableResource(selectedBackground)
 
+        val selectedColor = MyApplication.getSelectedColor(this)
+        setAllButtonsColor(selectedColor)
+
+    }
+
+    private fun setAllButtonsColor(color: Int) {
+        val rootView = window.decorView.rootView
+        MyApplication.setViewBackgroundColor(rootView, color)
     }
 
     private fun getSelectedBackground(): Int {

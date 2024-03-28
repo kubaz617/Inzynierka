@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.example.bookreader.databinding.ActivityAddCategoryBinding
+import com.example.bookreader.utils.MyApplication
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
@@ -23,6 +24,14 @@ class AddCategory : AppCompatActivity() {
         binding.submitBtn.setOnClickListener(){
             validateData()
         }
+
+        val selectedBackground = getSelectedBackground()
+        window.setBackgroundDrawableResource(selectedBackground)
+
+        val selectedColor = MyApplication.getSelectedColor(this)
+        setAllButtonsColor(selectedColor)
+
+        window.statusBarColor = MyApplication.getStatusBarColor(this)
     }
 
     private var category = ""
@@ -56,5 +65,16 @@ class AddCategory : AppCompatActivity() {
             .addOnFailureListener{e ->
                 Toast.makeText(this,"Błąd podczas dodawania do bazy danych", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun setAllButtonsColor(color: Int) {
+        val rootView = window.decorView.rootView
+        MyApplication.setViewBackgroundColor(rootView, color)
+    }
+
+
+
+    private fun getSelectedBackground(): Int {
+        return MyApplication.getSelectedBackground(this)
     }
 }

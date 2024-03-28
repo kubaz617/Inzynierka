@@ -7,12 +7,15 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import com.example.bookreader.R
 import com.example.bookreader.databinding.ActivityUserScreenBinding
 import com.example.bookreader.utils.MyApplication
+import com.example.bookreader.utils.MyApplication.Companion.saveSelectedColor
+import com.example.bookreader.utils.MyApplication.Companion.setViewBackgroundColor
 import com.google.firebase.auth.FirebaseAuth
 
 class UserScreen : AppCompatActivity() {
@@ -68,8 +71,12 @@ class UserScreen : AppCompatActivity() {
         }
 
         val selectedBackground = getSelectedBackground()
-
         setAppBackground(selectedBackground)
+
+        val selectedColor = MyApplication.getSelectedColor(this)
+        setAllButtonsColor(selectedColor)
+
+        window.statusBarColor = MyApplication.getStatusBarColor(this)
 
 
     }
@@ -115,13 +122,37 @@ class UserScreen : AppCompatActivity() {
         popupMenu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.theme_default -> {
+                    // Zmiana tła aplikacji
                     setAppBackground(R.drawable.screen_1)
-                    saveSelectedBackground(R.drawable.screen_1) // Zapisz wybrane tło do SharedPreferences
+                    // Zmiana koloru przycisków
+                    setAllButtonsColor(getColor(R.color.cyan))
+                    // Zapisanie wybranego tła
+                    saveSelectedBackground(R.drawable.screen_1)
+                    // Zapisanie wybranego koloru
+                    saveSelectedColor(this, getColor(R.color.cyan))
+                    // Zmiana koloru paska stanu
+                    window.statusBarColor = getColor(R.color.cyan)
+                    // Zapisanie wybranego koloru paska stanu
+                    MyApplication.saveStatusBarColor(this, getColor(R.color.cyan))
                     true
                 }
                 R.id.theme_pink -> {
                     setAppBackground(R.drawable.screen_2)
-                    saveSelectedBackground(R.drawable.screen_2) // Zapisz wybrane tło do SharedPreferences
+                    setAllButtonsColor(getColor(R.color.pink))
+                    saveSelectedBackground(R.drawable.screen_2)
+                    saveSelectedColor(this, getColor(R.color.pink))
+                    window.statusBarColor = getColor(R.color.pink) // Zmiana koloru paska stanu
+                    MyApplication.saveStatusBarColor(this, getColor(R.color.pink))
+                    true
+                }
+                R.id.theme_green -> {
+                    setAppBackground(R.drawable.screen_3)
+                    setAllButtonsColor(getColor(R.color.light_yellow))
+                    saveSelectedBackground(R.drawable.screen_3)
+                    saveSelectedColor(this, getColor(R.color.light_yellow))
+
+                    window.statusBarColor = getColor(R.color.light_yellow) // Zmiana koloru paska stanu
+                    MyApplication.saveStatusBarColor(this, getColor(R.color.light_yellow))
                     true
                 }
                 else -> false
@@ -129,6 +160,14 @@ class UserScreen : AppCompatActivity() {
         }
         popupMenu.show()
     }
+
+
+
+    private fun setAllButtonsColor(color: Int) {
+        val rootView = window.decorView.rootView
+        setViewBackgroundColor(rootView, color)
+    }
+
 
 
     private fun setAppBackground(backgroundId: Int) {

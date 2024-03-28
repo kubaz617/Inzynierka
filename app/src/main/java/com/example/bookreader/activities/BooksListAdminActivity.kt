@@ -8,6 +8,7 @@ import android.util.Log
 import com.example.bookreader.models.ModelBook
 import com.example.bookreader.adapters.AdapterBookAdmin
 import com.example.bookreader.databinding.ActivityBooksListAdminBinding
+import com.example.bookreader.utils.MyApplication
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -57,6 +58,14 @@ class BooksListAdminActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
             }
         })
+
+        val selectedBackground = getSelectedBackground()
+        window.setBackgroundDrawableResource(selectedBackground)
+
+        val selectedColor = MyApplication.getSelectedColor(this)
+        setAllButtonsColor(selectedColor)
+
+        window.statusBarColor = MyApplication.getStatusBarColor(this)
     }
 
     private fun loadBooksList() {
@@ -85,4 +94,16 @@ class BooksListAdminActivity : AppCompatActivity() {
 
 
     }
+
+    private fun setAllButtonsColor(color: Int) {
+        val rootView = window.decorView.rootView
+        MyApplication.setViewBackgroundColor(rootView, color)
+    }
+
+
+
+    private fun getSelectedBackground(): Int {
+        return MyApplication.getSelectedBackground(this)
+    }
+
 }

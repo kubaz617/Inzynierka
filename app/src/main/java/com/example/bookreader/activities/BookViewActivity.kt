@@ -75,6 +75,7 @@ class BookViewActivity : AppCompatActivity() {
         val jumpToCurrentPage: ImageButton = findViewById(R.id.jumpToCurrentPage)
 
         mediaPlayer = MediaPlayer.create(this, R.raw.book_music)
+        window.statusBarColor = MyApplication.getStatusBarColor(this)
 
 
 

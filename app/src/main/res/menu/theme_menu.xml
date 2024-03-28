@@ -1,8 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/theme_default"
-        android:title="Default Background" />
+        android:title="Domyślny motyw" />
     <item
         android:id="@+id/theme_pink"
-        android:title="Pink Background" />
+        android:title="Różowy" />
+    <item
+        android:id="@+id/theme_green"
+        android:title="Zielony" />
 </menu>

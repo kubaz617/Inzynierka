@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.example.bookreader.databinding.ActivityBookEditBinding
+import com.example.bookreader.utils.MyApplication
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -49,6 +50,14 @@ class BookEditActivity : AppCompatActivity() {
         binding.submitBtn.setOnClickListener{
         validateData()
         }
+
+        val selectedBackground = getSelectedBackground()
+        window.setBackgroundDrawableResource(selectedBackground)
+
+        val selectedColor = MyApplication.getSelectedColor(this)
+        setAllButtonsColor(selectedColor)
+
+        window.statusBarColor = MyApplication.getStatusBarColor(this)
     }
 
     private fun loadBookInfo() {
@@ -189,5 +198,16 @@ class BookEditActivity : AppCompatActivity() {
 
             }
         })
+    }
+
+    private fun setAllButtonsColor(color: Int) {
+        val rootView = window.decorView.rootView
+        MyApplication.setViewBackgroundColor(rootView, color)
+    }
+
+
+
+    private fun getSelectedBackground(): Int {
+        return MyApplication.getSelectedBackground(this)
     }
 }
