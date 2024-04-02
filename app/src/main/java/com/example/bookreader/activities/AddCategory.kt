@@ -1,5 +1,6 @@
 package com.example.bookreader.activities
 
+import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -19,9 +20,11 @@ class AddCategory : AppCompatActivity() {
         binding = ActivityAddCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
         firebaseAuth = FirebaseAuth.getInstance()
 
-        binding.submitBtn.setOnClickListener(){
+        binding.submitBtn.setOnClickListener{
             validateData()
         }
 

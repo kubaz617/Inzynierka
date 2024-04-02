@@ -1,5 +1,6 @@
 package com.example.bookreader.activities
 
+import android.content.pm.ActivityInfo
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -45,6 +46,8 @@ class QuizActivity : AppCompatActivity(), View.OnClickListener {
             btnC.setOnClickListener(this@QuizActivity)
             btnD.setOnClickListener(this@QuizActivity)
             nextBtn.setOnClickListener(this@QuizActivity)
+
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
 
         shuffleQuestions()

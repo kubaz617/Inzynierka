@@ -108,7 +108,7 @@ class UserScreen : AppCompatActivity() {
 
     private fun applyTheme(themeId: Int) {
         setTheme(themeId)
-        recreate() // Przeładuj aktywność, aby zastosować nowy motyw
+        recreate()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -122,17 +122,11 @@ class UserScreen : AppCompatActivity() {
         popupMenu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.theme_default -> {
-                    // Zmiana tła aplikacji
                     setAppBackground(R.drawable.screen_1)
-                    // Zmiana koloru przycisków
                     setAllButtonsColor(getColor(R.color.cyan))
-                    // Zapisanie wybranego tła
                     saveSelectedBackground(R.drawable.screen_1)
-                    // Zapisanie wybranego koloru
                     saveSelectedColor(this, getColor(R.color.cyan))
-                    // Zmiana koloru paska stanu
                     window.statusBarColor = getColor(R.color.cyan)
-                    // Zapisanie wybranego koloru paska stanu
                     MyApplication.saveStatusBarColor(this, getColor(R.color.cyan))
                     true
                 }
@@ -141,7 +135,7 @@ class UserScreen : AppCompatActivity() {
                     setAllButtonsColor(getColor(R.color.pink))
                     saveSelectedBackground(R.drawable.screen_2)
                     saveSelectedColor(this, getColor(R.color.pink))
-                    window.statusBarColor = getColor(R.color.pink) // Zmiana koloru paska stanu
+                    window.statusBarColor = getColor(R.color.pink)
                     MyApplication.saveStatusBarColor(this, getColor(R.color.pink))
                     true
                 }
@@ -151,7 +145,7 @@ class UserScreen : AppCompatActivity() {
                     saveSelectedBackground(R.drawable.screen_3)
                     saveSelectedColor(this, getColor(R.color.light_yellow))
 
-                    window.statusBarColor = getColor(R.color.light_yellow) // Zmiana koloru paska stanu
+                    window.statusBarColor = getColor(R.color.light_yellow)
                     MyApplication.saveStatusBarColor(this, getColor(R.color.light_yellow))
                     true
                 }
@@ -169,7 +163,6 @@ class UserScreen : AppCompatActivity() {
     }
 
 
-
     private fun setAppBackground(backgroundId: Int) {
         window.setBackgroundDrawableResource(backgroundId)
     }
@@ -178,7 +171,6 @@ class UserScreen : AppCompatActivity() {
         MyApplication.saveSelectedBackground(this, backgroundId)
     }
 
-    // Wywołanie metody pobierającej tło w innej aktywności
     private fun getSelectedBackground(): Int {
         return MyApplication.getSelectedBackground(this)
     }

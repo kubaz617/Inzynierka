@@ -1,5 +1,6 @@
 package com.example.bookreader.activities
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -29,6 +30,7 @@ class SimiliarActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySimiliarBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         firebaseAuth = FirebaseAuth.getInstance()
         checkUser()
@@ -164,7 +166,7 @@ class SimiliarActivity : AppCompatActivity() {
                                 }
 
                                 if (unreadBooks.isNotEmpty()) {
-                                    val randomBooks = unreadBooks.shuffled().take(5)
+                                    val randomBooks = unreadBooks.shuffled().take(6)
 
                                     val recommendedBooksTitlesAndAuthors = randomBooks.joinToString("\n\n") { book ->
                                         "Tytuł: ${book.title}\nAutor: ${book.author}"

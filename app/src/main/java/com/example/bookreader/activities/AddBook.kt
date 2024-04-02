@@ -3,6 +3,7 @@ package com.example.bookreader.activities
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -39,6 +40,8 @@ class AddBook : AppCompatActivity() {
 
         firebaseAuth = FirebaseAuth.getInstance()
         loadBookCategories()
+
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         progressDialog = ProgressDialog(this)
         progressDialog.setTitle("Proszę czekać")

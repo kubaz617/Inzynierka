@@ -2,6 +2,7 @@ package com.example.bookreader.activities
 
 import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -33,6 +34,8 @@ class BookEditActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityBookEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         bookId = intent.getStringExtra("bookId")!!
 
