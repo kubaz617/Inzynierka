@@ -127,7 +127,7 @@
 
             <TextView
                 android:id="@+id/challengeName"
-                android:layout_width="320dp"
+                android:layout_width="280dp"
                 android:layout_height="wrap_content"
                 android:text="Wyzwanie determinacji"
                 android:textSize="18sp"
@@ -256,7 +256,7 @@
 
             <TextView
                 android:id="@+id/newBookChallengeName"
-                android:layout_width="320dp"
+                android:layout_width="280dp"
                 android:layout_height="wrap_content"
                 android:text="Wyzwanie początkowe"
                 android:textSize="18sp"
@@ -363,7 +363,7 @@
 
             <TextView
                 android:id="@+id/randomBookChallenge"
-                android:layout_width="320dp"
+                android:layout_width="280dp"
                 android:layout_height="wrap_content"
                 android:text="Wyzwanie losowości"
                 android:textSize="18sp"
