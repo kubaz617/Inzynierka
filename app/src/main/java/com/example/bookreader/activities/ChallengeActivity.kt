@@ -34,7 +34,6 @@ class ChallengeActivity : AppCompatActivity() {
         binding = ActivityChallengeBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         val selectedBackground = getSelectedBackground()
         window.setBackgroundDrawableResource(selectedBackground)
@@ -459,7 +458,6 @@ class ChallengeActivity : AppCompatActivity() {
                                     val message = "Wyzwanie rozpoczęte"
                                     Toast.makeText(this@ChallengeActivity, message, Toast.LENGTH_LONG).show()
 
-                                    startChallengeToUser(uid)
                                     saveChallengeDate(uid, currentBookId!!, title!!, author!!)
                                 } else if (userBookSnapshot.child("isBookFullyRead").value == true) {
                                     tryChallenge(attempts - 1)
@@ -511,20 +509,20 @@ class ChallengeActivity : AppCompatActivity() {
                                 }
                             }
 
-                            // Usuń książki, które są już w bookDetails z listy wszystkich książek
+
                             allBooks.removeAll(userBooks)
 
                             if (allBooks.isNotEmpty()) {
-                                // Losuj jedną z dostępnych książek
+
                                 val randomIndex = (0 until allBooks.size).random()
                                 val randomBookId = allBooks[randomIndex]
 
-                                // Pobierz tytuł i autora książki
+
                                 val bookTitle = dataSnapshot.child(randomBookId).child("title").getValue(String::class.java)
                                 val bookAuthor = dataSnapshot.child(randomBookId).child("author").getValue(String::class.java)
 
                                 if (bookTitle != null && bookAuthor != null) {
-                                    // Dodaj książkę do wyzwania
+
                                     val challengePage = 15
                                     val challengeData: MutableMap<String, Any> = HashMap()
                                     challengeData["challengePage"] = challengePage

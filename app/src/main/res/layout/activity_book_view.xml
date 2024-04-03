@@ -34,9 +34,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=" "
-        android:textSize="10sp"
+        android:textSize="8sp"
         android:drawableLeft="@drawable/ic_battery"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:layout_toEndOf="@+id/jumpToCurrentPage"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"/>

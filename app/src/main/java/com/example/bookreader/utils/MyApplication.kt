@@ -49,7 +49,7 @@ class MyApplication:Application() {
 
         fun getSelectedBackground(context: Context): Int {
             val sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-            return sharedPreferences.getInt("BACKGROUND_ID", R.drawable.screen_2)
+            return sharedPreferences.getInt("BACKGROUND_ID", R.drawable.screen_1)
         }
 
         fun saveSelectedColor(context: Context, color: Int) {
